@@ -19,5 +19,5 @@ public class MessageDTO {
     private Long recipientId;
     private String content;
     private LocalDateTime time;
-    private String status; // 'SENT', 'READ', 'FAILED', 'DELETED'
+    private StateMessage status; // 'SENT', 'READ', 'FAILED', 'DELETED'
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.vaschenko.ParkPoint.dto.BookingDTO;
 import ru.vaschenko.ParkPoint.model.Booking;
 import ru.vaschenko.ParkPoint.services.BookingService;
 import ru.vaschenko.ParkPoint.type.StateBooking;
@@ -33,9 +34,9 @@ public class BookingController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/create")
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        Booking createdBooking = bookingService.createClient(booking);
-        return new ResponseEntity<>(createdBooking, HttpStatus.CREATED);
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingDTO booking) {
+        BookingDTO createdBookingDTO = bookingService.createClient(booking);
+        return new ResponseEntity<>(createdBookingDTO, HttpStatus.CREATED);
     }
 
     // Получение бронирования по ID
@@ -45,8 +46,8 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Booking not found")
     })
     @GetMapping("/getId/{id}")
-    public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
-        Booking booking = bookingService.getBookingById(id);
+    public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {
+        BookingDTO booking = bookingService.getBookingById(id);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
@@ -82,9 +83,9 @@ public class BookingController {
             @ApiResponse(responseCode = "400", description = "Invalid status")
     })
     @PutMapping("/updateStatus/{id}")
-    public ResponseEntity<Booking> updateBookingStatus(
+    public ResponseEntity<BookingDTO> updateBookingStatus(
             @PathVariable Long id, @RequestParam StateBooking status) {
-        Booking updatedBooking = bookingService.updateBookingStatus(id, status);
+        BookingDTO updatedBooking = bookingService.updateBookingStatus(id, status);
         return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
     }
 
@@ -107,8 +108,8 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Client not found")
     })
     @GetMapping("/getByClientId/{clientId}")
-    public ResponseEntity<List<Booking>> getBookingsByClientId(@PathVariable Long clientId) {
-        List<Booking> bookings = bookingService.getBookingsByClientId(clientId);
+    public ResponseEntity<List<BookingDTO>> getBookingsByClientId(@PathVariable Long clientId) {
+        List<BookingDTO> bookings = bookingService.getBookingsByClientId(clientId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
@@ -119,8 +120,8 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Owner not found")
     })
     @GetMapping("/getByOwnerId/{ownerId}")
-    public ResponseEntity<List<Booking>> getBookingsByOwnerId(@PathVariable Long ownerId) {
-        List<Booking> bookings = bookingService.getBookingsByOwnerId(ownerId);
+    public ResponseEntity<List<BookingDTO>> getBookingsByOwnerId(@PathVariable Long ownerId) {
+        List<BookingDTO> bookings = bookingService.getBookingsByOwnerId(ownerId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
@@ -131,8 +132,8 @@ public class BookingController {
             @ApiResponse(responseCode = "404", description = "Parking space not found")
     })
     @GetMapping("/getByParkingSpaceId/{parkingSpaceId}")
-    public ResponseEntity<List<Booking>> getBookingsByParkingSpaceId(@PathVariable Long parkingSpaceId) {
-        List<Booking> bookings = bookingService.getBookingsByParkingSpaceId(parkingSpaceId);
+    public ResponseEntity<List<BookingDTO>> getBookingsByParkingSpaceId(@PathVariable Long parkingSpaceId) {
+        List<BookingDTO> bookings = bookingService.getBookingsByParkingSpaceId(parkingSpaceId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 }

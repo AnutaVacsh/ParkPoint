@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.vaschenko.ParkPoint.dto.ParkingSpaceDTO;
 import ru.vaschenko.ParkPoint.model.ParkingSpace;
 import ru.vaschenko.ParkPoint.services.ParkingSpaceServices;
 
@@ -32,9 +33,9 @@ public class ParkingSpaceController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/create")
-    public ResponseEntity<ParkingSpace> createParkingSpace(@RequestBody ParkingSpace parkingSpace) {
-        ParkingSpace createdParkingSpace = spaceServices.createParkingSpace(parkingSpace);
-        return new ResponseEntity<>(createdParkingSpace, HttpStatus.CREATED);
+    public ResponseEntity<ParkingSpaceDTO> createParkingSpace(@RequestBody ParkingSpaceDTO parkingSpaceDTO) {
+        ParkingSpaceDTO createdParkingSpaceDTO = spaceServices.createParkingSpace(parkingSpaceDTO);
+        return new ResponseEntity<>(createdParkingSpaceDTO, HttpStatus.CREATED);
     }
 
     // Получение парковочного места по ID
@@ -44,8 +45,8 @@ public class ParkingSpaceController {
             @ApiResponse(responseCode = "404", description = "Parking space not found")
     })
     @GetMapping("/getId/{id}")
-    public ResponseEntity<ParkingSpace> getParkingSpaceById(@PathVariable Long id) {
-        ParkingSpace parkingSpace = spaceServices.getParkingSpaceById(id);
+    public ResponseEntity<ParkingSpaceDTO> getParkingSpaceById(@PathVariable Long id) {
+        ParkingSpaceDTO parkingSpace = spaceServices.getParkingSpaceById(id);
         return new ResponseEntity<>(parkingSpace, HttpStatus.OK);
     }
 
@@ -56,10 +57,10 @@ public class ParkingSpaceController {
             @ApiResponse(responseCode = "404", description = "Parking space not found")
     })
     @PutMapping("/updateAvailability/{id}")
-    public ResponseEntity<ParkingSpace> updateParkingSpaceAvailability(
+    public ResponseEntity<ParkingSpaceDTO> updateParkingSpaceAvailability(
             @PathVariable Long id,
             @RequestParam Boolean isAvailable) {
-        ParkingSpace updatedParkingSpace = spaceServices.updateParkingSpaceAvailability(id, isAvailable);
+        ParkingSpaceDTO updatedParkingSpace = spaceServices.updateParkingSpaceAvailability(id, isAvailable);
         return new ResponseEntity<>(updatedParkingSpace, HttpStatus.OK);
     }
 
@@ -70,10 +71,10 @@ public class ParkingSpaceController {
             @ApiResponse(responseCode = "404", description = "Parking space not found")
     })
     @PutMapping("/updatePrice/{id}")
-    public ResponseEntity<ParkingSpace> updateParkingSpacePrice(
+    public ResponseEntity<ParkingSpaceDTO> updateParkingSpacePrice(
             @PathVariable Long id,
             @RequestParam Integer price) {
-        ParkingSpace updatedParkingSpace = spaceServices.updateParkingSpacePrice(id, price);
+        ParkingSpaceDTO updatedParkingSpace = spaceServices.updateParkingSpacePrice(id, price);
         return new ResponseEntity<>(updatedParkingSpace, HttpStatus.OK);
     }
 
@@ -84,10 +85,10 @@ public class ParkingSpaceController {
             @ApiResponse(responseCode = "404", description = "Parking space not found")
     })
     @PutMapping("/update/{id}")
-    public ResponseEntity<ParkingSpace> updateParkingSpace(
+    public ResponseEntity<ParkingSpaceDTO> updateParkingSpace(
             @PathVariable Long id,
-            @RequestBody ParkingSpace updatedData) {
-        ParkingSpace updatedParkingSpace = spaceServices.updateParkingSpace(id, updatedData);
+            @RequestBody ParkingSpaceDTO updatedData) {
+        ParkingSpaceDTO updatedParkingSpace = spaceServices.updateParkingSpace(id, updatedData);
         return new ResponseEntity<>(updatedParkingSpace, HttpStatus.OK);
     }
 
@@ -110,8 +111,8 @@ public class ParkingSpaceController {
             @ApiResponse(responseCode = "404", description = "Parking zone not found")
     })
     @GetMapping("/getByZoneId/{zoneId}")
-    public ResponseEntity<List<ParkingSpace>> getParkingSpacesByZoneId(@PathVariable Long zoneId) {
-        List<ParkingSpace> parkingSpaces = spaceServices.getParkingSpacesByZoneId(zoneId);
+    public ResponseEntity<List<ParkingSpaceDTO>> getParkingSpacesByZoneId(@PathVariable Long zoneId) {
+        List<ParkingSpaceDTO> parkingSpaces = spaceServices.getParkingSpacesByZoneId(zoneId);
         return new ResponseEntity<>(parkingSpaces, HttpStatus.OK);
     }
 

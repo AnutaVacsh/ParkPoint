@@ -6,7 +6,8 @@ import lombok.Setter;
 @Builder
 @Setter @Getter
 public class PhotoDTO {
-    private Long id;
-    private Integer order;
-    private String photoUrl;
+    protected Long id;
+    protected Integer order;
+    protected ParkingZoneDTO parkingZoneDTO;
+    protected String photoUrl;
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter @Getter
 public class ParkingSpaceDTO {
     private Long id;
-    private Long parkingZoneId; // Идентификатор парковочной зоны
+    private ParkingZoneDTO parkingZoneDTO; //
     private Integer order;
     private Integer price;
     private Boolean isAvailable;

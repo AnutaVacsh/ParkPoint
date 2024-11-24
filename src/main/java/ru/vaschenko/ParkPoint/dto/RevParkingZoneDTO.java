@@ -1,4 +1,6 @@
 package ru.vaschenko.ParkPoint.dto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,9 +9,11 @@ import lombok.Setter;
 @Setter @Getter
 public class RevParkingZoneDTO {
     private Long id;
-    private Long parkingZoneId;
-    private Long clientId;
+    private ParkingZoneDTO parkingZoneDTO; //
+    private ClientDTO clientDTO; //
     private String comment;
-    private Integer rating; // Оценка от 1 до 5
-    private PhotoDTO photo;
+
+    @NotBlank(message = "Оценка не может быть null")
+    @Size(min = 1, max = 5, message = "Оценка от 1 до 5")
+    private Integer rating;
 }

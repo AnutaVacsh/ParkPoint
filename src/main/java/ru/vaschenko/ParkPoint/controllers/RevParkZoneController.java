@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.vaschenko.ParkPoint.dto.RevParkingZoneDTO;
 import ru.vaschenko.ParkPoint.model.Client;
 import ru.vaschenko.ParkPoint.model.RevParkingZone;
 import ru.vaschenko.ParkPoint.repositories.RevParkingZoneRepositories;
@@ -34,7 +35,7 @@ public class RevParkZoneController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/create")
-    public RevParkingZone createRev(@RequestBody RevParkingZone rev) {
+    public RevParkingZoneDTO createRev(@RequestBody RevParkingZoneDTO rev) {
         return revParkZoneService.createRev(rev);
     }
 
@@ -44,7 +45,7 @@ public class RevParkZoneController {
             @ApiResponse(responseCode = "404", description = "Review not found")
     })
     @PutMapping("/update/{id}")
-    public RevParkingZone updateRev(@PathVariable Long id, @RequestBody RevParkingZone updatedRev) {
+    public RevParkingZoneDTO updateRev(@PathVariable Long id, @RequestBody RevParkingZoneDTO updatedRev) {
         return revParkZoneService.updateRev(id, updatedRev);
     }
 
@@ -64,7 +65,7 @@ public class RevParkZoneController {
             @ApiResponse(responseCode = "404", description = "Review not found")
     })
     @PostMapping("/createRating/{id}")
-    public RevParkingZone createRating(@RequestParam int rating, @RequestParam Client client) {
+    public RevParkingZoneDTO createRating(@RequestParam int rating, @RequestParam Client client) {
         return revParkZoneService.createRating(rating, client);
     }
 

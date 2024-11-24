@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.vaschenko.ParkPoint.dto.OwnerDTO;
+import ru.vaschenko.ParkPoint.dto.SafeUserRequestDTO;
 import ru.vaschenko.ParkPoint.model.Owner;
 import ru.vaschenko.ParkPoint.model.Password;
 import ru.vaschenko.ParkPoint.services.OwnerServices;
@@ -34,7 +35,7 @@ public class OwnerController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/create")
-    public ResponseEntity<OwnerDTO> createOwner(@RequestBody Owner owner) {
+    public ResponseEntity<OwnerDTO> createOwner(@RequestBody SafeUserRequestDTO owner) {
 //        Password createdPassword = passwordService.createPassword(owner.getPassword());
         OwnerDTO createdOwner = ownerServices.createOwner(owner);
         return new ResponseEntity<>(createdOwner, HttpStatus.CREATED);

@@ -14,11 +14,10 @@ import lombok.Setter;
 @Setter @Getter
 public class BookingDTO {
     private Long id;
-    private Long clientId;
-    private Long parkingSpaceId;
+    private ClientDTO clientDTO; //
+    private ParkingSpaceDTO parkingSpaceDTO; //
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDateTime dateCreated;
-    private String status; // 'PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'EXPIRED', 'REJECTED'
-
+    private StateBooking status;
 }

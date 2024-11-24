@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.vaschenko.ParkPoint.dto.ParkingZoneDTO;
+import ru.vaschenko.ParkPoint.dto.mapper.ParkingSpaceMapper;
+import ru.vaschenko.ParkPoint.dto.mapper.ParkingZoneMapping;
 import ru.vaschenko.ParkPoint.exception.ParkingSpaceNotFoundException;
 import ru.vaschenko.ParkPoint.exception.ParkingZoneNotFoundException;
 import ru.vaschenko.ParkPoint.model.ParkingZone;
@@ -28,41 +31,45 @@ import java.util.List;
 @AllArgsConstructor
 public class ParkingZoneServices {
     private final ParkingZoneRepositories parkingZoneRepository;
+    private final ParkingZoneMapping parkingZoneMapper;
 
     // Создание парковочной зоны
-    public ParkingZone createParkingZone(ParkingZone parkingZone) {
-        return parkingZoneRepository.save(parkingZone);
+    public ParkingZoneDTO createParkingZone(ParkingZoneDTO parkingZoneDTO) {
+        ParkingZone savedParkingZone = parkingZoneRepository.save(parkingZoneMapper.toEntity(parkingZoneDTO));
+        return parkingZoneMapper.toDto(savedParkingZone);
     }
 
     // Получение парковочной зоны по ID
-    public ParkingZone getParkingZoneById(Long parkingZoneId) {
-        return parkingZoneRepository.findById(parkingZoneId)
+    public ParkingZoneDTO getParkingZoneById(Long parkingZoneId) {
+        ParkingZone parkingZone = parkingZoneRepository.findById(parkingZoneId)
                 .orElseThrow(() -> new ParkingZoneNotFoundException("Parking Zone not found with id: " + parkingZoneId));
+        return parkingZoneMapper.toDto(parkingZone);
     }
 
     // Обновление данных парковочной зоны
     @Transactional
-    public ParkingZone updateParkingZone(Long parkingZoneId, ParkingZone updatedData) {
-        validateParkingZoneExists(parkingZoneId);
+    public ParkingZoneDTO updateParkingZone(Long parkingZoneId, ParkingZoneDTO updatedData) {
+        ParkingZone parkingZone = parkingZoneRepository.findById(parkingZoneId)
+                .orElseThrow(() -> new ParkingZoneNotFoundException("Parking Zone not found with id: " + parkingZoneId));
 
-        ParkingZone parkingZone = getParkingZoneById(parkingZoneId);
         parkingZone.setTitle(updatedData.getTitle());
         parkingZone.setAddress(updatedData.getAddress());
         parkingZone.setLatitude(updatedData.getLatitude());
         parkingZone.setLongitude(updatedData.getLongitude());
         parkingZone.setState(updatedData.getState());
         parkingZone.setDescription(updatedData.getDescription());
-        return parkingZoneRepository.save(parkingZone);
+
+        return parkingZoneMapper.toDto(parkingZoneRepository.save(parkingZone));
     }
 
     // Обновление статуса парковочной зоны
     @Transactional
-    public ParkingZone updateParkingZoneStatus(Long parkingZoneId, StateParkingZone state) {
-        validateParkingZoneExists(parkingZoneId);
+    public ParkingZoneDTO updateParkingZoneStatus(Long parkingZoneId, StateParkingZone state) {
+        ParkingZone parkingZone = parkingZoneRepository.findById(parkingZoneId)
+                .orElseThrow(() -> new ParkingZoneNotFoundException("Parking Zone not found with id: " + parkingZoneId));
 
-        ParkingZone parkingZone = getParkingZoneById(parkingZoneId);
         parkingZone.setState(state);
-        return parkingZoneRepository.save(parkingZone);
+        return parkingZoneMapper.toDto(parkingZoneRepository.save(parkingZone));
     }
 
     // Удаление парковочной зоны
@@ -73,8 +80,8 @@ public class ParkingZoneServices {
     }
 
     // Получение списка всех парковочных зон
-    public List<ParkingZone> getAllParkingZones() {
-        return parkingZoneRepository.findAll();
+    public List<ParkingZoneDTO> getAllParkingZones() {
+        return parkingZoneMapper.ToDTOs(parkingZoneRepository.findAll());
     }
 
     // Получение парковочных зон с пагинацией и фильтрацией

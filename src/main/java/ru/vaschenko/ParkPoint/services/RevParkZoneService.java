@@ -2,6 +2,8 @@ package ru.vaschenko.ParkPoint.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.vaschenko.ParkPoint.dto.RevParkingZoneDTO;
+import ru.vaschenko.ParkPoint.dto.mapper.RevParkingZoneMapper;
 import ru.vaschenko.ParkPoint.exception.RevParkZoneNotFoundException;
 import ru.vaschenko.ParkPoint.model.Client;
 import ru.vaschenko.ParkPoint.model.RevParkingZone;
@@ -11,20 +13,22 @@ import ru.vaschenko.ParkPoint.repositories.RevParkingZoneRepositories;
 @AllArgsConstructor
 public class RevParkZoneService {
     private final RevParkingZoneRepositories revRepositories;
+    private final RevParkingZoneMapper revParkingZoneMapper;
 
-    public RevParkingZone createRev(RevParkingZone rev) {
-        return revRepositories.save(rev);
+    public RevParkingZoneDTO createRev(RevParkingZoneDTO revDTO) {
+        RevParkingZone rev = revParkingZoneMapper.toEntity(revDTO);
+        return revParkingZoneMapper.toDto(revRepositories.save(rev));
     }
 
     // Изменение отзыва
-    public RevParkingZone updateRev(Long id, RevParkingZone updatedRev) {
+    public RevParkingZoneDTO updateRev(Long id, RevParkingZoneDTO updatedRev) {
         RevParkingZone existingRev = revRepositories.findById(id)
                 .orElseThrow(() -> new RevParkZoneNotFoundException("RevParkingZone not found with id " + id));
 
         existingRev.setComment(updatedRev.getComment());
         existingRev.setRating(updatedRev.getRating());
 
-        return revRepositories.save(existingRev);
+        return revParkingZoneMapper.toDto(revRepositories.save(existingRev));
     }
 
     // Удаление отзыва
@@ -36,12 +40,12 @@ public class RevParkZoneService {
     }
 
     // Установка только оценки
-    public RevParkingZone createRating(int rating, Client client) {
+    public RevParkingZoneDTO createRating(int rating, Client client) {
         RevParkingZone existingRev = new RevParkingZone();
 
         existingRev.setClient(client);
         existingRev.setRating(rating);
-        return revRepositories.save(existingRev);
+        return revParkingZoneMapper.toDto(revRepositories.save(existingRev));
     }
 
     // Получение всех отзывов для конкретной зоны с пагинацией и сортировкой

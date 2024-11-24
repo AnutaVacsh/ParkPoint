@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.vaschenko.ParkPoint.dto.ParkingZoneDTO;
 import ru.vaschenko.ParkPoint.model.ParkingZone;
 import ru.vaschenko.ParkPoint.services.ParkingZoneServices;
 import ru.vaschenko.ParkPoint.type.StateParkingZone;
@@ -30,8 +31,8 @@ public class ParkingZoneController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/create")
-    public ResponseEntity<ParkingZone> createParkingZone(@RequestBody ParkingZone parkingZone) {
-        ParkingZone createdZone = zoneServices.createParkingZone(parkingZone);
+    public ResponseEntity<ParkingZoneDTO> createParkingZone(@RequestBody ParkingZoneDTO parkingZone) {
+        ParkingZoneDTO createdZone = zoneServices.createParkingZone(parkingZone);
         return new ResponseEntity<>(createdZone, HttpStatus.CREATED);
     }
 
@@ -42,9 +43,9 @@ public class ParkingZoneController {
             @ApiResponse(responseCode = "404", description = "Parking zone not found")
     })
     @GetMapping("/getId/{id}")
-    public ResponseEntity<ParkingZone> getParkingZoneById(@PathVariable Long id) {
-        ParkingZone parkingZone = zoneServices.getParkingZoneById(id);
-        return new ResponseEntity<>(parkingZone, HttpStatus.OK);
+    public ResponseEntity<ParkingZoneDTO> getParkingZoneById(@PathVariable Long id) {
+        ParkingZoneDTO parkingZoneDTO = zoneServices.getParkingZoneById(id);
+        return new ResponseEntity<>(parkingZoneDTO, HttpStatus.OK);
     }
 
     // Обновление данных парковочной зоны
@@ -55,18 +56,18 @@ public class ParkingZoneController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PutMapping("/update/{id}")
-    public ResponseEntity<ParkingZone> updateParkingZone(
-            @PathVariable Long id, @RequestBody ParkingZone updatedData) {
-        ParkingZone updatedZone = zoneServices.updateParkingZone(id, updatedData);
+    public ResponseEntity<ParkingZoneDTO> updateParkingZone(
+            @PathVariable Long id, @RequestBody ParkingZoneDTO updatedData) {
+        ParkingZoneDTO updatedZone = zoneServices.updateParkingZone(id, updatedData);
         return new ResponseEntity<>(updatedZone, HttpStatus.OK);
     }
 
     // Обновление статуса парковочной зоны
     @PutMapping("/update-status/{id}")
     @Operation(summary = "Update the status of a parking zone")
-    public ResponseEntity<ParkingZone> updateParkingZoneStatus(
+    public ResponseEntity<ParkingZoneDTO> updateParkingZoneStatus(
             @PathVariable Long id, @RequestBody StateParkingZone newStatus) {
-        ParkingZone updatedZone = zoneServices.updateParkingZoneStatus(id, newStatus);
+        ParkingZoneDTO updatedZone = zoneServices.updateParkingZoneStatus(id, newStatus);
         return new ResponseEntity<>(updatedZone, HttpStatus.OK);
     }
 
@@ -86,8 +87,8 @@ public class ParkingZoneController {
     @Operation(summary = "Get all parking zones")
     @ApiResponse(responseCode = "200", description = "Successfully fetched all parking zones")
     @GetMapping("/getAll")
-    public ResponseEntity<List<ParkingZone>> getAllParkingZones() {
-        List<ParkingZone> zones = zoneServices.getAllParkingZones();
+    public ResponseEntity<List<ParkingZoneDTO>> getAllParkingZones() {
+        List<ParkingZoneDTO> zones = zoneServices.getAllParkingZones();
         return new ResponseEntity<>(zones, HttpStatus.OK);
     }
 }

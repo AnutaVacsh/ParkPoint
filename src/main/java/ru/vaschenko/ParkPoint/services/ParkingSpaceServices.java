@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.vaschenko.ParkPoint.dto.ParkingSpaceDTO;
+import ru.vaschenko.ParkPoint.dto.mapper.ParkingSpaceMapper;
+import ru.vaschenko.ParkPoint.dto.mapper.ParkingZoneMapping;
 import ru.vaschenko.ParkPoint.exception.ParkingSpaceNotFoundException;
 import ru.vaschenko.ParkPoint.model.ParkingSpace;
 import ru.vaschenko.ParkPoint.repositories.ParkingSpaceRepositories;
@@ -25,45 +28,50 @@ import java.util.List;
 @AllArgsConstructor
 public class ParkingSpaceServices {
     private final ParkingSpaceRepositories spaceRepositories;
+    private final ParkingSpaceMapper parkingSpaceMapper;
+    private final ParkingZoneMapping parkingZoneMapping;
 
     // Создание нового парковочного места в конкретной зоне
-    public ParkingSpace createParkingSpace(ParkingSpace parkingSpace) {
-        return spaceRepositories.save(parkingSpace);
+    public ParkingSpaceDTO createParkingSpace(ParkingSpaceDTO parkingSpaceDTO) {
+        ParkingSpace parkingSpace = parkingSpaceMapper.toEntity(parkingSpaceDTO);
+        ParkingSpace savedParkingSpace = spaceRepositories.save(parkingSpace);
+        return parkingSpaceMapper.toDto(savedParkingSpace);
     }
 
     // Получение парковочного места по ID
-    public ParkingSpace getParkingSpaceById(Long id) {
-        return spaceRepositories.findById(id)
+    public ParkingSpaceDTO getParkingSpaceById(Long id) {
+        ParkingSpace parkingSpace = spaceRepositories.findById(id)
                 .orElseThrow(() -> new ParkingSpaceNotFoundException("Parking space not found with id: " + id));
+        return parkingSpaceMapper.toDto(parkingSpace);
     }
 
     // Обновление доступности и цены парковочного места
-    public ParkingSpace updateParkingSpaceAvailability(Long id, Boolean isAvailable) {
-        validateParkingSpaceExists(id);
+    public ParkingSpaceDTO updateParkingSpaceAvailability(Long id, Boolean isAvailable) {
+        ParkingSpace parkingSpace = spaceRepositories.findById(id)
+                .orElseThrow(() -> new ParkingSpaceNotFoundException("Parking space not found with id: " + id));
 
-        ParkingSpace parkingSpace = getParkingSpaceById(id);
         if (isAvailable != null) parkingSpace.setIsAvailable(isAvailable);
-        return spaceRepositories.save(parkingSpace);
+        return parkingSpaceMapper.toDto(spaceRepositories.save(parkingSpace));
     }
 
-    public ParkingSpace updateParkingSpacePrice(Long id, Integer price) {
-        validateParkingSpaceExists(id);
+    public ParkingSpaceDTO updateParkingSpacePrice(Long id, Integer price) {
+        ParkingSpace parkingSpace = spaceRepositories.findById(id)
+                .orElseThrow(() -> new ParkingSpaceNotFoundException("Parking space not found with id: " + id));
 
-        ParkingSpace parkingSpace = getParkingSpaceById(id);
         if (price != null) parkingSpace.setPrice(price);
-        return spaceRepositories.save(parkingSpace);
+        return parkingSpaceMapper.toDto(spaceRepositories.save(parkingSpace));
     }
 
-    public ParkingSpace updateParkingSpace(Long id, ParkingSpace updatedData) {
-        validateParkingSpaceExists(id);
+    public ParkingSpaceDTO updateParkingSpace(Long id, ParkingSpaceDTO updatedData) {
+        ParkingSpace parkingSpace = spaceRepositories.findById(id)
+                .orElseThrow(() -> new ParkingSpaceNotFoundException("Parking space not found with id: " + id));
 
-        ParkingSpace parkingSpace = getParkingSpaceById(id);
         parkingSpace.setIsAvailable(updatedData.getIsAvailable());
         parkingSpace.setPrice(updatedData.getPrice());
         parkingSpace.setDescription(updatedData.getDescription());
-        parkingSpace.setParkingZone(updatedData.getParkingZone());
+        parkingSpace.setParkingZone(parkingZoneMapping.toEntity(updatedData.getParkingZoneDTO()));
 
-        return spaceRepositories.save(parkingSpace);
+        return parkingSpaceMapper.toDto(spaceRepositories.save(parkingSpace));
     }
 
     // Удаление парковочного места
@@ -73,15 +81,15 @@ public class ParkingSpaceServices {
     }
 
     // Получение списка парковочных мест в конкретной зоне
-    public List<ParkingSpace> getParkingSpacesByZoneId(Long zoneId) {
-        return spaceRepositories.findByParkingZoneId(zoneId);
+    public List<ParkingSpaceDTO> getParkingSpacesByZoneId(Long zoneId) {
+        return parkingSpaceMapper.ToDTOs(spaceRepositories.findByParkingZoneId(zoneId));
     }
 
     // Получение списка парковочных мест с пагинацией
-    public Page<ParkingSpace> getParkingSpacesWithPagination(Pageable pageable) {
-        return spaceRepositories.findAll(pageable);
-    }
-
+//    public Page<ParkingSpace> getParkingSpacesWithPagination(Pageable pageable) {
+//        return spaceRepositories.findAll(pageable);
+//    }
+//
     private void validateParkingSpaceExists(Long spaceId) {
         if (!spaceRepositories.existsById(spaceId)) {
             throw new ParkingSpaceNotFoundException("Parking space not found with id: " + spaceId);

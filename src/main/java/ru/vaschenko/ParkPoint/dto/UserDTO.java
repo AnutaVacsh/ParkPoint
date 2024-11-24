@@ -12,6 +12,5 @@ import lombok.Setter;
 //@Accessors(chain = true)
 public abstract class UserDTO {
     protected Long id;
-    protected String email;
-    protected String role; //ADMIN, OWNER, CLIENT
+    protected Role role; //ADMIN, OWNER, CLIENT
 }

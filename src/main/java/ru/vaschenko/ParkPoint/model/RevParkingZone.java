@@ -25,10 +25,4 @@ public class RevParkingZone {
 
     private String comment;
     private Integer rating;
-
-//    @OneToOne
-//    @JoinColumn(name = "id_photo")
-//    private Photo photo;
-
-    // Getters and Setters
 }

@@ -12,7 +12,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.dto.ClientDTO;
-import ru.vaschenko.ParkPoint.dto.mapper.UserMapper;
+import ru.vaschenko.ParkPoint.dto.PasswordDTO;
+import ru.vaschenko.ParkPoint.dto.SafeUserRequestDTO;
+import ru.vaschenko.ParkPoint.dto.mapper.ClientMapper;
+import ru.vaschenko.ParkPoint.dto.mapper.PasswordMapper;
+import ru.vaschenko.ParkPoint.dto.mapper.SafeUserRequestMapper;
 import ru.vaschenko.ParkPoint.exception.ClientNotFoundException;
 import ru.vaschenko.ParkPoint.model.Client;
 import ru.vaschenko.ParkPoint.model.Password;
@@ -22,30 +26,32 @@ import ru.vaschenko.ParkPoint.type.Role;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
-Пагинация
- */
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class ClientServices {
     private final ClientRepositories clientRepository;
-    private final UserMapper clientMapper;
+    private final ClientMapper clientMapper;
+    private final PasswordMapper passwordMapper;
     private final PasswordService passwordService;
+    private final SafeUserRequestMapper safeUserRequestMapper;
 
     // Создание нового клиента
-    public ClientDTO createClient(Client client) {
-        client.setRole(Role.CLIENT);
-        Password createdPassword = passwordService.createPassword(client.getPassword());
-        Client savedClient = clientRepository.save(client);
-        return clientMapper.clientToClientDTO(savedClient);
+    public ClientDTO createClient(SafeUserRequestDTO safeUserRequestDTO) {
+        safeUserRequestDTO.setRole(Role.CLIENT);
+        PasswordDTO passwordDTO = passwordService.createPassword(safeUserRequestDTO.getPasswordDTO());
+        safeUserRequestDTO.setPasswordDTO(passwordDTO);
+        log.info("Сохраняем клиента {}", safeUserRequestDTO.getId());
+
+        Client savedClient = clientRepository.save(safeUserRequestMapper.toClientEntity(safeUserRequestDTO));
+        return clientMapper.toDTO(savedClient);
     }
 
     // Получение клиента по ID
     public ClientDTO getClientById(Long clientId) {
         return clientRepository.findById(clientId)
-                .map(clientMapper::clientToClientDTO)
+                .map(clientMapper::toDTO)
                 .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId));
     }
 
@@ -58,7 +64,7 @@ public class ClientServices {
         client.setEmail(clientDTO.getEmail());
         client.setPhoneNumber(clientDTO.getPhoneNumber());
         Client updatedClient = clientRepository.save(client);
-        return clientMapper.clientToClientDTO(updatedClient);
+        return clientMapper.toDTO(updatedClient);
     }
 
 
@@ -83,7 +89,7 @@ public class ClientServices {
     // Получение всех клиентов
     public List<ClientDTO> getAllClients() {
         List<Client> clients = clientRepository.findAll();
-        return clientMapper.clientsToClientDTOs(clients);
+        return clientMapper.ToDTOs(clients);
     }
 
 }

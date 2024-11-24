@@ -6,5 +6,6 @@ import lombok.Setter;
 @Builder
 @Setter @Getter
 public class PasswordDTO {
-    private String password;
+    protected long id;
+    protected String password;
 }

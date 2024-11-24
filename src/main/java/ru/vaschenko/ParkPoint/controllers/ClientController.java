@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.vaschenko.ParkPoint.dto.ClientDTO;
+import ru.vaschenko.ParkPoint.dto.SafeUserRequestDTO;
 import ru.vaschenko.ParkPoint.model.Client;
 import ru.vaschenko.ParkPoint.model.Password;
 import ru.vaschenko.ParkPoint.services.ClientServices;
@@ -35,8 +36,7 @@ public class ClientController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/create")
-    public ResponseEntity<ClientDTO> createClient(@RequestBody Client client) {
-//        Password createdPassword = passwordService.createPassword(client.getPassword());
+    public ResponseEntity<ClientDTO> createClient(@RequestBody SafeUserRequestDTO client) {
         ClientDTO createdClient = clientServices.createClient(client);
         return new ResponseEntity<>(createdClient, HttpStatus.CREATED);
     }

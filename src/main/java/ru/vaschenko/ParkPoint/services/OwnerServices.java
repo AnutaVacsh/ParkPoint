@@ -4,11 +4,16 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.dto.ClientDTO;
 import ru.vaschenko.ParkPoint.dto.OwnerDTO;
-import ru.vaschenko.ParkPoint.dto.mapper.UserMapper;
+import ru.vaschenko.ParkPoint.dto.PasswordDTO;
+import ru.vaschenko.ParkPoint.dto.SafeUserRequestDTO;
+import ru.vaschenko.ParkPoint.dto.mapper.OwnerMapper;
+import ru.vaschenko.ParkPoint.dto.mapper.PasswordMapper;
+import ru.vaschenko.ParkPoint.dto.mapper.SafeUserRequestMapper;
 import ru.vaschenko.ParkPoint.exception.OwnerNotFoundException;
 import ru.vaschenko.ParkPoint.model.Client;
 import ru.vaschenko.ParkPoint.model.Owner;
@@ -23,25 +28,31 @@ import java.util.List;
 Пагинация
  */
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class OwnerServices {
     private final OwnerRepositories ownerRepository;
-    private final UserMapper ownerMapper;
+    private final OwnerMapper ownerMapper;
     private final PasswordService passwordService;
+    private final PasswordMapper passwordMapper;
+    private final SafeUserRequestMapper safeUserRequestMapper;
 
     // Создание нового клиента
-    public OwnerDTO createOwner(Owner owner) {
-        owner.setRole(Role.OWNER);
-        Password savedPassword = passwordService.createPassword(owner.getPassword());
-        Owner savedOwner = ownerRepository.save(owner);
-        return ownerMapper.ownerToOwnerDTO(savedOwner);
+    public OwnerDTO createOwner(SafeUserRequestDTO safeUserRequestDTO) {
+        safeUserRequestDTO.setRole(Role.OWNER);
+        PasswordDTO passwordDTO = passwordService.createPassword(safeUserRequestDTO.getPasswordDTO());
+        safeUserRequestDTO.setPasswordDTO(passwordDTO);
+        log.info("Сохраняем владельца {}", safeUserRequestDTO.getId());
+
+        Owner savedOwner = ownerRepository.save(safeUserRequestMapper.toOwnerEntity(safeUserRequestDTO));
+        return ownerMapper.toDTO(savedOwner);
     }
 
     // Получение владельца по ID
     public OwnerDTO getOwnerById(Long ownerId) {
         return ownerRepository.findById(ownerId)
-                .map(ownerMapper::ownerToOwnerDTO)
+                .map(ownerMapper::toDTO)
                 .orElseThrow(() -> new OwnerNotFoundException("Owner not found with id: " + ownerId));
     }
 
@@ -54,7 +65,7 @@ public class OwnerServices {
         owner.setPhoneNumber(ownerDTO.getPhoneNumber());
         owner.setEmail(ownerDTO.getEmail());
         Owner updatedOwner = ownerRepository.save(owner);
-        return ownerMapper.ownerToOwnerDTO(updatedOwner);
+        return ownerMapper.toDTO(updatedOwner);
     }
 
     // Удаление владельца
@@ -68,6 +79,6 @@ public class OwnerServices {
     // Получение всех владельцев
     public List<OwnerDTO> getAllOwners() {
         List<Owner> owners = ownerRepository.findAll();
-        return ownerMapper.ownersToOwnerDTOs(owners);
+        return ownerMapper.ToDTOs(owners);
     }
 }
