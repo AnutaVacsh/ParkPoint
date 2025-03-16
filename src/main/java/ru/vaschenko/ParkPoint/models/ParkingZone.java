@@ -31,4 +31,8 @@ public class ParkingZone {
     @OneToMany(mappedBy = "parkingZone", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Photo> photos;
+
+    @OneToMany(mappedBy = "parkingZone", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<RevParkingZone> rev;
 }

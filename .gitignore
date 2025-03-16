@@ -6,6 +6,7 @@ target/
 
 .idea/
 **/logs/
+#crud.txt
 
 ### STS ###
 .apt_generated

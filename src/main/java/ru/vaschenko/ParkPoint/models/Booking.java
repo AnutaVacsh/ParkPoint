@@ -29,8 +29,8 @@ public class Booking {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    private LocalDateTime dateCreated;
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    private StateBooking status;
+    private StateBooking status = StateBooking.PENDING;
 }

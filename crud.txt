@@ -1,0 +1,33 @@
+CLIENT
+1. Авторизация
+    get (login, password) -> UserDto
+2. Регистрация
+    post (RegisterRequestDto) -> OK/ пользователь с таким логином уже есть
+3. Выбрать пять ближайших парковочных зон от введённого месторасположения (только активные)
+    get (latitude, longitude) -> List<ParkingZoneResponseDto>
+4. Частичная информация о зоне
+    get (id) -> ParkingZonePartDto
+5. Полная информация о зоне
+    get (id) -> ParkingZoneDto
+6. Бронирование
+    get (id) -> BookingResponseDto //подтягиваем лист броней (endTime > now) для каждого парковочного места
+    post (BookingRequestDto) -> сохранение
+7. Оформление подписки на место
+    get (idParkingSpase) -> SubscriptionResponseDto
+    + получение всех карточек клиента
+    get () -> UserCardResponseDto
+    post (SubscriptionRequestDto) -> сохранение
+8. Привязать новую карту
+    post (UserCardDto) -> сохранить
+9. Брони клиента (фильтрация по StateBooking, сортировка по дате создания) + все подписки
+    get (MyBookingRequestDto) -> List<MyBookingResponseDto>
+    get (UserId) -> List<SubscriptionResponseDto>
+10. Отменить бронь
+    put (bookingId) -> OK/error
+11. Пожаловаться
+    post (complaintDto) -> сохранить
+12. Отзыв
+    post (RevParkingZoneDto) -> сохранить
+13. Жалобы на меня
+    get (userId) -> List<ComplaintDto>
+14. Чаты

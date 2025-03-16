@@ -30,7 +30,7 @@ public class Complaint {
     private User accused;
 
     private String text;
-    private StateComplaint status;
+    private StateComplaint status = StateComplaint.PENDING;
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();
