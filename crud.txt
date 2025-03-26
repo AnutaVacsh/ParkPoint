@@ -23,7 +23,7 @@ CLIENT
     get (MyBookingRequestDto) -> List<MyBookingResponseDto>
     get (UserId) -> List<SubscriptionResponseDto>
 10. Отменить бронь
-    put (bookingId) -> OK/error
+    put (bookingId, state) -> меняем статус
 11. Пожаловаться
     post (complaintDto) -> сохранить
 12. Отзыв
