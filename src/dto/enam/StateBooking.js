@@ -1,0 +1,8 @@
+export const StateBooking = {
+    PENDING: 'PENDING',
+    CONFIRMED: 'CONFIRMED',
+    CANCELLED: 'CANCELLED',
+    COMPLETED: 'COMPLETED',
+    EXPIRED: 'EXPIRED',
+    REJECTED: 'REJECTED'
+  };

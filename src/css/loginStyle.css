@@ -1,0 +1,102 @@
+.loginPage {
+    background: url('../img/loginBlur.png') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loginContent {
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 400px;
+    width: 100%;
+    color: #fff;
+  }
+  
+  .loginTitle {
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  .loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .loginForm .formGroup {
+    display: flex;
+    align-items: center; /* Расположим лейблы и инпуты на одной линии */
+    margin-bottom: 20px;
+  }
+  
+  .loginPage .formLabel {
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 18px;
+    margin-bottom: 0; /* Убираем нижний отступ */
+    flex: 0 0 120px; /* Ограничиваем ширину лейбла */
+  }
+  
+  .loginPage .formInput {
+    width: 100%;
+    max-width: 373px;
+    height: 40px;
+    padding: 10px 15px;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    background-color: transparent;
+    color: #fff;
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .loginPage .formInput:focus {
+    border-color: #FEE174;
+  }
+  
+  .loginPage .submitButton {
+    display: block;
+    width: 100%;
+    height: 55px;
+    background-color: #FEE174;
+    color: #000;
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 55px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .submitButton:hover {
+    background-color: #e5cc62;
+  }
+  
+  .registerPrompt {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 16px;
+  }
+  
+  .registerLink {
+    color: #FEE174;
+    font-family: 'Manrope-Bold', sans-serif;
+    text-decoration: none;
+  }
+  
+  .registerLink:hover {
+    text-decoration: underline;
+  }
+  

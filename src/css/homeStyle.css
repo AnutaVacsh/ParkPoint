@@ -1,0 +1,87 @@
+.home {
+    background-color: #1D2329;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0px;
+    margin: 0px;
+    height: 100vh;
+    color: #fff;
+    position: relative;
+}
+
+.home .homeContent {
+    /* max-width: 50%; */
+    margin-left: 50px;
+    height: 900px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 1; /* Текст будет поверх изображения */
+}
+
+.home .welcomeTitle {
+    font-family: 'Manrope-Bold', sans-serif;
+    color: #e5cc62;
+    font-size: 58px;
+    font-weight: 700; /* Bold */
+    margin: 0;
+    line-height: 1.2;
+    position: relative;
+    z-index: 2;
+}
+
+.home .subtitle {
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 32px;
+    font-weight: 700; /* Bold */
+    margin-top: 20px;
+    line-height: 1.2;
+}
+
+.home .description {
+    font-family: 'Manrope-Regular', sans-serif;
+    max-width: 60%;
+    font-size: 24px;
+    font-weight: 400; /* Regular */
+    margin-top: 30px;
+    line-height: 1.5;
+}
+
+.home .registerButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: 40px;
+    width: 317px;
+    height: 53px;
+    background-color: #FEE174;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .home .registerButton:hover {
+    background-color: #e5cc62;
+  }
+
+.home .imageContainer {
+    position: relative;
+    max-width: 50%;
+}
+
+.home .homeImage {
+    width: 1000px;
+    /* height: 854px; */
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 0;
+}

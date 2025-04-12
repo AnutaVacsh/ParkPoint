@@ -1,0 +1,121 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #1D2329; 
+  }
+
+.myBookingPage {
+    color: #fff;
+    height: 100hv;
+  }
+  
+  .myBookingHeader {
+    background: #1D2329;
+    color: #fff;
+    position: relative;
+  }
+  
+  .headerBackground {
+    background-color: #1D2329;
+    background-image: url('../img/grayCarsBlur.png');
+    background-size: cover;
+    background-position: center;
+    height: 250px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    position: relative;
+  }
+  
+  .headerTitle {
+    font-size: 36px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    margin-top: 100px;
+    margin-left: 30px;
+    z-index: 1;
+  }
+  
+  .myBookingContent {
+    padding: 30px;
+    flex: 1
+  }
+  
+  .myBookingNav {
+    margin-bottom: 30px;
+  }
+  
+  .navList {
+    list-style-type: none;
+    padding: 0px;
+    display: flex;    
+    justify-content: flex-start;
+  }
+
+  .navButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    margin-right: 20px;
+  }
+  
+  .navButton:hover {
+    color: #e5cc62;
+  }
+  
+  .navButton.active {
+    font-weight: bold;
+    color: #FEE174;
+  }
+  
+  
+  .sortByContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+  }
+  
+  .sortLabel {
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  
+  .sortSelect {
+    padding: 8px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    background-color: #1D2329;
+    color: #fff;
+    border: 2px solid #fff;
+    outline: none;
+  }
+  
+  .sortSelect:focus {
+    border-color: #FEE174;
+  }
+  
+  .bookingsList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .bookingItem {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .bookingText {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  

@@ -1,0 +1,94 @@
+.bookingCard {
+    width: 400px;
+    height: 400px;
+    border-radius: 20px;
+    background-color: transparent;
+    border: 3px solid;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .bookingCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .timeInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #fff;
+    height: 170px;
+    width: 150px;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .timeInfo span{
+    text-align: center;
+  }
+
+
+  
+  .arrow {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .bookingCardContent {
+    font-size: 18px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bookingCardContent p {
+    margin: 0px;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+
+  .bookingActions {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .actionButton {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 200px;
+  }
+  
+  .cancelButton {
+    background-color: #FEE174;
+    color: #000;
+  }
+  
+  .cancelButton:hover {
+    background-color: #ffdc5b;
+  }
+  
+  .reviewButton {
+    background-color: #FEE174;
+    color: #000;
+  }
+  
+  .reviewButton:hover {
+    background-color: #ffdc5b;
+  }
+  

@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import '../src/css/baseStyle.css';
+import '../src/css/fonts.css';
 
-function App() {
+import React, { useState } from 'react';
+import { Routes, Route} from 'react-router-dom';
+
+import HeaderGuest from './components/HeaderGuest';
+import Home from './components/Home';
+import Register from './components/register/Register';
+import Login from './components/register/Login';
+import Parking from './components/Parking';
+import { HeaderContext } from './contexts/HeaderContext';
+import HeaderClient from './components/HeaderClient';
+import ClientPath from './components/Client/ClientPath';
+import { UserContext } from './contexts/UserContext';
+import HeaderStates from './dto/enam/headerState';
+import ChooseRolePage from './components/register/ChooseRolePage';
+import UserStates from './dto/enam/userState';
+
+const App = () => {
+  const [headerState, setheaderState] = useState(HeaderStates.CLIENT); //guest, client, none
+  console.log(headerState)
+
+  const [user, setUser] = useState(UserStates.CLIENT); //guest, client, owner, admin
+  console.log(user)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={{user, setUser}}>
+      <HeaderContext.Provider value={{headerState, setheaderState}}>
+        {headerState === HeaderStates.GUEST && (<HeaderGuest />)}
+        {headerState === HeaderStates.CLIENT && (<HeaderClient />)}
+        {headerState === HeaderStates.OWNER && (<></>)}
+        
+        <Routes>
+            <Route path='/' element = {<Home />}/>
+            <Route path='/parking' element = {<></>}/>
+            <Route path='/owners' element = {<></>}/>
+            <Route path='/contacts' element = {<></>}/>
+            <Route path='/chooseRolePage' element = {<ChooseRolePage/>}/>
+            <Route path='/register/client' element = {<Register/>}/>
+            <Route path='/register/owner' element = {<Register/>}/>
+            <Route path='/login' element = {<Login/>}/>
+            <Route path='/parking' element = {<Parking/>}/>
+            <Route path="/client" element = {(user === UserStates.CLIENT && <ClientPath/>) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)}/>
+            <Route path="/client/*" element = {(user === UserStates.CLIENT && <ClientPath/>) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)}/>
+          </Routes>
+      </HeaderContext.Provider>
+    </UserContext.Provider>
   );
-}
+};
 
 export default App;

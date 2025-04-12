@@ -1,0 +1,101 @@
+.registerPage {
+    background: url('../img/loginBlur.png') no-repeat center center/cover; /* Путь к изображению */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  
+  .registerContent {
+    color: #fff;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .registerTitle {
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 58px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 5)
+  }
+  
+  .registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .registerPage .formGroup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .registerPage .formLabel {
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 18px;
+    margin-right: 10px;
+    flex: 0 0 200px;
+  }
+  
+  .registerPage .formInput {
+    width: 373px;
+    height: 40px;
+    padding: 10px 15px;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    background-color: transparent;
+    color: #fff;
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .formInput:focus {
+    border-color: #FEE174;
+  }
+  
+  .registerPage .submitButton {
+    display: block;
+    text-align: center;
+    margin: 40px auto 0;
+    width: 317px;
+    height: 53px;
+    line-height: 53px;
+    background-color: #FEE174;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: #e5cc62;
+  }
+  
+  .registerPage .loginPrompt {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 16px;
+  }
+  
+  .registerPage .loginLink {
+    color: #FEE174;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+  }
+  
+  .registerPage .loginLink:hover {
+    color: #e5cc62;
+  }
+  
