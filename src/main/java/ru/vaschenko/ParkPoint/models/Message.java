@@ -9,7 +9,7 @@ import ru.vaschenko.ParkPoint.enams.StateMessage;
 
 @Entity
 @Data
-@Table(name = "Messagee")
+@Table(name = "Message")
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Data
-@Table(name = "Passwordd")
+@Table(name = "Password")
 public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

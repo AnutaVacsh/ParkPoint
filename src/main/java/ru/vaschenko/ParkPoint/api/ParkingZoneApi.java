@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
-import ru.vaschenko.util.ApiPath;
+import ru.vaschenko.ParkPoint.util.ApiPath;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package ru.vaschenko.util;
+package ru.vaschenko.ParkPoint.util;
 
 import lombok.experimental.UtilityClass;
 
@@ -20,6 +20,7 @@ public class ApiPath {
     // Bookings
     public static final String BOOKING = "/booking";
     public static final String BOOKING_INFO = "/get/{id}";
+    public static final String USER_BOOKING = "/get/booking/{userId}";
     public static final String BOOKING_CREATE = "/create";
     public static final String SUBSCRIPTION_INFO = "/subscription/{idParkingSpace}";
     public static final String SUBSCRIPTION_CREATE = "/subscription";
@@ -27,6 +28,7 @@ public class ApiPath {
     public static final String MY_BOOKINGS = "/my-bookings";
     public static final String USER_SUBSCRIPTIONS = "/subscriptions/{userId}";
     public static final String CHANGE_STATE_BOOKING = "change/state/{bookingId}";
+    public static final String BOOKING_PAG = "/getAllWithPag";
 
     // User
     public static final String USER = "user";

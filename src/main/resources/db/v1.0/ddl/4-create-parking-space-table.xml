@@ -1,0 +1,23 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="4" author="AnutaVacsh">
+        <createTable tableName="parking_space">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_parking_space_id"/>
+            </column>
+            <column name="id_owner" type="BIGINT">
+                <constraints nullable="true" references="user(id)" foreignKeyName="fk_parking_space_owner"/>
+            </column>
+            <column name="id_parking_zone" type="BIGINT">
+                <constraints nullable="true" references="parking_zone(id)" foreignKeyName="fk_parking_space_zone"/>
+            </column>
+            <column name="order" type="INTEGER"/>
+            <column name="price" type="INTEGER"/>
+            <column name="is_available" type="BOOLEAN"/>
+            <column name="description" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -21,7 +21,7 @@ public class RevParkingZone {
 
     @ManyToOne
     @JoinColumn(name = "id_client")
-    private Client client;
+    private User client;
 
     private String comment;
     private Integer rating;

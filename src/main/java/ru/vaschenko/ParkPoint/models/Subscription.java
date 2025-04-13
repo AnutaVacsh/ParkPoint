@@ -27,7 +27,7 @@ public class Subscription {
 
     @ManyToOne
     @JoinColumn(name = "id_client")
-    private Client client;
+    private User client;
 
     @ElementCollection
     @CollectionTable(name = "subscription_days", joinColumns = @JoinColumn(name = "subscription_id"))

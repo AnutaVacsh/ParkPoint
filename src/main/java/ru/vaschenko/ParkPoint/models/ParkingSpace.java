@@ -15,7 +15,7 @@ public class ParkingSpace {
 
     @ManyToOne
     @JoinColumn(name = "id_owner")
-    private Owner owner;
+    private User owner;
 
     @ManyToOne
     @JoinColumn(name = "id_parking_zone")

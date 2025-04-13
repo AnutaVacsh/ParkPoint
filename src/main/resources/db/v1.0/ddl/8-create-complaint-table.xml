@@ -1,0 +1,22 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="8" author="AnutaVacsh">
+        <createTable tableName="complaint">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_complaint_id"/>
+            </column>
+            <column name="id_complainant" type="BIGINT">
+                <constraints nullable="true" references="user(id)" foreignKeyName="fk_complaint_complainant"/>
+            </column>
+            <column name="id_accused" type="BIGINT">
+                <constraints nullable="true" references="user(id)" foreignKeyName="fk_complaint_accused"/>
+            </column>
+            <column name="text" type="TEXT"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="created_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

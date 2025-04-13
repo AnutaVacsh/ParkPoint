@@ -16,11 +16,11 @@ public class Chat {
 
     @ManyToOne
     @JoinColumn(name = "id_owner")
-    private Owner owner;
+    private User owner;
 
     @ManyToOne
     @JoinColumn(name = "id_client")
-    private Client client;
+    private User client;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     @JsonManagedReference

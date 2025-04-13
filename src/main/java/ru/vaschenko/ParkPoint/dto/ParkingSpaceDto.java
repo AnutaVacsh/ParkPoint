@@ -8,6 +8,5 @@ public record ParkingSpaceDto(
         Integer order,
         Integer price,
         Boolean isAvailable,
-        ParkingZoneDto parkingZoneDto,
-        List<BookingDto> bookings
+        ParkingZoneDto parkingZoneDto
 ) {}

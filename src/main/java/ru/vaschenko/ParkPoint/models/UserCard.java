@@ -23,7 +23,7 @@ public class UserCard {
 
     @ManyToOne
     @JoinColumn(name = "id_client")
-    private Client client;
+    private User client;
 
     @Lob
     @Column(name = "encrypted_card")

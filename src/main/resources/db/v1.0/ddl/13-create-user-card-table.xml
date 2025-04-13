@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="13" author="AnutaVacsh">
+        <createTable tableName="user_card">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_card_id"/>
+            </column>
+            <column name="id_client" type="BIGINT">
+                <constraints nullable="true" references="user(id)" foreignKeyName="fk_user_card_client"/>
+            </column>
+            <column name="encrypted_card" type="BYTEA"/>
+            <column name="last4" type="VARCHAR(10)"/>
+            <column name="expiration_date" type="VARCHAR(20)"/>
+            <column name="created_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

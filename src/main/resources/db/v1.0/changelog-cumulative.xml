@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <include file="ddl/1-create-password-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/2-create-user-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/3-create-parking-zone-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/4-create-parking-space-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/5-create-booking-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/6-create-chat-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/7-create-message-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/8-create-complaint-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/9-create-photo-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/10-create-rev-parking-zone-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/11-create-subscription-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/12-create-subscription-days-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/13-create-user-card-table.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

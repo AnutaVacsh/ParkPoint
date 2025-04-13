@@ -7,20 +7,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.vaschenko.ParkPoint.dto.BookingDto;
 import ru.vaschenko.ParkPoint.dto.request.BookingRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.SearchRequestDTO;
 import ru.vaschenko.ParkPoint.dto.request.SubscriptionRequestDto;
-import ru.vaschenko.ParkPoint.dto.response.BookingResponseDto;
 import ru.vaschenko.ParkPoint.dto.response.SubscriptionResponseDto;
-import ru.vaschenko.ParkPoint.dto.response.UserCardResponseDto;
 import ru.vaschenko.ParkPoint.enams.StateBooking;
-import ru.vaschenko.util.ApiPath;
+import ru.vaschenko.ParkPoint.util.ApiPath;
 
 import java.util.List;
 
 @RequestMapping(ApiPath.BOOKING)
 public interface BookingApi {
     @GetMapping(ApiPath.BOOKING_INFO)
-    ResponseEntity<BookingResponseDto> getBookingInfo(@PathVariable Long id);
+    ResponseEntity<List<BookingDto>> getBookingInfo(@PathVariable Long id);
+
+    @GetMapping(ApiPath.USER_BOOKING)
+    ResponseEntity<List<BookingDto>> getUserBooking(@PathVariable Long id);
 
     @PostMapping(ApiPath.BOOKING_CREATE)
     ResponseEntity<String> createBooking(@RequestBody BookingRequestDto request);
@@ -34,4 +37,7 @@ public interface BookingApi {
 
     @PostMapping(ApiPath.SUBSCRIPTION_CREATE)
     ResponseEntity<String> createSubscription(@RequestBody SubscriptionRequestDto request);
+
+    @PostMapping(ApiPath.BOOKING_PAG)
+    public List<BookingDto> getBookingsWithPagination(@RequestBody SearchRequestDTO searchRequest);
 }

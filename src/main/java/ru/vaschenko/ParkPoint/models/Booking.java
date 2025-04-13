@@ -20,7 +20,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "id_client")
-    private Client client;
+    private User client;
 
     @ManyToOne
     @JoinColumn(name = "id_parking_space")

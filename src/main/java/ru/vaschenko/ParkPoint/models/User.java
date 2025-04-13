@@ -8,9 +8,8 @@ import ru.vaschenko.ParkPoint.enams.Role;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Userr")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+@Table(name = "User")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;

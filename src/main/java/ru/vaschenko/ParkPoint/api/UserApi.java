@@ -10,7 +10,7 @@ import ru.vaschenko.ParkPoint.dto.ComplaintDto;
 import ru.vaschenko.ParkPoint.dto.RevParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.UserCardDto;
 import ru.vaschenko.ParkPoint.dto.response.UserCardResponseDto;
-import ru.vaschenko.util.ApiPath;
+import ru.vaschenko.ParkPoint.util.ApiPath;
 
 import java.util.List;
 
