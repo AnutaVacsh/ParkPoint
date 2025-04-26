@@ -3,26 +3,8 @@ import { userMockData } from '../dto/mock/UserMockData';
 
 const BASE_URL = 'http://localhost:8080/auth';
 
-// Функция для проверки доступности сервера
-const isServerAvailable = async () => {
-  try {
-    const res = await fetch(`${BASE_URL}/ping`, { method: 'GET' }); // Endpoint ping для проверки доступности
-    return res.ok;
-  } catch (error) {
-    console.error('Сервер недоступен:', error);
-    return false;
-  }
-};
-
-// Функция для логина
+// Функция для логина клиента
 export const login = async (login, password) => {
-  const serverAvailable = await isServerAvailable();
-
-  if (!serverAvailable) {
-    console.warn('[MOCK] Сервер недоступен, возвращаем мок-данные');
-    return userMockData;
-  }
-
   try {
     console.log(`Запрос на логин: login=${login}, password=${password}`);
     const response = await fetch(
@@ -31,29 +13,27 @@ export const login = async (login, password) => {
     );
 
     if (!response.ok) {
+      if (response.status === 404 || response.status === 503) {
+        console.warn('[MOCK] Сервер недоступен (404/503), возвращаем мок-данные');
+        return userMockData;
+      }
       throw new Error('Ошибка авторизации');
     }
 
     const user = await response.json();
     console.log('Ответ от сервера:', user);
-    return new UserDto(user.email, user.role);
+    return new UserDto(user.id, user.email, user.role);
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
-    throw error;
+    console.warn('[MOCK] Ошибка соединения, возвращаем мок-данные');
+    return userMockData;
   }
 };
 
 // Функция для регистрации клиента
 export const register = async (registerRequest) => {
-  const serverAvailable = await isServerAvailable();
-
-  if (!serverAvailable) {
-    console.warn('[MOCK] Сервер недоступен, возвращаем мок-данные');
-    return userMockData;
-  }
-
   try {
-    console.log('Запрос на регистрацию:', registerRequest);
+    console.log('Запрос на регистрацию клиента:', registerRequest);
     const response = await fetch(`${BASE_URL}/client/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -61,14 +41,47 @@ export const register = async (registerRequest) => {
     });
 
     if (!response.ok) {
-      throw new Error('Ошибка регистрации');
+      if (response.status === 404 || response.status === 503) {
+        console.warn('[MOCK] Сервер недоступен (404/503), возвращаем мок-данные');
+        return userMockData;
+      }
+      throw new Error('Ошибка регистрации клиента');
     }
 
-    const result = await response.text();
+    const result = await response.json();
     console.log('Ответ от сервера:', result);
-    return result;
+    return new UserDto(result.id, result.email, result.role);
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
-    throw error;
+    console.warn('[MOCK] Ошибка соединения, возвращаем мок-данные');
+    return userMockData;
+  }
+};
+
+// Функция для регистрации владельца парковки
+export const registerOwner = async (ownerRegisterRequest) => {
+  try {
+    console.log('Запрос на регистрацию владельца:', ownerRegisterRequest);
+    const response = await fetch(`${BASE_URL}/owner/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ownerRegisterRequest),
+    });
+
+    if (!response.ok) {
+      if (response.status === 404 || response.status === 503) {
+        console.warn('[MOCK] Сервер недоступен (404/503), возвращаем мок-данные');
+        return userMockData;
+      }
+      throw new Error('Ошибка регистрации владельца');
+    }
+
+    const result = await response.json();
+    console.log('Ответ от сервера:', result);
+    return new UserDto(result.id, result.email, result.role);
+  } catch (error) {
+    console.error('Ошибка при выполнении запроса:', error);
+    console.warn('[MOCK] Ошибка соединения, возвращаем мок-данные');
+    return userMockData;
   }
 };

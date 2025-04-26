@@ -1,11 +1,13 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import MyBooking from './MyBooking';
+import UserParkingMapPage from '../map/UserParkingMapPage';
 
 const ClientPath = () => {
   return (
     <Routes>
-        <Route path="/" element={<></> } />
+        {/* <Route path="/" element={<></> } /> */}
+        <Route path='/' element={<UserParkingMapPage/>}/>
         <Route path="/myBookings" element={<MyBooking/> } />
         <Route path="/profile" element={<></>} />
         <Route path="/chats" element={<></>} />

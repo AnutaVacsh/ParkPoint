@@ -99,3 +99,35 @@
     color: #e5cc62;
   }
   
+  .inputWithIcon {
+    display: flex;
+    align-items: center; /* Выравниваем по центру по вертикали */
+    gap: 10px; /* Небольшой отступ между инпутом и иконкой */
+  }
+  
+  .mapIcon {
+    width: 40px;  /* Ширина блока */
+    height: 40px; /* Высота блока */
+    background-image: url('../img/map.svg');  /* Фоновое изображение */
+    background-size: cover;  /* Масштабируем картинку по размеру блока */
+    background-position: center;  /* Центрируем картинку */
+    cursor: pointer;  /* Курсор при наведении */
+    transition: background-image 0.3s ease;  /* Плавный переход при смене картинки */
+  }
+  
+  /* Эффект при наведении */
+  .mapIcon:hover {
+    background-image: url('../img/mapY.svg');  /* Картинка, которая появляется при наведении */
+  }
+
+  /* Для кнопки с картой */
+.mapButton {
+  background-size: cover;
+  width: 40px; /* ширина */
+  height: 40px; /* высота */
+  border: none;
+  cursor: pointer;
+  background-color: #00000000;
+}
+
+  

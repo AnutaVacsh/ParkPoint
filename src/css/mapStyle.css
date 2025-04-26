@@ -1,0 +1,187 @@
+.mapPageContainer {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.infoBlock {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    background-color: rgba(0, 0, 0, 0.7); /* темный полупрозрачный фон */
+    color: white; /* цвет текста белый */
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.infoTitle {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+
+.infoDescription {
+    margin: 0;
+    font-size: 16px;
+}
+
+.infoPanel {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    background: rgba(0, 0, 0, 0.7); /* черный полупрозрачный фон */
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    font-family: 'Arial', sans-serif;
+    max-width: 100%;
+    color: white; /* цвет текста — белый */
+}
+
+.infoLeft {
+    flex: 1;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.zoneTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white; /* Белый цвет для заголовков */
+}
+
+.zoneAddress,
+.zoneSpaces {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #ccc; /* Светло-серый для описания */
+}
+
+.detailsButton {
+    margin-top: 12px;
+    padding: 10px 20px;
+    border: 2px solid #FFD700;
+    background: transparent;
+    color: white; /* Белый цвет для текста кнопки */
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.detailsButton:hover {
+    background: #ffd90079;
+    color: #fff;
+}
+
+.infoRight {
+    flex: 1;
+}
+
+.reviewsTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white; /* Белый цвет для заголовков отзывов */
+}
+
+.ratingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Выравнивание по левому краю */
+    margin-bottom: 12px; /* Увеличиваем отступ */
+}
+
+.star {
+    font-size: 20px;
+    color: gold;
+  }
+  
+  .star.full {
+    color: gold; /* Полная звезда */
+  }
+  
+  .star.empty {
+    color: lightgray; /* Пустая звезда */
+  }
+  
+  .star.half {
+    background: linear-gradient(90deg, gold 50%, rgba(211, 211, 211, 0) 50%);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+.ratingNumber {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFD700; /* Цвет рейтинга */
+}
+
+.reviewsTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.allReviewsButton {
+    margin-top: 10px;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    color: #FFD700;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.allReviewsButton:hover {
+    color: #fff;
+}
+
+.reviewContainer {
+    border: 2px solid #FFD700; /* жёлтая рамка */
+    padding: 15px;
+    margin-bottom: 20px; /* отступы между отзывами */
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.1); /* лёгкий фон */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reviewUser {
+    font-weight: bold;
+    font-size: 16px;
+    color: #FFD700; /* цвет для имени пользователя */
+    margin-bottom: 8px;
+}
+
+.reviewText {
+    font-size: 14px;
+    font-style: italic;
+    color: #ccc;
+    margin-bottom: 12px;
+}
+
+.reviewDate {
+    font-size: 12px;
+    color: #aaa; /* цвет для даты */
+    margin-top: 10px;
+}
+
+.reviewContainer .stars {
+    margin-bottom: 10px;
+}
