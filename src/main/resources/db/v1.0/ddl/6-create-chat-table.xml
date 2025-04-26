@@ -4,14 +4,14 @@
 
     <changeSet id="6" author="AnutaVacsh">
         <createTable tableName="chat">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_chat_id"/>
             </column>
             <column name="id_owner" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_chat_owner"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_chat_owner"/>
             </column>
             <column name="id_client" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_chat_client"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_chat_client"/>
             </column>
         </createTable>
     </changeSet>

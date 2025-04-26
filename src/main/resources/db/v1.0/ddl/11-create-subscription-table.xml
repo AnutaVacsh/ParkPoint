@@ -4,14 +4,14 @@
 
     <changeSet id="11" author="AnutaVacsh">
         <createTable tableName="subscription">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_subscription_id"/>
             </column>
             <column name="id_parking_spase" type="BIGINT">
                 <constraints nullable="true" references="parking_space(id)" foreignKeyName="fk_subscription_parking_space"/>
             </column>
             <column name="id_client" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_subscription_client"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_subscription_client"/>
             </column>
             <column name="start_time" type="TIME"/>
             <column name="end_time" type="TIME"/>

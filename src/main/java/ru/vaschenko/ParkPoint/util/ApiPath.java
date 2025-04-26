@@ -10,6 +10,7 @@ public class ApiPath {
     public static final String AUTH = "auth";
     public static final String CLIENT_LOGIN = "client/login";
     public static final String CLIENT_REGISTER = "client/register";
+    public static final String OWNER_REGISTER = "owner/register";
 
     // Parking Zones
     public static final String PARKING_ZONES = "/parking-zones";

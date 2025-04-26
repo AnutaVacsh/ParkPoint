@@ -14,6 +14,10 @@ public class ParkingZone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "id_zone_manager")
+    private User zoneManager;
+
     private String title;
     private String address;
     private Double latitude;
@@ -35,4 +39,5 @@ public class ParkingZone {
     @OneToMany(mappedBy = "parkingZone", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<RevParkingZone> rev;
+
 }

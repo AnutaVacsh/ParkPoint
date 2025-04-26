@@ -1,12 +1,16 @@
 package ru.vaschenko.ParkPoint.dto;
 
-import java.util.List;
+import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 
 public record ParkingSpaceDto(
         Long id,
         Long idOwner,
         Integer order,
-        Integer price,
-        Boolean isAvailable,
+        Integer hourlyPrice,
+        Integer dailyPrice,
+        Integer weeklyPrice,
+        Integer monthlyPrice,
+        StateParkingSpace isAvailable,
+        String description,
         ParkingZoneDto parkingZoneDto
 ) {}

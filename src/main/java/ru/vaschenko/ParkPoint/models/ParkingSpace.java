@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import lombok.*;
+import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 
 @Entity
 @Data
@@ -24,8 +25,23 @@ public class ParkingSpace {
 
     @Column(name = "\"order\"")
     private Integer order;
-    private Integer price;
-    private Boolean isAvailable;
-    private String description;
 
+    @Column(name = "hourly_price")
+    private Integer hourlyPrice;  // Цена в копейках
+
+    @Column(name = "daily_price")
+    private Integer dailyPrice;
+
+    @Column(name = "weekly_price")
+    private Integer weeklyPrice;
+
+    @Column(name = "monthly_price")
+    private Integer monthlyPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "is_available")
+    private StateParkingSpace isAvailable;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 }

@@ -4,7 +4,7 @@
 
     <changeSet id="3" author="AnutaVacsh">
         <createTable tableName="parking_zone">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_parking_zone_id"/>
             </column>
             <column name="title" type="VARCHAR(255)"/>
@@ -14,6 +14,9 @@
             <column name="state" type="VARCHAR(50)"/>
             <column name="description" type="TEXT"/>
             <column name="map" type="TEXT"/>
+            <column name="id_zone_manager" type="BIGINT">
+                <constraints foreignKeyName="fk_parking_zone_user" references="users(id)" nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

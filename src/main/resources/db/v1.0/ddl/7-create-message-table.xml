@@ -4,17 +4,17 @@
 
     <changeSet id="7" author="AnutaVacsh">
         <createTable tableName="message">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_message_id"/>
             </column>
             <column name="id_chat" type="BIGINT">
                 <constraints nullable="true" references="chat(id)" foreignKeyName="fk_message_chat"/>
             </column>
             <column name="id_sender" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_message_sender"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_message_sender"/>
             </column>
             <column name="id_recipient" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_message_recipient"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_message_recipient"/>
             </column>
             <column name="content" type="TEXT"/>
             <column name="time" type="TIMESTAMP"/>

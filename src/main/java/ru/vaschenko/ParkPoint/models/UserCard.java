@@ -1,6 +1,7 @@
 package ru.vaschenko.ParkPoint.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,12 +9,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jdk.jfr.Enabled;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Enabled
+@Entity
 @Table(name = "userCard")
 @Data
 public class UserCard {
@@ -25,7 +25,6 @@ public class UserCard {
     @JoinColumn(name = "id_client")
     private User client;
 
-    @Lob
     @Column(name = "encrypted_card")
     private byte[] encryptedCard;
 

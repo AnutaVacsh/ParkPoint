@@ -7,5 +7,7 @@ public record ParkingZonePartDto(
     String title,
     String address,
     int parkingSpacesCount,
+    double latitude,
+    double longitude,
     List<RevParkingZoneDto> rev
 ) {}

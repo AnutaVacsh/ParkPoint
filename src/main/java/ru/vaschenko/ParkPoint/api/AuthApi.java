@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.vaschenko.ParkPoint.dto.request.OwnerRegisterRequestDto;
 import ru.vaschenko.ParkPoint.dto.UserDto;
 import ru.vaschenko.ParkPoint.dto.request.RegisterRequestDto;
 import ru.vaschenko.ParkPoint.util.ApiPath;
@@ -17,4 +18,7 @@ public interface AuthApi {
 
     @PostMapping(ApiPath.CLIENT_REGISTER)
     ResponseEntity<UserDto> register(@RequestBody RegisterRequestDto request);
+
+    @PostMapping(ApiPath.OWNER_REGISTER)
+    ResponseEntity<UserDto> registerOwner(@RequestBody OwnerRegisterRequestDto request);
 }

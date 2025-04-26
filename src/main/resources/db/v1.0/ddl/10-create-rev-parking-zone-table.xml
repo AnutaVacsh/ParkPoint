@@ -4,14 +4,14 @@
 
     <changeSet id="10" author="AnutaVacsh">
         <createTable tableName="rev_parking_zone">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_rev_parking_zone_id"/>
             </column>
             <column name="id_parking_zone" type="BIGINT">
                 <constraints nullable="true" references="parking_zone(id)" foreignKeyName="fk_rev_parking_zone_zone"/>
             </column>
             <column name="id_client" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_rev_parking_zone_client"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_rev_parking_zone_client"/>
             </column>
             <column name="comment" type="TEXT"/>
             <column name="rating" type="INTEGER"/>

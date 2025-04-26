@@ -5,6 +5,6 @@ import ru.vaschenko.ParkPoint.enams.Role;
 
 public record RegisterRequestDto(
         String email,
-        PasswordDto password,
+        String password,
         Role role
 ) {}

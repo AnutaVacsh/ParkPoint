@@ -4,7 +4,7 @@
 
     <changeSet id="9" author="AnutaVacsh">
         <createTable tableName="photo">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_photo_id"/>
             </column>
             <column name="id_parking_zone" type="BIGINT">

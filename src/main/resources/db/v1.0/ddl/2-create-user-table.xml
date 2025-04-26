@@ -3,8 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
 
     <changeSet id="2" author="AnutaVacsh">
-        <createTable tableName="user">
-            <column name="id" type="BIGINT">
+        <createTable tableName="users">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_id"/>
             </column>
             <column name="email" type="VARCHAR(255)"/>

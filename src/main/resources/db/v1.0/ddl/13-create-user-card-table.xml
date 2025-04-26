@@ -4,11 +4,11 @@
 
     <changeSet id="13" author="AnutaVacsh">
         <createTable tableName="user_card">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_card_id"/>
             </column>
             <column name="id_client" type="BIGINT">
-                <constraints nullable="true" references="user(id)" foreignKeyName="fk_user_card_client"/>
+                <constraints nullable="true" references="users(id)" foreignKeyName="fk_user_card_client"/>
             </column>
             <column name="encrypted_card" type="BYTEA"/>
             <column name="last4" type="VARCHAR(10)"/>
