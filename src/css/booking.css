@@ -116,16 +116,21 @@
     align-items: center;
     height: 40px; /* Уменьшил высоту для компактности */
   }
-  
+
   .parking-space-number {
+    width: 40px;
+    text-align: center;
     border: 2px solid white;
     border-radius: 12px;
-    padding: 5px 10px;
-    background-color: rgba(255, 255, 255, 0.1);
     color: white;
-    margin-right: 10px;
-    min-width: 40px;
-    text-align: center;
+    padding: 5px;
+    cursor: pointer; /* Указатель при наведении */
+    transition: all 0.3s ease; /* Плавный переход */
+  }
+  
+  .parking-space-number.selected {
+    border-color: #FEE174; /* Жёлтая рамка */
+    color: #FEE174; /* Жёлтый текст */
   }
   
   .parking-space-timeline {
@@ -147,17 +152,6 @@
   .timeline-segment.free {
     background-color: #888;
     opacity: 0.5;
-  }
-  
-  .booking-container {
-    background-color: #1D2329;
-    color: white;
-    padding: 100px 30px;
-    border-radius: 10px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
   }
   
   .global-timeline-container {
@@ -235,6 +229,7 @@
   .timeline-header {
     margin-top: 30px;
     margin-bottom: 20px;
+    margin-left: 80px;
   }
   
   .hours-scale {
@@ -290,6 +285,7 @@
     display: flex;
     align-items: center;
     height: 30px;
+    margin-top: 20px;
   }
   
   .parking-space-number {
@@ -461,3 +457,5 @@
     color: white;
     font-weight: bold;
   }
+
+  

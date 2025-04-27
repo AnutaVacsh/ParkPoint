@@ -1,136 +1,160 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../../css/booking.css'; // Для стилей
+import '../../css/booking.css';
 import { mockParkingSpaceBooking } from '../../dto/mock/ParkingSpaceBooking';
+
+const DURATION_OPTIONS = ['Часы', 'Дни', 'Дни недели', 'Месяцы'];
+
+const TIMELINE_LABELS = {
+  'Часы': Array.from({ length: 25 }, (_, i) => i),
+  'Дни': Array.from({ length: 8 }, (_, i) => `День ${i}`),
+  'Дни недели': ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+  'Месяцы': ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+};
 
 export default function Booking() {
   const timelineRef = useRef(null);
-  const [dragging, setDragging] = useState(null); // 'start' | 'end' | null
-  const [range, setRange] = useState({ start: 0, end: 24 }); // в часах [0–24]
-  const [parkingSpaces, setParkingSpaces] = useState(null); // Состояние для парковочных мест
-  const [loading, setLoading] = useState(true); // Состояние загрузки
-  const [selectedDate, setSelectedDate] = useState(''); // Для выбранной даты
-  const [selectedOption, setSelectedOption] = useState('Часы'); // Для выбранной длительности
-  const [startTime, setStartTime] = useState(""); // Состояние для времени начала
-  const [endTime, setEndTime] = useState(""); // Состояние для времени конца
-  
-  // Перевод пикселей в часы
-  const pxToHours = (px) => {
-    const width = timelineRef.current.clientWidth;
-    return Math.min(24, Math.max(0, (px / width) * 24));
-  };
 
-  // Функция для преобразования часов в строку времени
-  const timeToString = (hours) => {
-    const h = Math.floor(hours);
-    const m = Math.round((hours - h) * 60);
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '00')}`;
-  };
+  const [parkingSpaces, setParkingSpaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(''); // Дата начала
+  const [endDate, setEndDate] = useState(''); // Дата конца
+  const [selectedOption, setSelectedOption] = useState('Часы');
+  const [selectionSpace, setSelectionSpace] = useState('');
+  const [range, setRange] = useState({ start: { major: 0, minor: 0 }, end: { major: 1, minor: 0 } });
+  const [dragging, setDragging] = useState(null);
 
-  // При движении тачки
-  const onMouseMove = (e) => {
-    if (!dragging) return;
-    const rect = timelineRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const h = pxToHours(x);
-    setRange((r) => {
-      const newRange = {
-        ...r,
-        [dragging]: dragging === 'start' ? Math.min(h, r.end) : Math.max(h, r.start),
-      };
-
-      // Обновляем время начала и конца
-      if (dragging === 'start') {
-        setStartTime(timeToString(newRange.start));
-        console.log(newRange.start)
-      }
-      if (dragging === 'end') {
-        setEndTime(timeToString(newRange.end));
-        console.log(newRange.end)
-      }
-
-      return newRange;
-    });
-
-    // Показываем подсказки
-  const tooltips = document.querySelectorAll('.time-tooltip');
-  tooltips.forEach((tooltip) => {
-    tooltip.style.opacity = 1; // Отображаем подсказки
-  });
-  };
-
-  const onMouseUp = () => setDragging(null);
+  const timelineValues = TIMELINE_LABELS[selectedOption] || [];
 
   useEffect(() => {
+    setLoading(true);
+    setParkingSpaces(mockParkingSpaceBooking);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const onMouseMove = (e) => {
+      if (!dragging || !timelineRef.current) return;
+      const rect = timelineRef.current.getBoundingClientRect();
+      const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width);
+      const pos = pxToPosition(x);
+
+      setRange(prev => {
+        const updated = {
+          ...prev,
+          [dragging]: dragging === 'start'
+            ? (comparePositions(pos, prev.end) <= 0 ? pos : prev.end)
+            : (comparePositions(pos, prev.start) >= 0 ? pos : prev.start)
+        };
+        return updated;
+      });
+      
+      console.log(range.start, range.end);
+
+      document.querySelectorAll('.time-tooltip').forEach(tooltip => {
+        tooltip.style.opacity = 1;
+      });
+    };
+
+    const onMouseUp = () => setDragging(null);
+
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
+
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
-  }, [dragging]);
+  }, [dragging, timelineValues, selectedOption]);
 
-  // Функция для фетча данных с сервиса
-  const fetchParkingSpaces = async () => {
-    try {
-      setLoading(true);
-      // Временно используем mock данные
-      setParkingSpaces(mockParkingSpaceBooking); // Устанавливаем моковые данные
-    } catch (error) {
-      console.error('Error fetching parking spaces:', error);
-    } finally {
-      setLoading(false);
+  const pxToPosition = (px) => {
+    const width = timelineRef.current.clientWidth;
+    const segments = timelineValues.length - 1;
+    const majorRaw = (px / width) * segments;
+    const major = Math.floor(majorRaw);
+    const minor = (majorRaw - major) * getMinorDivisor();
+    return { major, minor };
+  };
+
+  const getMinorDivisor = () => {
+    switch (selectedOption) {
+      case 'Часы': return 60;
+      case 'Месяцы': return 31;
+      default: return 24;
     }
   };
 
-  // Загружаем данные при монтировании компонента
-  useEffect(() => {
-    fetchParkingSpaces();
-  }, []);
-
-  // Рендерим метки часов сверху
-  const hours = Array.from({ length: 25 }, (_, i) => i);
-
-  // Если данные еще загружаются, отображаем индикатор загрузки
-  if (loading) {
-    return <div>Загрузка парковочных мест...</div>;
-  }
-
-  // Обработчик выбора даты
-  const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
-    console.log(e.target.value)
+  const calculatePercent = ({ major, minor }) => {
+    const segments = timelineValues.length - 1;
+    return ((major + minor / getMinorDivisor()) / segments) * 100;
   };
 
-  // Обработчик выбора длительности
-  const handleOptionClick = (option) => {
+  const positionToLabel = ({ major, minor }) => {
+    const value = timelineValues[major] ?? timelineValues.at(-1);
+    switch (selectedOption) {
+      case 'Часы':
+        const totalMinutes = major * 60 + minor;
+        const hours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+        const minutes = Math.round(totalMinutes % 60).toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+      case 'Дни':
+      case 'Дни недели':
+        return `${value} +${Math.floor(minor)}ч`;
+      case 'Месяцы':
+        return `${value} +${Math.floor(minor)}д`;
+      default:
+        return '';
+    }
+  };
+
+  const comparePositions = (a, b) => (a.major - b.major) || (a.minor - b.minor);
+
+  const handleOptionChange = (option) => {
+    const time = new Date().toLocaleTimeString();
+    console.log(`[${time}] Выбрана опция:`, option); // Логируем выбор опции с временем
     setSelectedOption(option);
-    console.log((option))
+    setRange({ start: { major: 0, minor: 0 }, end: { major: 1, minor: 0 } });
   };
+
+  const handleDateChange = (e) => {
+    const time = new Date().toLocaleTimeString();
+    console.log(`[${time}] Выбрана дата начала:`, e.target.value); // Логируем выбор даты начала с временем
+    setSelectedDate(e.target.value);
+  };
+
+  const handleEndDateChange = (e) => {
+    const time = new Date().toLocaleTimeString();
+    console.log(`[${time}] Выбрана дата конца:`, e.target.value); // Логируем выбор даты конца с временем
+    setEndDate(e.target.value);
+  };
+
+  const handleSpaceClick = (spaceId) => {
+    const time = new Date().toLocaleTimeString();
+    console.log(`[${time}] Выбрано парковочное место:`, spaceId); // Логируем выбор парковочного места с временем
+    setSelectionSpace(spaceId);
+  };
+
+  if (loading) return <div>Загрузка парковочных мест...</div>;
 
   return (
     <div className="booking-container">
-      {/* --- Блок с датой начала --- */}
+      {/* Дата начала */}
       <div className="date-picker-container">
         <div className="date-picker-label">Дата начала</div>
         <div className="date-picker">
           <div className="calendar-icon">📅</div>
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
+          <input type="date" value={selectedDate} onChange={handleDateChange} />
         </div>
       </div>
 
-      {/* --- Блок с длительностью --- */}
+      {/* Длительность */}
       <div className="duration-container">
         <div className="duration-label">Длительность</div>
         <div className="duration-options">
-          {['Часы', 'Дни недели', 'Месяцы', 'Дни'].map((option) => (
+          {DURATION_OPTIONS.map(option => (
             <button
               key={option}
               className={`option-btn ${selectedOption === option ? 'selected' : ''}`}
-              onClick={() => handleOptionClick(option)}
+              onClick={() => handleOptionChange(option)}
             >
               {option}
             </button>
@@ -138,80 +162,79 @@ export default function Booking() {
         </div>
       </div>
 
-      {/* --- Общий контейнер с временной шкалой и ползунками --- */}
+      {/* Таймлайн */}
       <div className="timeline-container">
-  <div className="timeline-header">
-    <div className="hours-scale" ref={timelineRef}>
-      {hours.map((h) => (
-        <div key={h} className="hour-tick">
-          <span className="hour-label">{timeToString(h)}</span> {/* Добавляем форматированное время */}
-        </div>
-      ))}
+        <div className="timeline-header">
+          <div className='null' />
+          <div className="hours-scale" ref={timelineRef}>
+            {timelineValues.map((label, idx) => (
+              <div key={idx} className="hour-tick">
+                <span className="hour-label">{label}</span>
+              </div>
+            ))}
 
-      {/* Ползунки */}
-      <div
-        className="handle start-handle"
-        style={{ left: `${(range.start / 24) * 100}%`, width: '16px' }}
-        onMouseDown={() => setDragging('start')}
-      />
-      <div
-        className="handle end-handle"
-        style={{ left: `${(range.end / 24) * 100}%`, width: '16px' }}
-        onMouseDown={() => setDragging('end')}
-      />
-
-      {/* Между ними — полупрозрачная зона выбора */}
-      <div
-        className="selected-range"
-        style={{
-          left: `${(range.start / 24) * 100}%`,
-          width: `${((range.end - range.start) / 24) * 100}%`,
-        }}
-      />
-
-      {/* Подсказки с временем для каждого ползунка */}
-      <div
-        className="time-tooltip"
-        style={{ left: `${(range.start / 24) * 100}%` }}
-      >
-        {timeToString(range.start)}
-      </div>
-      <div
-        className="time-tooltip"
-        style={{ left: `${(range.end / 24) * 100}%` }}
-      >
-        {timeToString(range.end)}
-      </div>
-    </div>
-  </div>
-
-  {/* --- Список парковочных мест --- */}
-  <div className="parking-selection-container">
-    {parkingSpaces?.map((space) => (
-      <div key={space.parkingSpaceDto.id} className="parking-space-row">
-        <div className="parking-space-number">{space.parkingSpaceDto.order}</div>
-        <div className="parking-space-bar">
-          <div className="bar-bg" />
-          {space.timeSlots?.map((slot, i) => {
-            const s =
-              slot.startTime.getHours() + slot.startTime.getMinutes() / 60;
-            const e = slot.endTime.getHours() + slot.endTime.getMinutes() / 60;
-            return (
+            {/* Ползунки */}
+            {['start', 'end'].map(type => (
               <div
-                key={i}
-                className="bar-busy"
-                style={{
-                  left: `${(s / 24) * 100}%`,
-                  width: `${((e - s) / 24) * 100}%`,
-                }}
+                key={type}
+                className={`handle ${type}-handle`}
+                style={{ left: `${calculatePercent(range[type])}%`, width: '16px' }}
+                onMouseDown={() => setDragging(type)}
               />
-            );
-          })}
+            ))}
+
+            <div
+              className="selected-range"
+              style={{
+                left: `${calculatePercent(range.start)}%`,
+                width: `${calculatePercent(range.end) - calculatePercent(range.start)}%`,
+              }}
+            />
+
+            {/* Подсказки */}
+            {['start', 'end'].map(type => (
+              <div
+                key={type}
+                className="time-tooltip"
+                style={{ left: `${calculatePercent(range[type])}%` }}
+              >
+                {positionToLabel(range[type])}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Парковочные места */}
+        <div className="parking-selection-container">
+          {parkingSpaces.map(space => (
+            <div key={space.parkingSpaceDto.id} className="parking-space-row">
+              <div
+                className={`parking-space-number ${selectionSpace === space.parkingSpaceDto.id ? 'selected' : ''}`}
+                onClick={() => handleSpaceClick(space.parkingSpaceDto.id)}
+              >
+                {space.parkingSpaceDto.order}
+              </div>
+              <div className="parking-space-bar">
+                <div className="bar-bg" />
+                {space.timeSlots.map((slot, idx) => {
+                  const start = slot.startTime.getHours() + slot.startTime.getMinutes() / 60;
+                  const end = slot.endTime.getHours() + slot.endTime.getMinutes() / 60;
+                  return (
+                    <div
+                      key={idx}
+                      className="bar-busy"
+                      style={{
+                        left: `${(start / 24) * 100}%`,
+                        width: `${((end - start) / 24) * 100}%`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    ))}
-  </div>
-</div>
     </div>
   );
 }
