@@ -43,13 +43,19 @@ body {
 
 }
 
-.nav-links a {
-    color: #fff; 
+.nav-links li a {
+    color: white;
     text-decoration: none;
     padding: 10px;
-    text-transform: uppercase;
-}
-
-.nav-links a:hover {
-    color: #FEE174;
-}
+    transition: color 0.3s, border-bottom 0.3s;
+  }
+  
+  .nav-links li a:hover {
+    color: #FFD700;
+  }
+  
+  .active-link {
+    color: #FFD700;
+    border-bottom: 2px solid #FFD700;
+  }
+  

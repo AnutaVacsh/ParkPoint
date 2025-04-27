@@ -1,0 +1,107 @@
+.parking-full-info {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out;
+  z-index: 1;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 2;
+  line-height: 40px;
+  text-align: center;
+}
+.arrow.left { left: 20px; }
+.arrow.right { right: 20px; }
+.arrow:hover { background: rgba(0, 0, 0, 0.6); }
+
+.map-button {
+  position: absolute;
+  top: 120px; /* немного ниже */
+  right: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+.map-button:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px 40px;
+  box-sizing: border-box;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* текст по левому краю */
+  max-height: 30vh; /* уменьшили высоту */
+  overflow-y: auto;
+}
+
+.info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* уменьшили расстояние */
+  width: 100%;
+  color: #fff;
+}
+
+.info-column p {
+  margin: 0;
+  line-height: 1.2; /* плотнее */
+}
+
+.book-button {
+  margin: 10px auto 0;
+  width: calc(100% - 80px); /* horizontal padding offset */
+  max-width: 400px;
+  padding: 12px 0;
+  background: #FEE174;
+  color: #000;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 3;
+}
+.book-button:hover {
+  background: #FFC300;
+}

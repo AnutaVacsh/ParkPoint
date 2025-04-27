@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
+import { useNavigate } from 'react-router-dom';
 import '../../css/mapStyle.css'; // подключаем стили
 
 const UserParkingMapPage = () => {
   const [parkingZones, setParkingZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
+
+  const navigate = useNavigate(); // <-- создали навигатор
+
+  const handlePlacemarkClick = (zone) => {
+    setSelectedZone(zone);
+  };
+
+  const handleMoreDetails = () => {
+    if (selectedZone) {
+      navigate(`/client/parking/${selectedZone.id}`); // <-- переход с id парковки
+    }
+  };
 
   useEffect(() => {
     const mockParkingZones = [
@@ -53,10 +66,6 @@ const UserParkingMapPage = () => {
 
     setParkingZones(mockParkingZones);
   }, []);
-
-  const handlePlacemarkClick = (zone) => {
-    setSelectedZone(zone);
-  };
 
   const renderStars = (rating) => {
     if (isNaN(rating) || rating < 0 || rating > 5) {
@@ -116,7 +125,7 @@ const UserParkingMapPage = () => {
             <p className="zoneAddress">{selectedZone.address}</p>
             <p className="zoneSpaces">Мест: {selectedZone.parkingSpacesCount}</p>
             
-            <button className="detailsButton">Подробнее</button>
+            <button className="detailsButton" onClick={handleMoreDetails}>Подробнее</button>
           </div>
 
           <div className="infoRight">

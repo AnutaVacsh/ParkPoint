@@ -1,16 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom";
-// import "./HeaderGuest.css"; // Подключение стилей
+import { NavLink } from "react-router-dom";
 
 const HeaderGuest = () => {
   return (
     <header className="header headerGuest">
       <nav className="nav">
-      <ul className="nav-links">
-          <li><Link to="/">ГЛАВНАЯ</Link></li>
-          <li><Link to="/parking">ПАРКОВКИ</Link></li>
-          <li><Link to="/owners">ДЛЯ ВЛАДЕЛЬЦЕВ</Link></li>
-          <li><Link to="/contacts">КОНТАКТЫ</Link></li>
+        <ul className="nav-links">
+          <li>
+            <NavLink 
+              to="/" 
+              end
+              className={({ isActive }) => isActive ? "active-link" : ""}
+            >
+              ГЛАВНАЯ
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/parking"
+              className={({ isActive }) => isActive ? "active-link" : ""}
+            >
+              ПАРКОВКИ
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/owners"
+              className={({ isActive }) => isActive ? "active-link" : ""}
+            >
+              ДЛЯ ВЛАДЕЛЬЦЕВ
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/contacts"
+              className={({ isActive }) => isActive ? "active-link" : ""}
+            >
+              КОНТАКТЫ
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </header>

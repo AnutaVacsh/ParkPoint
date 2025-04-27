@@ -1,0 +1,463 @@
+.booking-container {
+    background-color: #1D2329;
+    background-image: url('../img/bookingBlur.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    color: white;
+    padding: 100px 30px;
+    border-radius: 10px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .booking-header {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .date-picker-container {
+    margin-bottom: 30px; /* Отступ между блоками */
+  }
+  
+  .date-picker-label {
+    font-size: 1em; /* Меньший размер шрифта */
+    margin-bottom: 8px; /* Отступ между текстом и блоком */
+    color: white;
+  }
+  
+  .date-picker {
+    display: flex;
+    align-items: center;
+    border: 2px solid white; /* Белая рамка вокруг поля */
+    border-radius: 12px; /* Скругляем углы */
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.1); /* Прозрачный фон */
+    width: auto; /* Убираем растяжение на всю ширину */
+    max-width: 300px; /* Максимальная ширина контейнера */
+  }
+  
+  .date-picker .calendar-icon {
+    margin-right: 10px;
+    font-size: 1.5em; /* Размер календарика */
+  }
+  
+  input[type="date"] {
+    background-color: transparent; /* Прозрачный фон */
+    border: none;
+    color: white; /* Белый текст */
+    font-size: 1em;
+    padding: 8px;
+    border-radius: 10px; /* Скруглённые углы */
+    outline: none;
+    width: 100%; /* Полная ширина для поля */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  input[type="date"]:focus {
+    background-color: rgba(255, 255, 255, 0.2); /* Цвет при фокусе */
+    border-color: yellow; /* Желтая рамка при фокусе */
+  }
+  
+  .duration-container {
+    margin-top: 30px;
+    flex-direction: column;
+  }
+  
+  .duration-label {
+    font-size: 1em; /* Меньший размер шрифта */
+    margin-bottom: 8px; /* Отступ между текстом и кнопками */
+    color: white;
+  }
+  
+  .duration-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .option-btn {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    border-radius: 12px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .option-btn.selected {
+    color: #FEE174;
+    border-color: #FEE174;
+  }
+  
+  /* ==== Parking selection ==== */
+  .parking-selection-container {
+    margin-top: 20px;
+  }
+  
+  .parking-selection-label {
+    font-size: 1em;
+    margin-bottom: 8px;
+    color: white;
+    text-align: center;
+  }
+  
+  .parking-spaces {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Уменьшил расстояние между местами */
+  }
+  
+  .parking-space {
+    display: flex;
+    align-items: center;
+    height: 40px; /* Уменьшил высоту для компактности */
+  }
+  
+  .parking-space-number {
+    border: 2px solid white;
+    border-radius: 12px;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    margin-right: 10px;
+    min-width: 40px;
+    text-align: center;
+  }
+  
+  .parking-space-timeline {
+    display: flex;
+    gap: 2px;
+    flex-grow: 1;
+    height: 20px;
+  }
+  
+  .timeline-segment {
+    flex: 1;
+    border-radius: 4px;
+  }
+  
+  .timeline-segment.busy {
+    background-color: #FEE174;
+  }
+  
+  .timeline-segment.free {
+    background-color: #888;
+    opacity: 0.5;
+  }
+  
+  .booking-container {
+    background-color: #1D2329;
+    color: white;
+    padding: 100px 30px;
+    border-radius: 10px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .global-timeline-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .global-timeline-segment {
+    text-align: center;
+    color: white;
+    font-size: 0.9em;
+    flex: 1;
+  }
+  
+  .parking-selection-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .parking-spaces {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .parking-space {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .parking-space-number {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    color: white;
+  }
+  
+  .parking-space-timeline {
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+  }
+  
+  .timeline-segment {
+    height: 100%;
+    border-radius: 12px;
+    position: relative;
+  }
+  
+  .timeline-segment.busy {
+    background-color: yellow;
+  }
+  
+  .timeline-segment.free {
+    background-color: gray;
+  }
+  
+  .occupied-time, .free-time {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.8em;
+  }
+  
+  .timeline-header {
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .hours-scale {
+    position: relative;
+    display: flex;
+    height: 40px;
+    user-select: none;
+  }
+  
+  .hour-tick {
+    flex: 1;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+  }
+  
+  .hour-tick:first-child { border-left: none; }
+  
+  .hour-label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75em;
+  }
+  
+  /* Ползунки */
+  .handle {
+    position: absolute;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    background: #FEE174;
+    cursor: ew-resize;
+    z-index: 2;
+    transform: translateX(-50%);
+  }
+  
+  .selected-range {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: rgba(254,225,116,0.3);
+    z-index: 1;
+  }
+  
+  /* --- Строки парковочных мест --- */
+  .parking-selection-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .parking-space-row {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+  
+  .parking-space-number {
+    width: 30px;
+    text-align: center;
+    margin-right: 12px;
+    border: 2px solid white;
+    border-radius: 4px;
+    line-height: 26px;
+  }
+  
+  /* Бар занятости */
+  .parking-space-bar {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .bar-bg {
+    position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+  }
+  
+  .bar-busy {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: #FEE174;
+  }
+/* Стиль для контейнера ползунков */
+.parking-space-timeline {
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin-top: 10px;
+  }
+  
+  /* Стиль для сегментов на временной шкале */
+  .timeline-segment {
+    height: 100%;
+    border-radius: 12px;
+    position: relative;
+  }
+  
+  /* Стиль для подсказки времени */
+.time-tooltip {
+    position: absolute;
+    top: -30px; /* Расположим немного выше ползунка */
+    left: 0;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: black;
+    font-size: 0.8em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none; /* чтобы подсказка не мешала взаимодействию с ползунком */
+    transition: opacity 0.2s;
+  }
+  
+  /* Показываем подсказку, когда ползунок в движении */
+  .timeline-segment:hover .time-tooltip {
+    opacity: 1;
+  }
+  .timeline-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .timeline-header {
+    margin-bottom: 20px;
+  }
+  
+  .hours-scale {
+    position: relative;
+    display: flex;
+    height: 40px;
+    user-select: none;
+  }
+  
+  .hour-tick {
+    flex: 1;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+  }
+  
+  .hour-tick:first-child { border-left: none; }
+  
+  .hour-label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75em;
+  }
+  
+  .handle {
+    position: absolute;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    background: #FEE174;
+    cursor: ew-resize;
+    z-index: 2;
+    transform: translateX(-50%);
+  }
+  
+  .selected-range {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(254, 225, 116, 0.3);
+    z-index: 1;
+  }
+  
+  .time-tooltip {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: black;
+    font-size: 0.8em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  
+  .timeline-segment {
+    height: 100%;
+    border-radius: 12px;
+    position: relative;
+  }
+  .timeline-header {
+    margin-bottom: 20px;
+  }
+  
+  .hours-scale {
+    position: relative;
+    display: flex;
+    height: 40px;
+    user-select: none;
+  }
+  
+  .hour-tick {
+    flex: 1;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+  }
+  
+  .hour-tick:first-child { border-left: none; }
+  
+  .hour-label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75em;
+    color: white;
+    font-weight: bold;
+  }
