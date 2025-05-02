@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record RevParkingZoneDto(
         Long id,
-        ParkingZoneDto parkingZone,
+//        ParkingZoneDto parkingZone,
         UserDto client,
         String comment,
         Integer rating,

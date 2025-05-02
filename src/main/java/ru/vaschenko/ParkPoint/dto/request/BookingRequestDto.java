@@ -5,6 +5,9 @@ import ru.vaschenko.ParkPoint.dto.ParkingSpaceDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * создание бронирования
+ */
 public record BookingRequestDto(
         Long clientId,
         Long parkingSpaceId,

@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping(ApiPath.PARKING_ZONES)
 public interface ParkingZoneApi {
     @GetMapping(ApiPath.PARKING_ZONES_LIST)
-    ResponseEntity<List<ParkingZoneResponseDto>> get5NearestParkingZones(@RequestParam double latitude, @RequestParam double longitude);
+    ResponseEntity<List<ParkingZoneResponseDto>> getAllParkingZones();
 
     @GetMapping(ApiPath.PARKING_ZONE_PARTIAL)
     ResponseEntity<ParkingZonePartDto> getPartialZoneInfo(@PathVariable Long id);

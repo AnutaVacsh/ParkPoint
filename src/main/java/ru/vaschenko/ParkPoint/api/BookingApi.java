@@ -13,6 +13,7 @@ import ru.vaschenko.ParkPoint.dto.request.SearchRequestDTO;
 import ru.vaschenko.ParkPoint.dto.request.SubscriptionRequestDto;
 import ru.vaschenko.ParkPoint.dto.response.SubscriptionResponseDto;
 import ru.vaschenko.ParkPoint.enams.StateBooking;
+import ru.vaschenko.ParkPoint.models.Booking;
 import ru.vaschenko.ParkPoint.util.ApiPath;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface BookingApi {
     ResponseEntity<List<BookingDto>> getUserBooking(@PathVariable Long id);
 
     @PostMapping(ApiPath.BOOKING_CREATE)
-    ResponseEntity<String> createBooking(@RequestBody BookingRequestDto request);
+    ResponseEntity<Booking> createBooking(@RequestBody BookingRequestDto request);
 
     @PutMapping(ApiPath.CHANGE_STATE_BOOKING)
     ResponseEntity<String> changeStateBooking(@PathVariable Long bookingId, @RequestBody StateBooking state);

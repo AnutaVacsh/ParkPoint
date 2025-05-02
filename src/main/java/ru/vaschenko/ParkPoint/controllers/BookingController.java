@@ -1,0 +1,59 @@
+package ru.vaschenko.ParkPoint.controllers;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import ru.vaschenko.ParkPoint.api.BookingApi;
+import ru.vaschenko.ParkPoint.dto.BookingDto;
+import ru.vaschenko.ParkPoint.dto.request.BookingRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.SearchRequestDTO;
+import ru.vaschenko.ParkPoint.dto.request.SubscriptionRequestDto;
+import ru.vaschenko.ParkPoint.dto.response.SubscriptionResponseDto;
+import ru.vaschenko.ParkPoint.enams.StateBooking;
+import ru.vaschenko.ParkPoint.models.Booking;
+import ru.vaschenko.ParkPoint.services.BookingService;
+
+import java.util.List;
+
+@Controller
+@CrossOrigin
+@RequiredArgsConstructor
+public class BookingController implements BookingApi {
+    private final BookingService bookingService;
+
+    @Override
+    public ResponseEntity<List<BookingDto>> getBookingInfo(Long id) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<BookingDto>> getUserBooking(Long id) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Booking> createBooking(BookingRequestDto request) {
+        return ResponseEntity.ok(bookingService.createBooking(request));
+    }
+
+    @Override
+    public ResponseEntity<String> changeStateBooking(Long bookingId, StateBooking state) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<SubscriptionResponseDto> getSubscriptionInfo(Long idParkingSpace) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<String> createSubscription(SubscriptionRequestDto request) {
+        return null;
+    }
+
+    @Override
+    public List<BookingDto> getBookingsWithPagination(SearchRequestDTO searchRequest) {
+        return List.of();
+    }
+}
