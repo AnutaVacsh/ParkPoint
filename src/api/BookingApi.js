@@ -91,7 +91,7 @@ export const getBookingsWithPagination = async (searchRequestDTO) => {
       console.log('[API] Отправка запроса на получение бронирований с пагинацией...');
       console.log('[API] Тело запроса:', searchRequestDTO);
   
-      const response = await fetch(`${BASE_URL}/booking/getAllWithPag`, {
+      const response = await fetch(`${BASE_URL}/booking/${localStorage.getItem("userId")}/getAllWithPag`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

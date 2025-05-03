@@ -1,46 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../css/bookingCardStyle.css';
-
+import { Link } from 'react-router-dom';
 
 const BookingCard = ({ booking }) => {
-  const { startTime, endTime, status, parkingSpace } = booking;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const { price, parkingZoneDto, order } = parkingSpace;
-  
-  const { title, address} = parkingZoneDto;
+  const { id, price, startTime, endTime, status, parkingSpace } = booking;
+  const { parkingZoneDto, order, idOwner } = parkingSpace;
+  const { title, address } = parkingZoneDto;
 
-  console.log(booking)
+  // Функции для обработки действий
+  const handleCancel = (e) => {
+    e.stopPropagation();
+    console.log('Отмена бронирования', id);
+  };
+
+  const handleComplain = (e) => {
+    e.stopPropagation();
+    console.log('Жалоба на бронирование', id);
+  };
+
+  const handleReview = (e) => {
+    e.stopPropagation();
+    console.log('Отзыв о бронировании', id);
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'PENDING':
-        return '#FEE174';
-      case 'CONFIRMED':
-        return '#9DFE74';
-      case 'REJECTED':
-        return '#FE7974';
+      case 'PENDING': return '#FEE174';
+      case 'CONFIRMED': return '#9DFE74';
+      case 'REJECTED': return '#FE7974';
       case 'CANCELLED':
       case 'COMPLETED':
-      case 'EXPIRED':
-        return '#A8A8A8';
-      default:
-        return '#FFFFFF';
+      case 'EXPIRED': return '#A8A8A8';
+      default: return '#FFFFFF';
     }
   };
 
   const borderColor = getStatusColor(status);
 
-  function cancel(){
-
-  }
-
-  function review(){
-    
-  }
-
   const formatDate = (date) => {
     const d = new Date(date);
-    
     const day = d.getDate(); 
     const month = d.toLocaleString('ru-RU', { month: 'long' }); 
     const time = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); 
@@ -54,39 +54,134 @@ const BookingCard = ({ booking }) => {
     );
   };
 
+  const handleCardClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = (e) => {
+    e.stopPropagation();
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="bookingCard" style={{ borderColor }}>
-      <div className="bookingCardHeader">
-        <div className="timeInfo">
-          <span><strong>Начало</strong></span>
-          <span>{formatDate(startTime)}</span>
+    <>
+      <div 
+        className="bookingCard" 
+        style={{ borderColor }}
+        onClick={handleCardClick}
+      >
+        <div className="bookingCardHeader">
+          <div className="timeInfo">
+            <span><strong>Начало</strong></span>
+            <span>{formatDate(startTime)}</span>
+          </div>
+          <div className="timeInfo">
+            <span><strong>Выезд</strong></span>
+            <span>{formatDate(endTime)}</span>
+          </div>
         </div>
-        <div className="arrow"> &gt;&gt; </div>
-        <div className="timeInfo">
-          <span><strong>Выезд</strong></span>
-          <span>{formatDate(endTime)}</span>
-        </div>
-      </div>
-      <div className="bookingCardContent">
-        <p><strong>Адрес:</strong> {address}</p>
-        <p><strong>Название:</strong> {title}</p>
-        <p><strong>Номер места:</strong> {order}</p>
-        <p><strong>Стоимость:</strong> {price/100}</p>
-        <div className='inLine'>
+        <div className="bookingCardContent">
+          <p><strong>Адрес:</strong> {address}</p>
+          <p><strong>Название:</strong> {title}</p>
+          <p><strong>Номер места:</strong> {order}</p>
+          <p><strong>Стоимость:</strong> {price/100} ₽</p>
+          <div className='inLine'>
             <span>Статус:</span>
             <span className="status" style={{ color: borderColor }}> {status}</span>
+          </div>
         </div>
+      </div>
 
-        <div className="bookingActions">
-            {['PENDING', 'CONFIRMED'].includes(booking.status) && (
-            <button className="actionButton cancelButton" onClick={cancel()}>Отменить</button>
-            )}
-            {booking.status === 'COMPLETED' && (
-            <button className="actionButton reviewButton" onClick={review()}>Оставить отзыв</button>
-            )}
+      {/* Модальное окно */}
+      {isModalOpen && (
+        <div className="modalOverlay" onClick={closeModal}>
+          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+            <button className="modalCloseButton" onClick={closeModal}>×</button>
+            
+            <h3>Детали бронирования</h3>
+            
+            <div className="modalGrid">
+              <div className="modalSection">
+                <h4>Время</h4>
+                <p><strong>Начало:</strong> {formatDate(startTime)}</p>
+                <p><strong>Окончание:</strong> {formatDate(endTime)}</p>
+                <p><strong>Длительность:</strong> {Math.round((new Date(endTime) - new Date(startTime)) / (1000 * 60 * 60))} часов</p>
+              </div>
+              
+              <div className="modalSection">
+                <h4>Парковочное место</h4>
+                <p><strong>Адрес:</strong> {address}</p>
+                <p><strong>Зона:</strong> {title}</p>
+                <p><strong>Место №:</strong> {order}</p>
+                {idOwner && (
+                  <p>
+                    <strong>Владелец:</strong>
+                    <Link
+                      to={`/client/owner/${idOwner}`} 
+                      className="ownerLink"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                    </Link>
+                  </p>
+                )}
+              </div>
+              
+              <div className="modalSection">
+                <h4>Оплата</h4>
+                <p><strong>Стоимость:</strong> {price/100} ₽</p>
+                <p><strong>Статус:</strong> <span style={{ color: borderColor }}>{status}</span></p>
+              </div>
+              {/* Кнопки действий */}
+            <div className="modalActions">
+              {status === 'PENDING' && (
+                <button className="actionButton cancelButton" onClick={handleCancel}>
+                  Отменить
+                </button>
+              )}
+              
+              {status === 'CONFIRMED' && (
+                <>
+                  <button className="actionButton cancelButton" onClick={handleCancel}>
+                    Отменить
+                  </button>
+                  <button className="actionButton complainButton" onClick={handleComplain}>
+                    Пожаловаться
+                  </button>
+                </>
+              )}
+              
+              {status === 'COMPLETED' && (
+                <>
+                  <button className="actionButton reviewButton" onClick={handleReview}>
+                    Оставить отзыв
+                  </button>
+                  <button className="actionButton complainButton" onClick={handleComplain}>
+                    Пожаловаться
+                  </button>
+                </>
+              )}
+              
+              {status === 'SUBSCRIPTION' && (
+                <>
+                  <button className="actionButton cancelButton" onClick={handleCancel}>
+                    Отменить
+                  </button>
+                  <button className="actionButton reviewButton" onClick={handleReview}>
+                    Оставить отзыв
+                  </button>
+                  <button className="actionButton complainButton" onClick={handleComplain}>
+                    Пожаловаться
+                  </button>
+                </>
+              )}
+            </div>
+            </div>
+            
+            {/* Дополнительные действия можно добавить здесь */}
+          </div>
         </div>
-        </div>
-    </div>
+      )}
+    </>
   );
 };
 

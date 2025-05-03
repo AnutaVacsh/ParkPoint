@@ -20,6 +20,7 @@ export default function Booking() {
   const [selectedOption, setSelectedOption] = useState('Часы');
   const [selectionSpace, setSelectionSpace] = useState('');
   const [range, setRange] = useState({ start: { major: 0, minor: 0 }, end: { major: 1, minor: 0 } });
+  const [price, setPrice] = useState(0);
   const {id} = useParams();
 
   useEffect(() => {
@@ -29,38 +30,6 @@ export default function Booking() {
   }, []);
 
   const navigate = useNavigate();
-
-  // const handleBooking = async () => {
-  //   if (!validateBooking()) return;
-  //   const start = new Date(selectedDate);
-  //   start.setHours(range.start.major, range.start.minor);
-  //   const end = new Date(start);
-  //   end.setHours(range.end.major, range.end.minor);
-
-  //   const startTime = toLocalISOString(start);
-  //   const endTime = toLocalISOString(end);
-
-  //   const bookingRequest = {
-  //     clientId: localStorage.getItem("userId"),
-  //     parkingSpaceId: selectionSpace,
-  //     startTime,
-  //     endTime
-  //   };
-
-  //   try {
-  //     const response = await fetch('http://localhost:8080/booking/create', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(bookingRequest)
-  //     });
-  //     if (!response.ok) throw new Error(`Ошибка ${response.status}`);
-  //     // при успешном создании перенаправим на страницу подтверждения
-  //     navigate(`/client/parking/${id}/booking/confirmation/${selectionSpace}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`);
-  //   } catch (error) {
-  //     console.error('Не удалось создать бронирование:', error);
-  //     alert('Ошибка при создании бронирования. Попробуйте позже.');
-  //   }
-  // };
 
   const handleBooking = async () => {
     if (!validateBooking()) return;
@@ -93,7 +62,8 @@ export default function Booking() {
       clientId: localStorage.getItem("userId"),
       parkingSpaceId: selectionSpace.id,
       startTime,
-      endTime
+      endTime,
+      price
     };
   
     try {
@@ -181,15 +151,7 @@ export default function Booking() {
     return 0;
   };
 
-  // const getDurationHours = (range) => {
-  //   const segments = timelineValues.length - 1;
-  //   const hoursStart = range.start.major * getMinorDivisor() + range.start.minor;
-  //   const hoursEnd = range.end.major * getMinorDivisor() + range.end.minor;
-  //   return hoursEnd - hoursStart;
-  // };
-
   function pluralize(n, forms) {
-    // forms = [«час», «часа», «часов»]
     n = Math.abs(n) % 100;
     const n1 = n % 10;
     if (n > 10 && n < 20) return forms[2];
@@ -218,17 +180,35 @@ export default function Booking() {
     return '';
   }
   
-
   const calculatePrice = (range, option) => {
-    const startMins = range.start.major * getMinorDivisor() + range.start.minor;
-    const endMins   = range.end.major   * getMinorDivisor() + range.end.minor;
-    const totalMins = endMins - startMins;
+    if (!selectedDate || !selectionSpace) {
+      setPrice(0);
+      return 0;
+    }
   
-    if (option === 'Часы') return +(totalMins / 60 * getUnitPrice(option)).toFixed(2);
-    if (option === 'Дни' || option === 'Дни недели') return +(totalMins / (24) * getUnitPrice(option)).toFixed(2);
-    if (option === 'Месяцы') return +(totalMins / (30) * getUnitPrice(option)).toFixed(2);
-    return 0;
+    const startMins = range.start.major * getMinorDivisor() + range.start.minor;
+    const endMins = range.end.major * getMinorDivisor() + range.end.minor;
+    const totalMins = endMins - startMins;
+    
+    let calculatedPrice = 0;
+    
+    if (option === 'Часы') {
+      calculatedPrice = +(totalMins / 60 * getUnitPrice(option)).toFixed(2);
+    } else if (option === 'Дни' || option === 'Дни недели') {
+      calculatedPrice = +(totalMins / (24) * getUnitPrice(option)).toFixed(2);
+    } else if (option === 'Месяцы') {
+      calculatedPrice = +(totalMins / (30) * getUnitPrice(option)).toFixed(2);
+    }
+    
+    setPrice(calculatedPrice);
+    return calculatedPrice;
   };
+
+  useEffect(() => {
+    if (selectedDate && selectionSpace) {
+      calculatePrice(range, selectedOption);
+    }
+  }, [range, selectedOption, selectedDate, selectionSpace]);
   
 
   const handleOptionChange = (option) => {
@@ -287,7 +267,7 @@ export default function Booking() {
       
 
       {/* Итог */}
-      <div className="summary-container">
+     <div className="summary-container">
         <h2 className="summary-title">Итог</h2>
 
         <div className="summary-time-block">
@@ -307,20 +287,20 @@ export default function Booking() {
             <span>{getDurationText(range, selectedOption)}</span>
           </div>
           <div className="summary-row">
-            <span>Стоимость за {selectedOption}:</span>
+            <span>Стоимость за {selectedOption.toLowerCase()}:</span>
             <span>{getUnitPrice(selectedOption)} ₽</span>
           </div>
           <hr className="summary-divider" />
           <div className="summary-row total">
-            <span>Итог:</span>
-            <span>{calculatePrice(range, selectedOption)} ₽</span>
+            <span>Итоговая стоимость:</span>
+            <span>{price} ₽</span> {/* Используем состояние price */}
           </div>
         </div>
 
         <div className="summary-buttons">
-        <button className="btn-yellow" onClick={handleBooking}>
-          Забронировать
-        </button>
+          <button className="btn-yellow" onClick={handleBooking}>
+            Забронировать
+          </button>
           <button className="btn-yellow">Оформить подписку на место</button>
         </div>
       </div>

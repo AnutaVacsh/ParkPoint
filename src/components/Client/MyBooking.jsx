@@ -1,26 +1,49 @@
 import '../../css/bookingStyle.css';
-
 import React, { useEffect, useState } from 'react';
 import SearchRequestDTO from '../../dto/SearchRequestDTO';
 import BookingCard from './BookingCard';
-import { getBookingsWithPagination } from '../../api/BookingApi';  // Импортируйте вашу функцию
+import { getBookingsWithPagination } from '../../api/BookingApi';
 
 const MyBooking = () => {
   const [sortBy, setSortBy] = useState('startTime');
-  const [filter, setFilter] = useState('null');
+  const [sortDirection, setSortDirection] = useState('DESC');
+  const [filter, setFilter] = useState('');
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const sortOptions = ['Дата', 'По алфавиту', 'По цене'];
+  const sortOptions = [
+    { value: 'dateCreated', label: 'Дате создания' },
+    { value: 'startTime', label: 'Дате начала' },
+    { value: 'endTime', label: 'Дате окончания' },
+    { value: 'price', label: 'Стоимости' }
+  ];
 
-  // Функция для загрузки бронирований
+  const statusFilters = [
+    { value: '', label: 'Все' },
+    { value: 'PENDING', label: 'Ожидают подтверждения' },
+    { value: 'CONFIRMED', label: 'Активные' },
+    { value: 'COMPLETED', label: 'Завершенные' },
+    { value: 'CANCELLED', label: 'Отмененные' },
+    { value: 'REJECTED', label: 'Отклоненные' },
+    { value: 'EXPIRED', label: 'Истекшие' }
+  ];
+
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const request = new SearchRequestDTO(1, 20, 'ASC', sortBy, filter);
+      const request = new SearchRequestDTO(
+        page, 
+        20, 
+        sortDirection, 
+        sortBy, 
+        filter
+      );
 
-      const data = await getBookingsWithPagination(request);
-      setBookings(data);
+      const response = await getBookingsWithPagination(request);
+      setBookings(response.content);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.error('Ошибка загрузки:', error);
     } finally {
@@ -28,10 +51,24 @@ const MyBooking = () => {
     }
   };
 
-  // Перезагрузка данных при изменении фильтра или сортировки
   useEffect(() => {
     fetchBookings();
-  }, [filter, sortBy]);
+  }, [filter, sortBy, sortDirection, page]);
+
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+    // Если выбрана та же сортировка, меняем направление
+    if (value === sortBy) {
+      setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC');
+    } else {
+      setSortBy(value);
+      setSortDirection('DESC');
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <div className="myBookingPage">
@@ -42,84 +79,92 @@ const MyBooking = () => {
       </div>
 
       <div className="myBookingContent">
+        {/* Фильтры по статусу */}
         <nav className="myBookingNav">
           <ul className="navList">
-            <li>
-              <button
-                className={`navButton ${filter === '' ? 'active' : ''}`}
-                onClick={() => setFilter('')}
-              >
-                Все
-              </button>
-            </li>
-            <li>
-              <button
-                className={`navButton ${filter === 'CONFIRMED' ? 'active' : ''}`}
-                onClick={() => setFilter('CONFIRMED')}
-              >
-                Активные
-              </button>
-            </li>
-            <li>
-              <button
-                className={`navButton ${filter === 'PENDING' ? 'active' : ''}`}
-                onClick={() => setFilter('PENDING')}
-              >
-                Ждут подтверждения
-              </button>
-            </li>
-            <li>
-              <button
-                className={`navButton ${filter === 'COMPLETED' ? 'active' : ''}`}
-                onClick={() => setFilter('COMPLETED')}
-              >
-                Завершённые
-              </button>
-            </li>
-            <li>
-              <button
-                className={`navButton ${filter === 'REJECTED' ? 'active' : ''}`}
-                onClick={() => setFilter('REJECTED')}
-              >
-                Отклонённые
-              </button>
-            </li>
-            <li>
-              <button
-                className={`navButton ${filter === 'CANCELLED' ? 'active' : ''}`}
-                onClick={() => setFilter('CANCELLED')}
-              >
-                Отменённые
-              </button>
-            </li>
+            {statusFilters.map((status) => (
+              <li key={status.value}>
+                <button
+                  className={`navButton ${filter === status.value ? 'active' : ''}`}
+                  onClick={() => {
+                    setFilter(status.value);
+                    setPage(1); 
+                  }}
+                >
+                  {status.label}
+                </button>
+              </li>
+            ))}
           </ul>
         </nav>
 
-        <div className="sortByContainer">
-          <span className="sortLabel">Сортировать по:</span>
-          <select
-            className="sortSelect"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option value="">Выберите сортировку</option>
-            {sortOptions.map((option, index) => (
-              <option key={index} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        {/* Блок сортировки */}
+        <div className="sortControls">
+          <div className="sortByContainer">
+            <span className="sortLabel">Сортировать по:</span>
+            <select
+              className="sortSelect"
+              value={sortBy}
+              onChange={handleSortChange}
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <button 
+              className="sortDirectionButton"
+              onClick={() => setSortDirection(sortDirection === 'ASC' ? 'DESC' : 'ASC')}
+            >
+              {sortDirection === 'ASC' ? '↑' : '↓'}
+            </button>
+          </div>
         </div>
 
+        {/* Список бронирований */}
         <div className="bookingsList">
           {loading ? (
-            <p>Загрузка...</p>
+            <div className="loadingIndicator">Загрузка...</div>
+          ) : bookings.length === 0 ? (
+            <div className="noResults">Нет бронирований</div>
           ) : (
-            bookings.map((booking, index) => (
-              <BookingCard key={index} booking={booking} />
-            ))
+            <>
+              {bookings.map((booking) => (
+                <BookingCard key={booking.id} booking={booking} />
+              ))}
+            </>
           )}
         </div>
+
+        {/* Пагинация */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button 
+              disabled={page === 1}
+              onClick={() => handlePageChange(page - 1)}
+            >
+              Назад
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                className={pageNum === page ? 'active' : ''}
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </button>
+            ))}
+            
+            <button 
+              disabled={page === totalPages}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              Вперед
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
