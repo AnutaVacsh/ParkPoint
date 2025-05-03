@@ -1,0 +1,115 @@
+.bc-container {
+    position: relative;
+    min-height: 100vh;
+    background: url('../img/bookingBlur.png') center/cover no-repeat;
+    color: #fff;
+    overflow: hidden;
+  }
+  
+  .bc-overlay {
+    position: absolute;
+    inset: 0;
+    /* background-color: rgba(0,0,0,0.6); */
+  }
+  
+  .bc-header {
+    position: relative;
+    padding: 20px;
+    z-index: 1;
+  }
+  
+  .bc-nav {
+    display: flex;
+    gap: 32px;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  
+  .bc-nav-item {
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+  }
+  
+  .bc-nav-item.active {
+    color: #FEE174;
+  }
+  
+  .bc-main {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 120px;
+  }
+  
+  .bc-title {
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+  
+  .bc-card {
+    background-color: rgba(254, 225, 116, 0.15);
+    border: 2px solid #FEE174;
+    border-radius: 12px;
+    padding: 24px 32px;
+    max-width: 480px;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 40px;
+  }
+  
+  .bc-address {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  
+  .bc-times {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .bc-time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .bc-time-block .label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .bc-time-block .date {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  
+  .bc-time-block .time {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .bc-separator {
+    font-size: 24px;
+    color: #FEE174;
+    margin: 0 16px;
+  }
+  
+  .bc-button {
+    background-color: #FEE174;
+    color: #000;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 48px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color .2s;
+  }
+  
+  .bc-button:hover {
+    background-color: #e6c741;
+  }
+  

@@ -2,70 +2,57 @@ import React, { useEffect, useState } from 'react';
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 import { useNavigate } from 'react-router-dom';
 import '../../css/mapStyle.css'; // подключаем стили
+import { mockParkingZones } from '../../dto/mock/mockParkingZones';
 
 const UserParkingMapPage = () => {
   const [parkingZones, setParkingZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
 
-  const navigate = useNavigate(); // <-- создали навигатор
+  const navigate = useNavigate();
 
-  const handlePlacemarkClick = (zone) => {
-    setSelectedZone(zone);
+  const handlePlacemarkClick = async (zone) => {
+    try {
+      const response = await fetch(`http://localhost:8080/parking-zones/get/${zone.id}/partial`);
+      if (!response.ok) throw new Error('Ошибка загрузки зоны');
+      const data = await response.json();
+      setSelectedZone(data);
+      console.log(selectedZone);
+    } catch (error) {
+      console.warn(`Не удалось загрузить зону ${zone.id}, используем данные с карты`);
+      setSelectedZone(zone);
+    }
   };
 
   const handleMoreDetails = () => {
     if (selectedZone) {
-      navigate(`/client/parking/${selectedZone.id}`); // <-- переход с id парковки
+      navigate(`/client/parking/${selectedZone.id}`);
     }
   };
 
   useEffect(() => {
-    const mockParkingZones = [
-      {
-        id: 1,
-        title: "Парковка на проспекте Кирова",
-        address: "Проспект Кирова, Саратов",
-        parkingSpacesCount: 20,
-        latitude: 51.533562,
-        longitude: 46.034257,
-        rev: [
-          {
-            id: 1,
-            client: { email: "user1@example.com" },
-            comment: "Очень удобная парковка, всегда есть места!",
-            rating: 4,
-            createdAt: "2025-04-26T10:00:00",
-          },
-          {
-            id: 2,
-            client: { email: "user1@example.com" },
-            comment: "Очень удобная парковка, всегда есть места!",
-            rating: 5,
-            createdAt: "2025-04-26T10:00:00",
-          }
-        ],
-      },
-      {
-        id: 2,
-        title: "Парковка у набережной",
-        address: "Улица Чернышевского, Саратов",
-        parkingSpacesCount: 15,
-        latitude: 51.530120,
-        longitude: 46.014982,
-        rev: [
-          {
-            id: 2,
-            client: { email: "user2@example.com" },
-            comment: "Парковка не очень удобная, часто занята.",
-            rating: 3,
-            createdAt: "2025-04-25T14:30:00",
-          },
-        ],
-      },
-    ];
-
-    setParkingZones(mockParkingZones);
+    const fetchParkingZones = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/parking-zones/get/list');
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        console.log(data);
+        setParkingZones(data);
+      } catch (error) {
+        console.warn('Ошибка при загрузке парковок, используем моки');
+        setParkingZones(mockParkingZones);
+      }
+    };
+  
+    fetchParkingZones();
   }, []);
+
+  useEffect(() => {
+    console.log("Обновленные parkingZones:", parkingZones);
+  }, [parkingZones]);
+
+  useEffect(() => {
+    console.log("Обновленный selectedZone:", selectedZone);
+  }, [selectedZone]);
 
   const renderStars = (rating) => {
     if (isNaN(rating) || rating < 0 || rating > 5) {
@@ -106,7 +93,7 @@ const UserParkingMapPage = () => {
               geometry={[zone.latitude, zone.longitude]}
               properties={{
                 iconContent: `${zone.parkingSpacesCount} мест`,
-                balloonContent: `${zone.title} - ${zone.address} | Рейтинг: ${zone.rev[0]?.rating || "Нет рейтинга"}`,
+                // balloonContent: `${zone.title} - ${zone.address} | Рейтинг: ${zone.revzone.rev[0]?.rating || "Нет рейтинга"}`,
               }}
               options={{
                 preset: 'islands#blueCircleIconWithCaption',

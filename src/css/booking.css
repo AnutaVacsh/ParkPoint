@@ -457,5 +457,82 @@
     color: white;
     font-weight: bold;
   }
-
+  .summary-container {
+    margin-top: 24px;
+    padding: 16px;
+  }
+  
+  .summary-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  
+  .summary-time-block {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(254, 225, 116, 0.15);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    width: 40%;
+  }
+  
+  .time-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .time-label {
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  
+  .time-value {
+    font-size: 16px;
+  }
+  
+  .summary-price {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+  }
+  
+  .summary-row.total {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .summary-divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 8px 0;
+  }
+  
+  .summary-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn-yellow {
+    padding: 12px;
+    width: 100%;
+    background-color: #FEE174;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .btn-yellow:hover {
+    background-color: #e6c741;
+  }
+  
   

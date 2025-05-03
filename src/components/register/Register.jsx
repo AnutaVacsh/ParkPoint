@@ -8,7 +8,6 @@ import { register as apiRegister } from '../../api/AuthApi';
 const OwnerRegisterStep1 = () => {
   const { setheaderState } = useContext(HeaderContext);
   const { setUser } = useContext(UserContext);
-  const [loginInput, setLoginInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
   const [phoneInput, setPhoneInput] = useState('');
@@ -23,7 +22,6 @@ const OwnerRegisterStep1 = () => {
     }
 
     const registerRequest = {
-      login: loginInput,
       password: passwordInput,
       phone: phoneInput,
       email: emailInput,
@@ -31,6 +29,7 @@ const OwnerRegisterStep1 = () => {
 
     try {
       const result = await apiRegister(registerRequest);
+      localStorage.setItem("userId", result.id);
       console.log(result)
       setheaderState(result.role);
       setUser(result.role);

@@ -16,6 +16,7 @@ const Login = () => {
   async function login() {
     try {
       const userData = await apiLogin(loginInput, passwordInput);
+      localStorage.setItem("userId", userData.id);
       console.log(userData);
       setheaderState(userData.role);
       setUser(userData.role);
