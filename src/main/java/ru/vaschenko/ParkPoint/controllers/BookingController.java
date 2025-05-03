@@ -1,6 +1,7 @@
 package ru.vaschenko.ParkPoint.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,7 +55,8 @@ public class BookingController implements BookingApi {
     }
 
     @Override
-    public List<BookingDto> getBookingsWithPagination(SearchRequestDTO searchRequest) {
-        return List.of();
+    public Page<BookingDto> getBookingsWithPagination(Long userId, SearchRequestDTO searchRequest) {
+        return bookingService.getBookingsWithPagination(userId, searchRequest);
     }
+
 }

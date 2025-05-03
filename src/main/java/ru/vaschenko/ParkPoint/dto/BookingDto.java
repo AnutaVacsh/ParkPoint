@@ -10,5 +10,6 @@ public record BookingDto(
         LocalDateTime startTime, 
         LocalDateTime endTime,
         LocalDateTime dateCreated,
-        StateBooking status
+        StateBooking status,
+        Integer price
 ) {}

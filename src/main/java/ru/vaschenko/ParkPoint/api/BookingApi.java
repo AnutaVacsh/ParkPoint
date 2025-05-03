@@ -1,5 +1,6 @@
 package ru.vaschenko.ParkPoint.api;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,5 +41,6 @@ public interface BookingApi {
     ResponseEntity<String> createSubscription(@RequestBody SubscriptionRequestDto request);
 
     @PostMapping(ApiPath.BOOKING_PAG)
-    public List<BookingDto> getBookingsWithPagination(@RequestBody SearchRequestDTO searchRequest);
+    public Page<BookingDto> getBookingsWithPagination(@PathVariable Long userId,
+                                                      @RequestBody SearchRequestDTO searchRequest);
 }

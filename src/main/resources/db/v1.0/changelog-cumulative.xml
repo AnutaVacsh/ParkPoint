@@ -18,5 +18,6 @@
     <include file="ddl/11-create-subscription-table.xml" relativeToChangelogFile="true"/>
     <include file="ddl/12-create-subscription-days-table.xml" relativeToChangelogFile="true"/>
     <include file="ddl/13-create-user-card-table.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/14-add-price-to-booking.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

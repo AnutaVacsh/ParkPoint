@@ -33,7 +33,7 @@ public class ApiPath {
     public static final String MY_BOOKINGS = "/my-bookings";
     public static final String USER_SUBSCRIPTIONS = "/subscriptions/{userId}";
     public static final String CHANGE_STATE_BOOKING = "change/state/{bookingId}";
-    public static final String BOOKING_PAG = "/getAllWithPag";
+    public static final String BOOKING_PAG = "/{userId}/getAllWithPag";
 
     // User
     public static final String USER = "user";

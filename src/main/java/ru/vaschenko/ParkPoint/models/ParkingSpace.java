@@ -47,4 +47,20 @@ public class ParkingSpace {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Override
+    public String toString() {
+        return "ParkingSpace{" +
+                "id=" + id +
+                ", owner=" + owner +
+                ", parkingZone=" + parkingZone.getId() +
+                ", order=" + order +
+                ", hourlyPrice=" + hourlyPrice +
+                ", dailyPrice=" + dailyPrice +
+                ", weeklyPrice=" + weeklyPrice +
+                ", monthlyPrice=" + monthlyPrice +
+                ", isAvailable=" + isAvailable +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

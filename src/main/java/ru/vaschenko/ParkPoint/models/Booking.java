@@ -33,4 +33,20 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     private StateBooking status = StateBooking.PENDING;
+
+    private Integer price;
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", client=" + client +
+                ", parkingSpace=" + parkingSpace.getId() +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", dateCreated=" + dateCreated +
+                ", status=" + status +
+                ", price=" + price +
+                '}';
+    }
 }

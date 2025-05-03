@@ -12,5 +12,6 @@ public record BookingRequestDto(
         Long clientId,
         Long parkingSpaceId,
         LocalDateTime startTime,
-        LocalDateTime endTime
+        LocalDateTime endTime,
+        Integer price
 ) {}
