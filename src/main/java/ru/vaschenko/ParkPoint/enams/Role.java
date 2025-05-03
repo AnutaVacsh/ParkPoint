@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum Role {
     CLIENT,
     OWNER,
-    ADMIN
+    ADMIN,
+    ZONE_MANAGER
 }
 

@@ -20,7 +20,7 @@ public class ApiPath {
 
     // ParkingSpace
     public static final String PARKING_SPACES = "/parking-spaces";
-    public static final String PARKING_SPACES_ZONE_LIST = "/get/list/{idParkingZone}";
+    public static final String PARKING_SPACES_ZONE_LIST = "/get/list/{parkingZoneId}";
 
     // Bookings
     public static final String BOOKING = "/booking";

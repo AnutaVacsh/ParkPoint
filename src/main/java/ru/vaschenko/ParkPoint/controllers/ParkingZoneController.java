@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 import ru.vaschenko.ParkPoint.api.ParkingZoneApi;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
@@ -12,7 +13,7 @@ import ru.vaschenko.ParkPoint.services.ParkingZoneService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin
 @RequiredArgsConstructor
 public class ParkingZoneController implements ParkingZoneApi {

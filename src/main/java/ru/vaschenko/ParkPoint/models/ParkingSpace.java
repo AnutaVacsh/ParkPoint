@@ -1,11 +1,14 @@
 package ru.vaschenko.ParkPoint.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import lombok.*;
 import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Data
 @Table(name = "ParkingSpace")

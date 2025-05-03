@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 import ru.vaschenko.ParkPoint.api.BookingApi;
 import ru.vaschenko.ParkPoint.dto.BookingDto;
 import ru.vaschenko.ParkPoint.dto.request.BookingRequestDto;
@@ -16,7 +17,7 @@ import ru.vaschenko.ParkPoint.services.BookingService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin
 @RequiredArgsConstructor
 public class BookingController implements BookingApi {
