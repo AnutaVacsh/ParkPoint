@@ -16,4 +16,7 @@ public interface ParkingSpaceApi {
 
     @GetMapping(ApiPath.PARKING_SPACES_ZONE_LIST)
     ResponseEntity<List<ParkingSpaceBookingDto>> getParkingSpaceIntoZoneByBooking(@PathVariable Long parkingZoneId);
+
+    @GetMapping(ApiPath.PARKING_SPACES_ID)
+    ResponseEntity<ParkingSpaceDto> getParkingSpaceById(@PathVariable Long id);
 }

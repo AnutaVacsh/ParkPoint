@@ -26,4 +26,9 @@ public class ParkingSpaceController implements ParkingSpaceApi {
     public ResponseEntity<List<ParkingSpaceBookingDto>> getParkingSpaceIntoZoneByBooking(Long parkingZoneId) {
         return parkingSpaceService.getParkingSpaceToBookingIntoZone(parkingZoneId);
     }
+
+    @Override
+    public ResponseEntity<ParkingSpaceDto> getParkingSpaceById(Long id) {
+        return parkingSpaceService.getParkingSpaceById(id);
+    }
 }

@@ -40,8 +40,8 @@ public class BookingController implements BookingApi {
     }
 
     @Override
-    public ResponseEntity<String> changeStateBooking(Long bookingId, StateBooking state) {
-        return null;
+    public ResponseEntity<Booking> changeStateBooking(Long bookingId, StateBooking state) {
+        return bookingService.changeStateBooking(bookingId, state);
     }
 
     @Override

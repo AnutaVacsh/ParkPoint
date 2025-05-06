@@ -1,7 +1,9 @@
 package ru.vaschenko.ParkPoint.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.dto.BookingDto;
 import ru.vaschenko.ParkPoint.dto.request.BookingRequestDto;
@@ -47,8 +49,12 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    private TimeSlotDto convertToDto(Booking booking) {
-        return new TimeSlotDto(booking.getStartTime(), booking.getEndTime());
+    public ResponseEntity<Booking> changeStateBooking(Long bookingId, StateBooking state) {
+        Booking booking = getBookingById(bookingId);
+        booking.setStatus(state);
+        bookingRepository.save(booking);
+        log.info("Booking {} status changed from {} to {}", bookingId, booking.getStatus(), state);
+        return ResponseEntity.ok(booking);
     }
 
     public Page<BookingDto> getBookingsWithPagination(Long userId, SearchRequestDTO searchRequest) {
@@ -76,5 +82,14 @@ public class BookingService {
         );
 
         return bookings.map(bookingMapper::toDto);
+    }
+
+    private TimeSlotDto convertToDto(Booking booking) {
+        return new TimeSlotDto(booking.getStartTime(), booking.getEndTime());
+    }
+
+    private Booking getBookingById(Long id){
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found with id: " + id));
     }
 }

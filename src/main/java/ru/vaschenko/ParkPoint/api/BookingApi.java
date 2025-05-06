@@ -31,7 +31,7 @@ public interface BookingApi {
     ResponseEntity<Booking> createBooking(@RequestBody BookingRequestDto request);
 
     @PutMapping(ApiPath.CHANGE_STATE_BOOKING)
-    ResponseEntity<String> changeStateBooking(@PathVariable Long bookingId, @RequestBody StateBooking state);
+    ResponseEntity<Booking> changeStateBooking(@PathVariable Long bookingId, @RequestBody StateBooking state);
 
 //    Subscription
     @GetMapping(ApiPath.SUBSCRIPTION_INFO)

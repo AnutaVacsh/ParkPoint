@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(ApiPath.USER)
 public interface UserApi {
     @GetMapping(ApiPath.USER_CARDS)
-    ResponseEntity<UserCardResponseDto> getUserCards();
+    ResponseEntity<List<UserCardResponseDto>> getUserCards();
 
     @PostMapping(ApiPath.CREATE_CARD)
     ResponseEntity<String> addUserCard(@RequestBody UserCardDto request);

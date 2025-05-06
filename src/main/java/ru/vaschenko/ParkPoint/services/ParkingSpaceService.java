@@ -1,5 +1,6 @@
 package ru.vaschenko.ParkPoint.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +38,11 @@ public class ParkingSpaceService {
                 .toList();
 
         return ResponseEntity.ok(psbd);
+    }
+
+    public ResponseEntity<ParkingSpaceDto> getParkingSpaceById(Long id){
+        ParkingSpace ps = parkingSpaceRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Parking space not found"));
+        return ResponseEntity.ok(parkingSpaceMapper.parkingSpaceToParkingSpaceDto(ps));
     }
 }

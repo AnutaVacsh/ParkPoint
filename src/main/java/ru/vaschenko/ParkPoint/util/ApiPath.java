@@ -21,6 +21,7 @@ public class ApiPath {
     // ParkingSpace
     public static final String PARKING_SPACES = "/parking-spaces";
     public static final String PARKING_SPACES_ZONE_LIST = "/get/list/{parkingZoneId}";
+    public static final String PARKING_SPACES_ID= "/get/{id}";
 
     // Bookings
     public static final String BOOKING = "/booking";
@@ -28,7 +29,7 @@ public class ApiPath {
     public static final String USER_BOOKING = "/get/booking/{userId}";
     public static final String BOOKING_CREATE = "/create";
     public static final String SUBSCRIPTION_INFO = "/subscription/{idParkingSpace}";
-    public static final String SUBSCRIPTION_CREATE = "/subscription";
+//    public static final String SUBSCRIPTION_CREATE = "/subscription";
     public static final String CANCEL_BOOKING = "/booking/{bookingId}/cancel";
     public static final String MY_BOOKINGS = "/my-bookings";
     public static final String USER_SUBSCRIPTIONS = "/subscriptions/{userId}";
@@ -38,8 +39,16 @@ public class ApiPath {
     // User
     public static final String USER = "user";
     public static final String USER_CARDS = "/get/cards/{userId}";
-    public static final String CREATE_CARD = "/create/card";
+    public static final String CREATE_CARD = "/create/card/";
     public static final String COMPLAINT = "/complaint";
     public static final String REVIEW = "/review";
     public static final String COMPLAINTS_AGAINST_USER = "/complaints/{userId}";
+
+    // Subscription
+    public static final String SUBSCRIPTION = "subscription";
+    public static final String SUBSCRIPTION_GET_USER = "/get/user/{userId}";
+    public static final String SUBSCRIPTION_GET_ID= "/get/{id}";
+    public static final String SUBSCRIPTION_GET_ALL = "/get";
+    public static final String SUBSCRIPTION_CREATE = "/create";
+
 }

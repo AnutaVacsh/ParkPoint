@@ -9,6 +9,7 @@ public enum StateBooking {
     CANCELLED,
     COMPLETED,
     EXPIRED,
-    REJECTED
+    REJECTED,
+    SUBSCRIPTION
 }
 
