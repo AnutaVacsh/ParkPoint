@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import SearchRequestDTO from '../../dto/SearchRequestDTO';
 import BookingCard from './BookingCard';
 import { getBookingsWithPagination } from '../../api/BookingApi';
+import { parkingSubscriptionsMock } from '../../dto/mock/BookingMock';
 
 const MyBooking = () => {
   const [sortBy, setSortBy] = useState('startTime');

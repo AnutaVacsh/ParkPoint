@@ -79,6 +79,35 @@ export default function Booking() {
       alert('Ошибка при создании бронирования. Попробуйте позже.');
     }
   };
+
+  const handleSubscription = () => {
+
+    const start = new Date(selectedDate);
+    let end = new Date(start);
+  
+    // Обработка в зависимости от выбранной опции
+    if (selectedOption === 'Часы') {
+      start.setHours(range.start.major, range.start.minor);
+      end.setHours(range.end.major, range.end.minor);
+    } else if (selectedOption === 'Дни') {
+      start.setDate(start.getDate() + range.start.major);
+      start.setHours(range.start.minor);
+      end.setDate(end.getDate() + range.end.major);
+      end.setHours(range.end.minor);
+    } else if (selectedOption === 'Месяцы') {
+      start.setMonth(start.getMonth() + range.start.major);
+      start.setDate(start.getDate() + range.start.minor);
+      start.setHours(range.start.minor);
+      end.setMonth(end.getMonth() + range.end.major);
+      end.setDate(end.getDate() + range.end.minor);
+      end.setHours(range.end.minor);
+    }
+  
+    const startTime = toLocalISOString(start);
+    const endTime = toLocalISOString(end);
+    
+    navigate(`/client/parking/${id}/booking/subscription/${selectionSpace.id}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`);
+  };
   
 
   const validateBooking = () => {
@@ -301,7 +330,9 @@ export default function Booking() {
           <button className="btn-yellow" onClick={handleBooking}>
             Забронировать
           </button>
-          <button className="btn-yellow">Оформить подписку на место</button>
+          <button className="btn-yellow" onClick={handleSubscription}>
+            Оформить подписку на место
+          </button>
         </div>
       </div>
     </div>

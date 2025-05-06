@@ -1,0 +1,81 @@
+.card-page-container {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh; /* Полный экран */
+    padding: 50px;
+    padding-top: 150px;
+    font-family: 'Arial', sans-serif;
+    background-color: #2C3E50;
+    background-image: url('../img/bookingBlur.png');
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+  }
+
+  .card-page-container h1{
+    text-align: center;
+
+  }
+  
+  .card-form-wrapper {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 40px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .card-form {
+    width: 500px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 20px;
+  }
+  
+  input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    background-color: #ecf0f1;
+  }
+  
+  input::placeholder {
+    color: #7f8c8d;
+  }
+  
+  .continue-button {
+    background-color: #FEE174;
+    color: #2C3E50;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .continue-button:hover {
+    background-color: #fcd94a;
+  }
+  

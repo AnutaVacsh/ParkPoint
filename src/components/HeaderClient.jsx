@@ -25,7 +25,7 @@ const HeaderClient = () => {
           </li>
           <li>
             <NavLink 
-              to="/client/owners" 
+              to="/client/profile" 
               className={({ isActive }) => isActive ? "active-link" : ""}
             >
               ПРОФИЛЬ

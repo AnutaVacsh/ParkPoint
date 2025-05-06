@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../../css/bookingCardStyle.css';
 import { Link } from 'react-router-dom';
+import { changeStateBooking } from '../../api/BookingApi';
 
 const BookingCard = ({ booking }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,10 +10,41 @@ const BookingCard = ({ booking }) => {
   const { parkingZoneDto, order, idOwner } = parkingSpace;
   const { title, address } = parkingZoneDto;
 
-  // Функции для обработки действий
-  const handleCancel = (e) => {
+  // Функция для перевода статусов
+  const translateStatus = (status) => {
+    switch (status) {
+      case 'PENDING': return 'Ожидают подтверждения';
+      case 'CONFIRMED': return 'Подтверждено';
+      case 'REJECTED': return 'Отклонено';
+      case 'CANCELLED': return 'Отменено';
+      case 'COMPLETED': return 'Завершено';
+      case 'EXPIRED': return 'Прошедшая';
+      case 'SUBSCRIPTION': return 'Подписка';
+      default: return status;
+    }
+  };
+
+  const handleCancel = async (e) => {
     e.stopPropagation();
-    console.log('Отмена бронирования', id);
+    
+    try {
+      const isConfirmed = window.confirm('Вы уверены, что хотите отменить бронирование?');
+      if (!isConfirmed) return;
+  
+      console.log('Начало отмены бронирования', id);
+      
+      const updatedBooking = await changeStateBooking(id, 'CANCELLED');
+      
+      console.log('Бронирование успешно отменено:', updatedBooking);
+      
+      setIsModalOpen(false);
+      
+      alert('Бронирование успешно отменено');
+      
+    } catch (error) {
+      console.error('Ошибка при отмене бронирования:', error);
+      alert(`Не удалось отменить бронирование: ${error.message}`);
+    }
   };
 
   const handleComplain = (e) => {
@@ -33,6 +65,7 @@ const BookingCard = ({ booking }) => {
       case 'CANCELLED':
       case 'COMPLETED':
       case 'EXPIRED': return '#A8A8A8';
+      case 'SUBSCRIPTION': return '#FF9000'
       default: return '#FFFFFF';
     }
   };
@@ -87,7 +120,7 @@ const BookingCard = ({ booking }) => {
           <p><strong>Стоимость:</strong> {price/100} ₽</p>
           <div className='inLine'>
             <span>Статус:</span>
-            <span className="status" style={{ color: borderColor }}> {status}</span>
+            <span className="status" style={{ color: borderColor }}> {translateStatus(status)}</span>
           </div>
         </div>
       </div>
@@ -129,7 +162,7 @@ const BookingCard = ({ booking }) => {
               <div className="modalSection">
                 <h4>Оплата</h4>
                 <p><strong>Стоимость:</strong> {price/100} ₽</p>
-                <p><strong>Статус:</strong> <span style={{ color: borderColor }}>{status}</span></p>
+                <p><strong>Статус:</strong> <span style={{ color: borderColor }}>{translateStatus(status)}</span></p>
               </div>
               {/* Кнопки действий */}
             <div className="modalActions">
@@ -176,8 +209,6 @@ const BookingCard = ({ booking }) => {
               )}
             </div>
             </div>
-            
-            {/* Дополнительные действия можно добавить здесь */}
           </div>
         </div>
       )}

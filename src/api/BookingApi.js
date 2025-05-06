@@ -1,4 +1,4 @@
-import { mockBookingResponse, mockBookingResponseList, mockSubscriptionResponse } from "../dto/mock/BookingMock";
+import { mockBookingResponse, mockBookingResponseList, mockSubscriptionResponse, parkingSubscriptionsMock } from "../dto/mock/BookingMock";
 
 const BASE_URL = 'http://localhost:8080';  // Замените на актуальный URL вашего API
 
@@ -111,9 +111,34 @@ export const getBookingsWithPagination = async (searchRequestDTO) => {
       return data;
     } catch (error) {
       console.debug('[API] Ошибка при получении бронирований с пагинацией:', error);
-      console.log("mack: ", mockBookingResponseList)
-      return mockBookingResponseList;
+      console.log("mack: ", parkingSubscriptionsMock)
+      return parkingSubscriptionsMock;
     }
   };
   
+  export const changeStateBooking = async (bookingId, state) => {
+    try {
+      const response = await fetch(`${BASE_URL}/booking/change/state/${bookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(state)
+      });
   
+      if (!response.ok) {
+        throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Ошибка при изменении статуса бронирования:', error);
+      // Возвращаем мок с обновленным статусом
+      const mockBooking = {
+        ...mockBookingResponse,
+        status: state
+      };
+      return mockBooking;
+    }
+  };
