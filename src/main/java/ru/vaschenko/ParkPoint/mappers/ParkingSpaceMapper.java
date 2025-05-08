@@ -1,18 +1,49 @@
 package ru.vaschenko.ParkPoint.mappers;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.vaschenko.ParkPoint.dto.ParkingSpaceDto;
+import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceRequestDto;
 import ru.vaschenko.ParkPoint.models.ParkingSpace;
+import ru.vaschenko.ParkPoint.models.ParkingZone;
+import ru.vaschenko.ParkPoint.models.User;
+import ru.vaschenko.ParkPoint.services.ParkingZoneService;
+import ru.vaschenko.ParkPoint.services.UserService;
 
+@Slf4j
 @Mapper(componentModel = "spring", uses = { ParkingZoneMapper.class })
-public interface ParkingSpaceMapper {
+public abstract class ParkingSpaceMapper {
+
+    @Autowired
+    protected UserService userService;
+
+    @Autowired
+    protected ParkingZoneService parkingZoneService;
 
     @Mapping(source = "owner.id", target = "idOwner")
     @Mapping(source = "parkingZone", target = "parkingZoneDto")
-    ParkingSpaceDto parkingSpaceToParkingSpaceDto(ParkingSpace parkingSpace);
+    public abstract ParkingSpaceDto parkingSpaceToParkingSpaceDto(ParkingSpace parkingSpace);
 
     @Mapping(source = "idOwner", target = "owner.id")
     @Mapping(source = "parkingZoneDto", target = "parkingZone")
-    ParkingSpace parkingSpaceDtoToParkingSpace(ParkingSpaceDto parkingSpaceDto);
+    public abstract ParkingSpace parkingSpaceDtoToParkingSpace(ParkingSpaceDto parkingSpaceDto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "owner", expression = "java(owner)")
+    @Mapping(target = "parkingZone", expression = "java(resolveParkingZone(parkingSpaceRequestDto.parkingZoneId()))")
+    public abstract ParkingSpace requestDtoToEntity(ParkingSpaceRequestDto parkingSpaceRequestDto, User owner);
+
+    protected ParkingZone resolveParkingZone(Long zoneId) {
+        if (zoneId == null) {
+            log.warn("Parking Zone ID is null");
+            return null;
+        }
+        ParkingZone zone = parkingZoneService.findById(zoneId);
+        if (zone == null) {
+            log.warn("Parking Zone with ID {} not found", zoneId);
+        }
+        return zone;
+    }
+
 }

@@ -1,5 +1,6 @@
 package ru.vaschenko.ParkPoint.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.models.User;
@@ -19,5 +20,10 @@ public class UserService {
                     newUser.setId(id);
                     return userRepository.save(newUser);
                 });
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id " + id));
     }
 }

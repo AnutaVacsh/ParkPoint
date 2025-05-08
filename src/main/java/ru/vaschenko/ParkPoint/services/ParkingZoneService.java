@@ -34,4 +34,9 @@ public class ParkingZoneService {
                 new EntityNotFoundException("Parking zone with id " + id + " not found"));
         return ResponseEntity.ok(parkingZoneMapper.toDto(pz));
     }
+
+    public ParkingZone findById(Long id) {
+        return parkingZoneRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Parking zone not found with id " + id));
+    }
 }

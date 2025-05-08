@@ -3,6 +3,7 @@ package ru.vaschenko.ParkPoint.mappers;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
@@ -34,7 +35,7 @@ public abstract class ParkingZoneMapper {
     @Mapping(target = "rev", source = "rev")
     public abstract ParkingZonePartDto toPartDto(ParkingZone entity);
 
-    @org.mapstruct.Named("longToUser")
+    @Named("longToUser")
     public User map(Long id) {
         return userService.getOrCreateUser(id);
     }

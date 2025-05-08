@@ -5,8 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vaschenko.ParkPoint.dto.UserDto;
 import ru.vaschenko.ParkPoint.dto.request.OwnerRegisterRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.RegisterRequestDto;
 import ru.vaschenko.ParkPoint.enams.Role;
 import ru.vaschenko.ParkPoint.exeptions.UnauthorizedException;
@@ -68,33 +70,48 @@ public class AuthService {
         return ResponseEntity.ok(userMapper.userToUserDto(savedUser));
     }
 
+    @Transactional
     public ResponseEntity<UserDto> registerOwner(OwnerRegisterRequestDto request) {
+        logger.info(request + " ");
         logger.info("Attempting to register a new owner with email: {}", request.registerRequestDto().email());
 
+        // Проверка на существование email
         checkIfEmailExists(request.registerRequestDto().email());
 
+        // Создание и сохранение пароля
         Password password = new Password();
         password.setPassword(request.registerRequestDto().password());
         logger.info("Password successfully set for new owner");
+        password = passwordRepository.save(password);
 
+        // Создание объекта User для владельца
         User owner = new User();
         owner.setEmail(request.registerRequestDto().email());
         owner.setPassword(password);
         owner.setRole(Role.OWNER);
         logger.info("Owner entity created with email: {} and role: {}", request.registerRequestDto().email(), Role.OWNER);
 
+        // Сохранение владельца в базе
         User savedOwner = userRepository.save(owner);
         logger.info("New owner registered with id: {}", savedOwner.getId());
 
-        ParkingSpace parkingSpace = parkingSpaceMapper.parkingSpaceDtoToParkingSpace(request.parkingSpaceDto());
+        // Маппинг парковочного места, передаем владельца
+        logger.debug(request.parkingSpaceRequestDto() + " ");
+        ParkingSpace parkingSpace = parkingSpaceMapper.requestDtoToEntity(request.parkingSpaceRequestDto(), savedOwner);
+        logger.info("Parking space entity created: {}", parkingSpace);
+
+        // Устанавливаем владельца парковочного места
         parkingSpace.setOwner(savedOwner);
         logger.info("Parking space associated with owner id: {}", savedOwner.getId());
 
+        // Сохранение парковочного места в базе
         parkingSpaceRepository.save(parkingSpace);
         logger.info("Parking space saved with id: {}", parkingSpace.getId());
 
+        // Возвращаем ответ с данными владельца
         return ResponseEntity.ok(userMapper.userToUserDto(savedOwner));
     }
+
 
     private void checkIfEmailExists(String email) {
         if (userRepository.findByEmail(email).isPresent()) {

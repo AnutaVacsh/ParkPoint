@@ -92,4 +92,32 @@ public class BookingService {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Booking not found with id: " + id));
     }
+
+    public Page<BookingDto> getOwnerBookingsWithPagination(Long ownerId, SearchRequestDTO searchRequest) {
+        Specification<Booking> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(cb.equal(root.get("parkingSpace").get("owner").get("id"), ownerId));
+
+            if (searchRequest.filter() != null && !searchRequest.filter().isEmpty()) {
+                predicates.add(cb.equal(root.get("status"), StateBooking.valueOf(searchRequest.filter())));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Sort sort = Sort.by(
+                searchRequest.sortDirection().equalsIgnoreCase("ASC") ?
+                        Sort.Direction.ASC : Sort.Direction.DESC,
+                searchRequest.sortBy()
+        );
+
+        Page<Booking> bookings = bookingRepository.findAll(
+                spec,
+                PageRequest.of(searchRequest.page() - 1, searchRequest.size(), sort)
+        );
+
+        return bookings.map(bookingMapper::toDto);
+    }
+
 }

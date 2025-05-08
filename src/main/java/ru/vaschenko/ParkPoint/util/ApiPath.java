@@ -35,6 +35,7 @@ public class ApiPath {
     public static final String USER_SUBSCRIPTIONS = "/subscriptions/{userId}";
     public static final String CHANGE_STATE_BOOKING = "change/state/{bookingId}";
     public static final String BOOKING_PAG = "/{userId}/getAllWithPag";
+    public static final String BOOKING_PAG_OWNER = "/owner/{userId}/getAllWithPag";
 
     // User
     public static final String USER = "user";

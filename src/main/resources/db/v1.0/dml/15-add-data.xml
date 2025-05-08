@@ -1,0 +1,146 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="5-seed-users" author="AnutaVacsh">
+        <!-- Пароли -->
+        <insert tableName="password">
+            <column name="password" value="123456"/>
+        </insert>
+        <insert tableName="password">
+            <column name="password" value="qwerty"/>
+        </insert>
+
+        <!-- Пользователи -->
+        <insert tableName="users">
+            <column name="email" value="manager@example.com"/>
+            <column name="id_password" valueNumeric="1"/>
+            <column name="role" value="ZONE_MANAGER"/>
+        </insert>
+        <insert tableName="users">
+            <column name="email" value="owner@example.com"/>
+            <column name="id_password" valueNumeric="2"/>
+            <column name="role" value="OWNER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="6-seed-parking-zones-and-spaces" author="AnutaVacsh">
+        <!-- Парковочные зоны -->
+        <insert tableName="parking_zone">
+            <column name="title" value="Парковка на Московской"/>
+            <column name="address" value="Саратов, ул. Московская, д. 135"/>
+            <column name="latitude" valueNumeric="51.5332"/>
+            <column name="longitude" valueNumeric="46.0341"/>
+            <column name="state" value="ACTIVE"/>
+            <column name="description" value="Удобная парковка в центре Саратова"/>
+            <column name="map" value=""/>
+            <column name="id_zone_manager" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="parking_zone">
+            <column name="title" value="Парковка у Набережной"/>
+            <column name="address" value="Саратов, ул. Волжская, д. 20"/>
+            <column name="latitude" valueNumeric="51.5278"/>
+            <column name="longitude" valueNumeric="45.9990"/>
+            <column name="state" value="ACTIVE"/>
+            <column name="description" value="Парковка рядом с набережной"/>
+            <column name="map" value=""/>
+            <column name="id_zone_manager" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="parking_zone">
+            <column name="title" value="Парковка на Университетской"/>
+            <column name="address" value="Саратов, ул. Университетская, д. 42"/>
+            <column name="latitude" valueNumeric="51.5402"/>
+            <column name="longitude" valueNumeric="46.0155"/>
+            <column name="state" value="INACTIVE"/>
+            <column name="description" value="Парковка у СГУ"/>
+            <column name="map" value=""/>
+            <column name="id_zone_manager" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="parking_zone">
+            <column name="title" value="Парковка у ТЦ Триумф Молл"/>
+            <column name="address" value="Саратов, ул. Вавилова, д. 48"/>
+            <column name="latitude" valueNumeric="51.5417"/>
+            <column name="longitude" valueNumeric="46.0344"/>
+            <column name="state" value="PENDING"/>
+            <column name="description" value="Парковка возле ТЦ"/>
+            <column name="map" value=""/>
+            <column name="id_zone_manager" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="parking_zone">
+            <column name="title" value="Парковка в Энгельсе у парка"/>
+            <column name="address" value="Энгельс, ул. Ленина, д. 5"/>
+            <column name="latitude" valueNumeric="51.5050"/>
+            <column name="longitude" valueNumeric="46.1160"/>
+            <column name="state" value="ACTIVE"/>
+            <column name="description" value="Парковка у парка"/>
+            <column name="map" value=""/>
+            <column name="id_zone_manager" valueNumeric="1"/>
+        </insert>
+
+        <!-- Парковочные места -->
+        <insert tableName="parking_space">
+            <column name="id_owner" valueNumeric="2"/>
+            <column name="id_parking_zone" valueNumeric="1"/>
+            <column name="order" valueNumeric="1"/>
+            <column name="hourly_price" valueNumeric="8000"/>
+            <column name="daily_price" valueNumeric="48000"/>
+            <column name="weekly_price" valueNumeric="240000"/>
+            <column name="monthly_price" valueNumeric="800000"/>
+            <column name="is_available" value="ACTIVE"/>
+            <column name="description" value="Место возле входа"/>
+        </insert>
+
+        <insert tableName="parking_space">
+            <column name="id_owner" valueNumeric="2"/>
+            <column name="id_parking_zone" valueNumeric="2"/>
+            <column name="order" valueNumeric="1"/>
+            <column name="hourly_price" valueNumeric="8000"/>
+            <column name="daily_price" valueNumeric="48000"/>
+            <column name="weekly_price" valueNumeric="240000"/>
+            <column name="monthly_price" valueNumeric="800000"/>
+            <column name="is_available" value="INACTIVE"/>
+            <column name="description" value="Место у берега"/>
+        </insert>
+
+        <insert tableName="parking_space">
+            <column name="id_owner" valueNumeric="2"/>
+            <column name="id_parking_zone" valueNumeric="3"/>
+            <column name="order" valueNumeric="1"/>
+            <column name="hourly_price" valueNumeric="8000"/>
+            <column name="daily_price" valueNumeric="48000"/>
+            <column name="weekly_price" valueNumeric="240000"/>
+            <column name="monthly_price" valueNumeric="800000"/>
+            <column name="is_available" value="PENDING"/>
+            <column name="description" value="Место у университета"/>
+        </insert>
+
+        <insert tableName="parking_space">
+            <column name="id_owner" valueNumeric="2"/>
+            <column name="id_parking_zone" valueNumeric="4"/>
+            <column name="order" valueNumeric="1"/>
+            <column name="hourly_price" valueNumeric="8000"/>
+            <column name="daily_price" valueNumeric="48000"/>
+            <column name="weekly_price" valueNumeric="240000"/>
+            <column name="monthly_price" valueNumeric="800000"/>
+            <column name="is_available" value="REJECTED"/>
+            <column name="description" value="Парковка у ТЦ"/>
+        </insert>
+
+        <insert tableName="parking_space">
+            <column name="id_owner" valueNumeric="2"/>
+            <column name="id_parking_zone" valueNumeric="5"/>
+            <column name="order" valueNumeric="1"/>
+            <column name="hourly_price" valueNumeric="8000"/>
+            <column name="daily_price" valueNumeric="48000"/>
+            <column name="weekly_price" valueNumeric="240000"/>
+            <column name="monthly_price" valueNumeric="800000"/>
+            <column name="is_available" value="BAN"/>
+            <column name="description" value="Место у парка"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

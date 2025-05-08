@@ -45,18 +45,13 @@ public class BookingController implements BookingApi {
     }
 
     @Override
-    public ResponseEntity<SubscriptionResponseDto> getSubscriptionInfo(Long idParkingSpace) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<String> createSubscription(SubscriptionRequestDto request) {
-        return null;
-    }
-
-    @Override
     public Page<BookingDto> getBookingsWithPagination(Long userId, SearchRequestDTO searchRequest) {
         return bookingService.getBookingsWithPagination(userId, searchRequest);
+    }
+
+    @Override
+    public Page<BookingDto> getBookingsOwnerWithPagination(Long userId, SearchRequestDTO searchRequest) {
+        return bookingService.getOwnerBookingsWithPagination(userId, searchRequest);
     }
 
 }

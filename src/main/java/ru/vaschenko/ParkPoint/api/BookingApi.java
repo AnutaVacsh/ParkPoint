@@ -33,14 +33,11 @@ public interface BookingApi {
     @PutMapping(ApiPath.CHANGE_STATE_BOOKING)
     ResponseEntity<Booking> changeStateBooking(@PathVariable Long bookingId, @RequestBody StateBooking state);
 
-//    Subscription
-    @GetMapping(ApiPath.SUBSCRIPTION_INFO)
-    ResponseEntity<SubscriptionResponseDto> getSubscriptionInfo(@PathVariable Long idParkingSpace);
-
-    @PostMapping(ApiPath.SUBSCRIPTION_CREATE)
-    ResponseEntity<String> createSubscription(@RequestBody SubscriptionRequestDto request);
-
     @PostMapping(ApiPath.BOOKING_PAG)
     public Page<BookingDto> getBookingsWithPagination(@PathVariable Long userId,
+                                                      @RequestBody SearchRequestDTO searchRequest);
+
+    @PostMapping(ApiPath.BOOKING_PAG_OWNER)
+    public Page<BookingDto> getBookingsOwnerWithPagination(@PathVariable Long userId,
                                                       @RequestBody SearchRequestDTO searchRequest);
 }
