@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaMap } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "../../css/parkingFullInfo.css";
@@ -7,6 +7,7 @@ import "../../css/parkingFullInfo.css";
 import img1 from "../../img/car0.png";
 import img2 from "../../img/car1.png";
 import img3 from "../../img/car2.png";
+import { UserContext } from "../../contexts/UserContext";
 
 const mockParkingData = {
   id: 1,
@@ -24,6 +25,7 @@ const mockParkingData = {
 
 const ParkingFullInfo = () => {
   const { id } = useParams();
+  const { user } = useContext(UserContext);
   const [parkingData, setParkingData] = useState(null);
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
@@ -100,9 +102,10 @@ const ParkingFullInfo = () => {
           <p><strong>Всего мест:</strong> {parkingData.parkingSpacesCount}</p>
           <p><strong>Состояние:</strong> {parkingData.state}</p>
         </div>
+        {user === "CLIENT" && 
         <button className="book-button" onClick={handleBookingClick}>
-          Забронировать
-        </button>
+        Забронировать
+      </button>}
       </div>
     </div>
   );

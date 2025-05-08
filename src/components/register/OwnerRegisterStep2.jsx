@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOwnerRegister } from '../../contexts/OwnerRegisterContext';
 import '../../css/registerStyle.css';
 import { registerOwner as apiRegisterOwner } from '../../api/AuthApi'; // API для отправки данных владельца
+import { HeaderContext } from '../../contexts/HeaderContext';
+import { UserContext } from '../../contexts/UserContext';
 
 const OwnerRegisterStep2 = () => {
+  const { setheaderState } = useContext(HeaderContext);
+  const { setUser } = useContext(UserContext);
   const { registerData, updateRegisterData } = useOwnerRegister(); // Получаем данные из контекста
-  const [parkingZone, setParkingZone] = useState('');
+  const [parkingZone, setParkingZone] = useState(1);
   const [spaceDescription, setSpaceDescription] = useState('');
-  const [photos, setPhotos] = useState('');
+  const [space, setPhotos] = useState('');
   const [hourlyPrice, setHourlyPrice] = useState('');
   const [dailyPrice, setDailyPrice] = useState('');
   const [weeklyPrice, setWeeklyPrice] = useState('');
@@ -30,29 +34,39 @@ const OwnerRegisterStep2 = () => {
         password: registerData.password,
         role: "OWNER", 
       },
-      parkingSpaceDto: {
+      parkingSpaceRequestDto: {
         id: null,
         idOwner: null,
-        order: 1,
+        order: space,
         hourlyPrice: parseInt(hourlyPrice),
         dailyPrice: parseInt(dailyPrice),
         weeklyPrice: parseInt(weeklyPrice),
         monthlyPrice: parseInt(monthlyPrice),
-        isAvailable: "AVAILABLE",
+        isAvailable: "PENDING",
         description: spaceDescription,
-        parkingZoneDto: {
-          id: 1, // Пока просто для теста
-        },
+        parkingZoneId: parkingZone,
       }
     };
   
     try {
       const result = await apiRegisterOwner(ownerRegisterRequest);
       console.log(result);
+      setheaderState(result.role);
+      setUser(result.role);
       navigate('/owner');
     } catch (err) {
-      setError('Ошибка регистрации парковочного места');
-      console.error('Owner registration error:', err);
+        let message = 'Ошибка регистрации парковочного места';
+      
+        if (err.response && err.response.data) {
+          if (typeof err.response.data === 'string') {
+            message = err.response.data;
+          } else if (err.response.data.message) {
+            message = err.response.data.message;
+          }
+        }
+      
+        setError(message);
+        console.error('Owner registration error:', err);
     }
   };
 
@@ -89,13 +103,23 @@ const OwnerRegisterStep2 = () => {
             />
           </div>
 
-          <div className="formGroup">
+          {/* <div className="formGroup">
             <label htmlFor="photos" className="formLabel">Фотографии</label>
             <input
               type="file"
               id="photos"
               className="formInput"
               onChange={(e) => setPhotos(e.target.files)}
+            />
+          </div> */}
+
+          <div className="formGroup">
+            <label htmlFor="photos" className="formLabel">Парковочная зона</label>
+            <input
+              type="number"
+              id="photos"
+              className="formInput"
+              onChange={(e) => setPhotos(e.target.value)}
             />
           </div>
 

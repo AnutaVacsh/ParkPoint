@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 import { useNavigate } from 'react-router-dom';
 import '../../css/mapStyle.css'; // подключаем стили
 import { mockParkingZones } from '../../dto/mock/mockParkingZones';
+import { UserContext } from '../../contexts/UserContext';
 
 const UserParkingMapPage = () => {
   const [parkingZones, setParkingZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
+  const { user } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -25,7 +27,7 @@ const UserParkingMapPage = () => {
 
   const handleMoreDetails = () => {
     if (selectedZone) {
-      navigate(`/client/parking/${selectedZone.id}`);
+      user === "CLIENT" ? navigate(`/client/parking/${selectedZone.id}`) : navigate(`/owner/parking/${selectedZone.id}`);
     }
   };
 

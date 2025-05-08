@@ -142,3 +142,25 @@ export const getBookingsWithPagination = async (searchRequestDTO) => {
       return mockBooking;
     }
   };
+
+  export const getOwnerBookingsWithPagination = async (ownerId, searchRequestDTO) => {
+    try {
+      const response = await fetch(`${BASE_URL}/booking/owner/${ownerId}/getAllWithPag`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(searchRequestDTO),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Ошибка при получении бронирований владельца с пагинацией');
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('[API] Ошибка при получении бронирований владельца:', error);
+      return []; // или возврат мока
+    }
+  };
+  

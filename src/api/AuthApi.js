@@ -73,7 +73,7 @@ export const registerOwner = async (ownerRegisterRequest) => {
         console.warn('[MOCK] Сервер недоступен (404/503), возвращаем мок-данные');
         return userMockData;
       }
-      throw new Error('Ошибка регистрации владельца');
+      throw new Error(response.error);
     }
 
     const result = await response.json();
@@ -81,7 +81,6 @@ export const registerOwner = async (ownerRegisterRequest) => {
     return new UserDto(result.id, result.email, result.role);
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
-    console.warn('[MOCK] Ошибка соединения, возвращаем мок-данные');
-    return userMockData;
+    throw error;
   }
 };

@@ -20,7 +20,8 @@ const Login = () => {
       console.log(userData);
       setheaderState(userData.role);
       setUser(userData.role);
-      navigate('/client');
+    
+      userData.role === "CLIENT" ? navigate('/client') : navigate('/owner');
     } catch (err) {
       setError('Ошибка авторизации');
       console.error('Login error:', err);
