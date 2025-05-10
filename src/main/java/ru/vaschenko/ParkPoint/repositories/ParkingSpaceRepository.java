@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long> {
     List<ParkingSpace> findByParkingZoneId(Long parkingZoneId);
+
+    List<ParkingSpace> findByOwnerId(Long ownerId);
 }

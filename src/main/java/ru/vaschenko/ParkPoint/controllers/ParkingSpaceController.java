@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vaschenko.ParkPoint.api.ParkingSpaceApi;
 import ru.vaschenko.ParkPoint.dto.ParkingSpaceDto;
+import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceUpdateRequestDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceBookingDto;
+import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 import ru.vaschenko.ParkPoint.services.ParkingSpaceService;
 
 import java.util.List;
@@ -30,5 +33,25 @@ public class ParkingSpaceController implements ParkingSpaceApi {
     @Override
     public ResponseEntity<ParkingSpaceDto> getParkingSpaceById(Long id) {
         return parkingSpaceService.getParkingSpaceById(id);
+    }
+
+    @Override
+    public ResponseEntity<List<ParkingSpaceDto>> getParkingSpaceByUserId(Long userId) {
+        return parkingSpaceService.getParkingSpaceByUserId(userId);
+    }
+
+    @Override
+    public ResponseEntity<ParkingSpaceDto> updateParkingSpace(ParkingSpaceUpdateRequestDto parkingSpaceDto) {
+        return parkingSpaceService.updateParkingSpace(parkingSpaceDto);
+    }
+
+    @Override
+    public ResponseEntity<ParkingSpaceDto> updateStateParkingSpace(Long id, StateParkingSpace newState) {
+        return parkingSpaceService.updateState(id, newState);
+    }
+
+    @Override
+    public ResponseEntity<ParkingSpaceDto> createParkingSpace(ParkingSpaceRequestDto parkingSpaceDto) {
+        return parkingSpaceService.createParkingSpace(parkingSpaceDto);
     }
 }

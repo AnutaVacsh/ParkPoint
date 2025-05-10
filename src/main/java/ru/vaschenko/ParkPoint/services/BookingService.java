@@ -94,6 +94,7 @@ public class BookingService {
     }
 
     public Page<BookingDto> getOwnerBookingsWithPagination(Long ownerId, SearchRequestDTO searchRequest) {
+        log.info("serch OwnerBookingsWithPagination owner id: {}", ownerId);
         Specification<Booking> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -119,5 +120,4 @@ public class BookingService {
 
         return bookings.map(bookingMapper::toDto);
     }
-
 }

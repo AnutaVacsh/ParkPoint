@@ -34,6 +34,11 @@ public abstract class ParkingSpaceMapper {
     @Mapping(target = "parkingZone", expression = "java(resolveParkingZone(parkingSpaceRequestDto.parkingZoneId()))")
     public abstract ParkingSpace requestDtoToEntity(ParkingSpaceRequestDto parkingSpaceRequestDto, User owner);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "owner", expression = "java(resolveOwner(parkingSpaceRequestDto.idOwner()))")
+    @Mapping(target = "parkingZone", expression = "java(resolveParkingZone(parkingSpaceRequestDto.parkingZoneId()))")
+    public abstract ParkingSpace requestDtoToEntity(ParkingSpaceRequestDto parkingSpaceRequestDto);
+
     protected ParkingZone resolveParkingZone(Long zoneId) {
         if (zoneId == null) {
             log.warn("Parking Zone ID is null");
@@ -46,4 +51,15 @@ public abstract class ParkingSpaceMapper {
         return zone;
     }
 
+    protected User resolveOwner(Long ownerId) {
+        if (ownerId == null) {
+            log.warn("Owner ID is null");
+            return null;
+        }
+        User owner = userService.findById(ownerId);
+        if (owner == null) {
+            log.warn("Owner with ID {} not found", ownerId);
+        }
+        return owner;
+    }
 }

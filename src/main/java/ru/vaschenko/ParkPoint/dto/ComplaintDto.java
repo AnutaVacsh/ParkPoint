@@ -6,8 +6,8 @@ import ru.vaschenko.ParkPoint.models.User;
 
 public record ComplaintDto(
     Long id,
-    User complainant,
-    User accused,
+    UserDto complainant,
+    UserDto accused,
     String text,
     StateComplaint status,
     LocalDateTime createdAt

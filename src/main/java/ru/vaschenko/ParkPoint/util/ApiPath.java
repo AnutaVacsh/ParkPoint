@@ -16,12 +16,16 @@ public class ApiPath {
     public static final String PARKING_ZONES = "/parking-zones";
     public static final String PARKING_ZONES_LIST = "/get/list";
     public static final String PARKING_ZONE_PARTIAL = "/get/{id}/partial";
-    public static final String PARKING_ZONE_FULL = "get/{id}";
+    public static final String PARKING_ZONE_FULL = "/get/{id}";
 
     // ParkingSpace
     public static final String PARKING_SPACES = "/parking-spaces";
     public static final String PARKING_SPACES_ZONE_LIST = "/get/list/{parkingZoneId}";
     public static final String PARKING_SPACES_ID= "/get/{id}";
+    public static final String PARKING_SPACES_CREATE = "/create";
+    public static final String PARKING_SPACES_USER = "get/user/{userId}";
+    public static final String PARKING_SPACES_UPDATE = "/update";
+    public static final String PARKING_SPACE_UPDATE_STATE = "/state/update";
 
     // Bookings
     public static final String BOOKING = "/booking";
@@ -39,11 +43,13 @@ public class ApiPath {
 
     // User
     public static final String USER = "user";
+    public static final String USER_INFO = "info/{userId}";
     public static final String USER_CARDS = "/get/cards/{userId}";
     public static final String CREATE_CARD = "/create/card/";
     public static final String COMPLAINT = "/complaint";
     public static final String REVIEW = "/review";
     public static final String COMPLAINTS_AGAINST_USER = "/complaints/{userId}";
+    public static final String REVIEW_AGAINST_USER = "/review/{userId}";
 
     // Subscription
     public static final String SUBSCRIPTION = "subscription";

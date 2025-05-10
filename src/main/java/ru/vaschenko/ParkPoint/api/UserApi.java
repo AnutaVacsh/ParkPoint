@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.vaschenko.ParkPoint.dto.ComplaintDto;
 import ru.vaschenko.ParkPoint.dto.RevParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.UserCardDto;
+import ru.vaschenko.ParkPoint.dto.UserDto;
 import ru.vaschenko.ParkPoint.dto.response.UserCardResponseDto;
 import ru.vaschenko.ParkPoint.util.ApiPath;
 
@@ -16,8 +17,11 @@ import java.util.List;
 
 @RequestMapping(ApiPath.USER)
 public interface UserApi {
+    @GetMapping(ApiPath.USER_INFO)
+    ResponseEntity<UserDto> getUserInfo(@PathVariable Long userId);
+
     @GetMapping(ApiPath.USER_CARDS)
-    ResponseEntity<List<UserCardResponseDto>> getUserCards();
+    ResponseEntity<List<UserCardResponseDto>> getUserCards(@PathVariable Long userId);
 
     @PostMapping(ApiPath.CREATE_CARD)
     ResponseEntity<String> addUserCard(@RequestBody UserCardDto request);
@@ -30,4 +34,7 @@ public interface UserApi {
 
     @GetMapping(ApiPath.COMPLAINTS_AGAINST_USER)
     ResponseEntity<List<ComplaintDto>> getComplaintsAgainstUser(@PathVariable Long userId);
+
+//    @GetMapping(ApiPath.REVIEW_AGAINST_USER)
+//    ResponseEntity<List<>> getReviewAgainstUser(@PathVariable Long userId);
 }
