@@ -4,6 +4,7 @@ import SearchRequestDTO from '../../dto/SearchRequestDTO';
 import BookingCard from '../Client/BookingCard';
 import { getOwnerBookingsWithPagination } from '../../api/BookingApi';
 import { UserContext } from '../../contexts/UserContext';
+import BookingCardOwner from './BookingCard';
 
 const MyBookingOwner = () => {
   const { user } = useContext(UserContext);
@@ -115,7 +116,7 @@ const MyBookingOwner = () => {
           ) : !bookings ? (
             <div className="noResults">Нет бронирований</div>
           ) : (
-            bookings.map((booking) => <BookingCard key={booking.id} booking={booking} />)
+            bookings.map((booking) => <BookingCardOwner key={booking.id} booking={booking} />)
           )}
         </div>
 

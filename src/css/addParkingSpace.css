@@ -1,0 +1,165 @@
+/* Общие стили */
+.registerPage {
+    background: url('../img/loginBlur.png') no-repeat center center/cover; /* Путь к изображению */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  
+  .registerContent {
+    color: #fff;
+    max-width: 600px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон для улучшения читаемости */
+    padding: 30px;
+    border-radius: 15px;
+  }
+  
+  .registerTitle {
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    color: #FEE174;
+  }
+  
+  .registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .formGroup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .formLabel {
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 18px;
+    margin-right: 10px;
+    flex: 0 0 200px;
+  }
+  
+  .formInput {
+    width: 100%;
+    max-width: 373px;
+    height: 40px;
+    padding: 10px 15px;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    background-color: transparent;
+    color: #fff;
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .formInput:focus {
+    border-color: #FEE174;
+  }
+  
+  .textareaInput {
+    resize: vertical;
+  }
+  
+  .submitButton {
+    display: block;
+    text-align: center;
+    margin: 40px auto 0;
+    width: 317px;
+    height: 53px;
+    line-height: 53px;
+    background-color: #FEE174;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Manrope-Bold', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .submitButton:hover {
+    background-color: #e5cc62;
+  }
+  
+  .inputWithIcon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .mapIcon {
+    width: 40px;
+    height: 40px;
+    background-image: url('../img/map.svg');
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: background-image 0.3s ease;
+  }
+  
+  .mapIcon:hover {
+    background-image: url('../img/mapY.svg');
+  }
+  
+  /* Для кнопки с картой */
+  .mapButton {
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    background-color: #00000000;
+  }
+  
+  /* Ошибки */
+  .error {
+    color: #e74c3c;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* Стиль для элементов внутри формы */
+  .formRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .formRow .formGroup {
+    flex: 1;
+  }
+  
+  .formGroup input[type="file"] {
+    display: none;
+  }
+  
+  /* Всплывающие подсказки */
+  .loginPrompt {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Manrope-Regular', sans-serif;
+    font-size: 16px;
+  }
+  
+  .loginLink {
+    color: #FEE174;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+  }
+  
+  .loginLink:hover {
+    color: #e5cc62;
+  }
+  

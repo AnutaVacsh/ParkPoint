@@ -116,33 +116,6 @@ export const getBookingsWithPagination = async (searchRequestDTO) => {
     }
   };
   
-  export const changeStateBooking = async (bookingId, state) => {
-    try {
-      const response = await fetch(`${BASE_URL}/booking/change/state/${bookingId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(state)
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
-      }
-  
-      return await response.json();
-    } catch (error) {
-      console.error('Ошибка при изменении статуса бронирования:', error);
-      // Возвращаем мок с обновленным статусом
-      const mockBooking = {
-        ...mockBookingResponse,
-        status: state
-      };
-      return mockBooking;
-    }
-  };
-
   export const getOwnerBookingsWithPagination = async (ownerId, searchRequestDTO) => {
     try {
       const response = await fetch(`${BASE_URL}/booking/owner/${ownerId}/getAllWithPag`, {

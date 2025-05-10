@@ -1,0 +1,334 @@
+/* ownerDashboard.css */
+
+.owner-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 24px;
+    color: white;
+    padding-top: 150px;
+    background-color: #1D2329;
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.right-column {
+    padding-top: 100px;
+}
+
+.owner-profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid #FEE174;
+    padding-bottom: 16px;
+}
+
+.owner-profile .avatar {
+    width: 64px;
+    height: 64px;
+    background: white;
+    border-radius: 50%;
+}
+
+.owner-profile .profile-actions {
+    margin-left: auto;
+}
+
+.owner-profile .edit-btn {
+    background-color: #FEE174;
+    color: black;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.owner-profile .edit-btn:hover {
+    background-color: #eab308;
+}
+
+.section {
+    margin-bottom: 40px;
+    padding: 16px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+.card-list,
+.complaints,
+.reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card,
+.parking,
+.complaint,
+.review {
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.complaint .font-bold,
+.review .font-bold {
+    color: #FEE174;
+}
+
+.parking {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.parking h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #FEE174;
+}
+
+.parking p {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.parking .status-switch {
+    display: flex;
+    align-items: center;
+    color: #FEE174;
+}
+
+.parking .status-switch input {
+    margin-left: 10px;
+}
+
+.owner-dashboard .btn-yellow {
+    background-color: #FEE174;
+    color: black;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.owner-dashboard .btn-yellow:hover {
+    background-color: #eab308;
+}
+
+.btn-outline-yellow {
+    color: white;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: fit-content;
+    border: 2px solid #FEE174;
+    /* border-radius: 20%; */
+}
+
+.btn-outline-yellow:hover {
+    background: #FEE174;
+    color: black;
+}
+
+.underline-yellow {
+    color: #FEE174;
+    text-decoration: underline;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.underline-yellow:hover {
+    color: #fde047;
+}
+
+.stars {
+    color: #FEE174;
+    display: flex;
+    gap: 4px;
+}
+
+.complaint, .review {
+    border: 2px solid #FEE174;
+}
+
+.section-title {
+    color: #ffffff;
+}
+
+.card-list {
+    gap: 24px;
+}
+
+.card, .parking, .complaint, .review {
+    background-color: #1f2937;
+    color: white;
+}
+
+.link-yellow {
+    color: #FEE174;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    width: fit-content;
+    display: inline-block;
+}
+
+.link-yellow:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: #fde047;
+}
+
+/* New styles for Parking items */
+
+  
+  .status-switch {
+    display: flex;
+    align-items: center;
+    color: #FEE174; /* Жёлтый цвет */
+  }
+  
+  .status-switch input {
+    margin-left: 10px;
+    transform: scale(1.5); /* Увеличиваем размер галочки */
+    accent-color: #FEE174; /* Цвет галочки — жёлтый */
+  }
+  
+  .parking-card {
+    display: flex;
+    justify-content: space-between;
+    background-color: #2c3e50;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .parking-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .parking-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  
+  .parking-actions .btn-outline-yellow {
+    margin-top: 8px;
+    align-self: flex-start;
+  }
+  
+  .parking-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FEE174;
+  }
+  
+  .parking-card p {
+    font-size: 14px;
+    /* color: #ccc; */
+  }
+
+  /* Стили для модального окна */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Стили для модального окна */
+  .modal-content {
+    background-color: #2c3e50;
+    padding: 32px;
+    border-radius: 8px;
+    color: white;
+    width: 400px;
+    text-align: left; /* Изменено с center на left, чтобы текст выравнивался слева */
+  }
+  
+  /* Стили для формы */
+  .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #FEE174;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #FEE174;
+    background-color: #1f2937;
+    color: white;
+    font-size: 14px;
+  }
+  
+  .form-group textarea {
+    resize: vertical; /* Оставим возможность изменять размер textarea по вертикали */
+    min-height: 80px; /* Минимальная высота для textarea */
+  }
+  
+  /* Стили для кнопок */
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  
+  .modal-actions button {
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .modal-actions .btn-yellow {
+    background-color: #FEE174;
+    color: black;
+    border: none;
+  }
+  
+  .modal-actions .btn-outline-yellow {
+    background-color: transparent;
+    color: #FEE174;
+    border: 2px solid #FEE174;
+  }
+  
+  .modal-actions button:hover {
+    background-color: #eab308;
+  }
+  

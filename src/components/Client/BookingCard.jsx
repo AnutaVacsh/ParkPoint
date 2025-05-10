@@ -57,6 +57,23 @@ const BookingCard = ({ booking }) => {
     console.log('Отзыв о бронировании', id);
   };
 
+  const changeStateBooking = async (bookingId, stateBooking) => {
+    const response = await fetch(`http://localhost:8080/booking/change/state/${bookingId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(stateBooking),
+    });
+  
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Ошибка при изменении состояния бронирования');
+    }
+  
+    return await response.json();
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'PENDING': return '#FEE174';

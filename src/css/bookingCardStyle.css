@@ -91,4 +91,8 @@
   .reviewButton:hover {
     background-color: #ffdc5b;
   }
-  
+  .disclaimer {
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 0.5em;
+  }
