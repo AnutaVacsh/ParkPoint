@@ -5,6 +5,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.vaschenko.ParkPoint.dto.ParkingSpaceDto;
 import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceRequestDto;
+import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceAPDto;
 import ru.vaschenko.ParkPoint.models.ParkingSpace;
 import ru.vaschenko.ParkPoint.models.ParkingZone;
 import ru.vaschenko.ParkPoint.models.User;
@@ -12,7 +13,7 @@ import ru.vaschenko.ParkPoint.services.ParkingZoneService;
 import ru.vaschenko.ParkPoint.services.UserService;
 
 @Slf4j
-@Mapper(componentModel = "spring", uses = { ParkingZoneMapper.class })
+@Mapper(componentModel = "spring", uses = { ParkingZoneMapper.class, UserMapper.class })
 public abstract class ParkingSpaceMapper {
 
     @Autowired
@@ -38,6 +39,10 @@ public abstract class ParkingSpaceMapper {
     @Mapping(target = "owner", expression = "java(resolveOwner(parkingSpaceRequestDto.idOwner()))")
     @Mapping(target = "parkingZone", expression = "java(resolveParkingZone(parkingSpaceRequestDto.parkingZoneId()))")
     public abstract ParkingSpace requestDtoToEntity(ParkingSpaceRequestDto parkingSpaceRequestDto);
+
+    @Mapping(source = "owner", target = "owner")
+    @Mapping(source = "parkingZone", target = "parkingZoneDto")
+    public abstract ParkingSpaceAPDto parkingSpaceToParkingSpaceAPDto(ParkingSpace parkingSpace);
 
     protected ParkingZone resolveParkingZone(Long zoneId) {
         if (zoneId == null) {

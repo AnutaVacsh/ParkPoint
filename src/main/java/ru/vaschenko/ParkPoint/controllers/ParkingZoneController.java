@@ -1,6 +1,7 @@
 package ru.vaschenko.ParkPoint.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -8,7 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.vaschenko.ParkPoint.api.ParkingZoneApi;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
+import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
+import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
+import ru.vaschenko.ParkPoint.enams.StateParkingZone;
 import ru.vaschenko.ParkPoint.services.ParkingZoneService;
 
 import java.util.List;
@@ -33,4 +38,24 @@ public class ParkingZoneController implements ParkingZoneApi {
     public ResponseEntity<ParkingZoneDto> getFullZoneInfo(Long id) {
         return parkingZoneService.getFullZoneInfo(id);
     }
+
+    @Override
+    public ResponseEntity<Void> updateStatus(Long id, StateParkingZone newStatus) {
+        parkingZoneService.updateStatus(id, newStatus);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Page<ParkingZoneAPDto>> getAllParkingZoneWithPag(APSearchRequestDto requestDTO) {
+        int page = requestDTO.page();
+        int size = requestDTO.size();
+        String sortBy = requestDTO.sortBy();
+        String sortDirection = requestDTO.sortDirection();
+        List<FilterDTO> filters = requestDTO.filters();
+
+        Page<ParkingZoneAPDto> pageResult = parkingZoneService.searchParkingZones(page, size, sortBy, sortDirection, filters);
+
+        return ResponseEntity.ok(pageResult);
+    }
+
 }

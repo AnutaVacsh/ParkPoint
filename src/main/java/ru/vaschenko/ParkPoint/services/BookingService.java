@@ -33,6 +33,10 @@ public class BookingService {
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final BookingMapper bookingMapper;
 
+    public ResponseEntity<BookingDto> getBookingInfo(Long id) {
+        return ResponseEntity.ok(bookingMapper.toDto(getBookingById(id)));
+    }
+
     public Booking createBooking(BookingRequestDto request) {
         log.debug("Запрос на сохранение брони {}", request);
         Booking booking = bookingMapper.toEntity(request, userRepository, parkingSpaceRepository);

@@ -2,10 +2,14 @@ package ru.vaschenko.ParkPoint.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.dto.ComplaintDto;
 import ru.vaschenko.ParkPoint.dto.UserDto;
+import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
+import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.UserCardResponseDto;
 import ru.vaschenko.ParkPoint.mappers.ComplaintMapper;
 import ru.vaschenko.ParkPoint.mappers.UserCardMapper;
@@ -17,6 +21,13 @@ import ru.vaschenko.ParkPoint.repositories.PasswordRepository;
 import ru.vaschenko.ParkPoint.repositories.UserCardRepository;
 import ru.vaschenko.ParkPoint.repositories.UserRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.criteria.Predicate;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +67,46 @@ public class UserService {
                 .toList();
 
         return ResponseEntity.ok(complaintDtos);
+    }
+
+    public Page<UserDto> getAllUsersWithPag(int page, int size, String sortBy, String sortDirection, List<FilterDTO> filters) {
+        Specification<User> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (filters != null) {
+                for (FilterDTO filter : filters) {
+                    if (filter.field() == null || filter.value() == null || "ALL".equalsIgnoreCase(filter.value().toString())) {
+                        continue;
+                    }
+
+                    switch (filter.operator()) {
+                        case "=":
+                            predicates.add(cb.equal(root.get(filter.field()), filter.value()));
+                            break;
+                        case "LIKE":
+                            predicates.add(cb.like(root.get(filter.field()), "%" + filter.value() + "%"));
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unsupported operator: " + filter.operator());
+                    }
+                }
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        if (sortBy == null || sortBy.trim().isEmpty()) {
+            throw new IllegalArgumentException("Sort field cannot be null or empty.");
+        }
+
+        Sort.Direction direction = "ASC".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size, sort);
+
+        Page<User> users = userRepository.findAll(spec, pageRequest);
+
+        return users.map(userMapper::userToUserDto);
     }
 
     public User findById(Long id) {

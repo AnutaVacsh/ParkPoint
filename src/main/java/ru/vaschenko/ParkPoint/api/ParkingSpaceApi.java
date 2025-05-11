@@ -1,5 +1,6 @@
 package ru.vaschenko.ParkPoint.api;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.vaschenko.ParkPoint.dto.ParkingSpaceDto;
+import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceUpdateRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.SearchRequestDTO;
+import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceBookingDto;
 import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 import ru.vaschenko.ParkPoint.util.ApiPath;
@@ -24,6 +28,9 @@ public interface ParkingSpaceApi {
 
     @GetMapping(ApiPath.PARKING_SPACES_ZONE_LIST)
     ResponseEntity<List<ParkingSpaceBookingDto>> getParkingSpaceIntoZoneByBooking(@PathVariable Long parkingZoneId);
+
+    @PostMapping(ApiPath.PARKING_SPACES_PAG)
+    ResponseEntity<Page<ParkingSpaceAPDto>> getAllParkingSpaceWithPag(@RequestBody APSearchRequestDto requestDTO);
 
     @GetMapping(ApiPath.PARKING_SPACES_ID)
     ResponseEntity<ParkingSpaceDto> getParkingSpaceById(@PathVariable Long id);

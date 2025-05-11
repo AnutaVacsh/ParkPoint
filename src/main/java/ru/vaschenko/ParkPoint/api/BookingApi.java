@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping(ApiPath.BOOKING)
 public interface BookingApi {
     @GetMapping(ApiPath.BOOKING_INFO)
-    ResponseEntity<List<BookingDto>> getBookingInfo(@PathVariable Long id);
+    ResponseEntity<BookingDto> getBookingInfo(@PathVariable Long id);
 
     @GetMapping(ApiPath.USER_BOOKING)
     ResponseEntity<List<BookingDto>> getUserBooking(@PathVariable Long id);

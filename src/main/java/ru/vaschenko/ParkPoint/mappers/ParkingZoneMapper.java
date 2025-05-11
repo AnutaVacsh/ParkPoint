@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
+import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
 import ru.vaschenko.ParkPoint.models.ParkingZone;
 import ru.vaschenko.ParkPoint.models.User;
@@ -34,6 +35,11 @@ public abstract class ParkingZoneMapper {
             expression = "java(entity.getParkingSpaces() != null ? entity.getParkingSpaces().size() : 0)")
     @Mapping(target = "rev", source = "rev")
     public abstract ParkingZonePartDto toPartDto(ParkingZone entity);
+
+    @Mapping(source = "zoneManager", target = "zoneManager")
+    @Mapping(target = "parkingSpacesCount", expression = "java(zone.getParkingSpaces() != null ? zone.getParkingSpaces().size() : 0)")
+    @Mapping(source = "photos", target = "photos")
+    public abstract ParkingZoneAPDto parkingZoneToParkingZoneAPDto(ParkingZone zone);
 
     @Named("longToUser")
     public User map(Long id) {

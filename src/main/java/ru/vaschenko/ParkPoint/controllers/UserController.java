@@ -1,6 +1,7 @@
 package ru.vaschenko.ParkPoint.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,9 @@ import ru.vaschenko.ParkPoint.dto.ComplaintDto;
 import ru.vaschenko.ParkPoint.dto.RevParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.UserCardDto;
 import ru.vaschenko.ParkPoint.dto.UserDto;
+import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
+import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.UserCardResponseDto;
 import ru.vaschenko.ParkPoint.services.UserService;
 
@@ -48,5 +52,18 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<List<ComplaintDto>> getComplaintsAgainstUser(Long userId) {
         return userService.getComplaintsAgainstUser(userId);
+    }
+
+    @Override
+    public ResponseEntity<Page<UserDto>> getAllUsersWithPag(APSearchRequestDto requestDTO) {
+        int page = requestDTO.page();
+        int size = requestDTO.size();
+        String sortDirection = requestDTO.sortDirection();
+        String sortBy = requestDTO.sortBy();
+        List<FilterDTO> filters = requestDTO.filters();
+
+        Page<UserDto> result = userService.getAllUsersWithPag(page, size, sortBy, sortDirection, filters);
+
+        return ResponseEntity.ok(result);
     }
 }

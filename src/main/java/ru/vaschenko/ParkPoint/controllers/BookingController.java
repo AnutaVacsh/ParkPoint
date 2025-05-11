@@ -25,8 +25,8 @@ public class BookingController implements BookingApi {
     private final BookingService bookingService;
 
     @Override
-    public ResponseEntity<List<BookingDto>> getBookingInfo(Long id) {
-        return null;
+    public ResponseEntity<BookingDto> getBookingInfo(Long id) {
+        return bookingService.getBookingInfo(id);
     }
 
     @Override

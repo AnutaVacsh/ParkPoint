@@ -1,18 +1,29 @@
 package ru.vaschenko.ParkPoint.services;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.dto.ParkingSpaceDto;
+import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
 import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.ParkingSpaceUpdateRequestDto;
+import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceBookingDto;
 import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 import ru.vaschenko.ParkPoint.mappers.ParkingSpaceMapper;
 import ru.vaschenko.ParkPoint.models.ParkingSpace;
 import ru.vaschenko.ParkPoint.repositories.ParkingSpaceRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,6 +99,48 @@ public class ParkingSpaceService {
         ParkingSpace ps = parkingSpaceRepository.save(parkingSpaceMapper.requestDtoToEntity(parkingSpaceDto));
         return ResponseEntity.ok(parkingSpaceMapper.parkingSpaceToParkingSpaceDto(ps));
     }
+
+    public Page<ParkingSpaceAPDto> searchParkingSpaces(int page, int size, String sortBy, String sortDirection, List<FilterDTO> filters) {
+        Specification<ParkingSpace> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (filters != null) {
+                for (FilterDTO filter : filters) {
+                    if (filter.field() == null || filter.value() == null || "ALL".equalsIgnoreCase(filter.value().toString())) {
+                        continue; // пропускаем фильтр
+                    }
+
+                    switch (filter.operator()) {
+                        case "=":
+                            predicates.add(cb.equal(root.get(filter.field()), filter.value()));
+                            break;
+                        case "LIKE":
+                            predicates.add(cb.like(root.get(filter.field()), "%" + filter.value() + "%"));
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unsupported operator: " + filter.operator());
+                    }
+                }
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        if (sortBy == null || sortBy.trim().isEmpty()) {
+            throw new IllegalArgumentException("Sort field cannot be null or empty.");
+        }
+
+        Sort.Direction direction = "ASC".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size, sort);
+
+        Page<ParkingSpace> parkingSpaces = parkingSpaceRepository.findAll(spec, pageRequest);
+
+        return parkingSpaces.map(parkingSpaceMapper::parkingSpaceToParkingSpaceAPDto);
+    }
+
+
 
     private ParkingSpace getById(Long id){
         log.info("getById called with id: {}", id);

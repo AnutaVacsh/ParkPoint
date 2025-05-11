@@ -17,6 +17,8 @@ public class ApiPath {
     public static final String PARKING_ZONES_LIST = "/get/list";
     public static final String PARKING_ZONE_PARTIAL = "/get/{id}/partial";
     public static final String PARKING_ZONE_FULL = "/get/{id}";
+    public static final String PARKING_ZONE_PAG = "/get/all/pag";
+    public static final String PARKING_ZONE_UPDATE_STATE = "/update/state/{id}";
 
     // ParkingSpace
     public static final String PARKING_SPACES = "/parking-spaces";
@@ -26,6 +28,7 @@ public class ApiPath {
     public static final String PARKING_SPACES_USER = "get/user/{userId}";
     public static final String PARKING_SPACES_UPDATE = "/update";
     public static final String PARKING_SPACE_UPDATE_STATE = "/state/update";
+    public static final String PARKING_SPACES_PAG = "/get/all/pag";
 
     // Bookings
     public static final String BOOKING = "/booking";
@@ -50,6 +53,7 @@ public class ApiPath {
     public static final String REVIEW = "/review";
     public static final String COMPLAINTS_AGAINST_USER = "/complaints/{userId}";
     public static final String REVIEW_AGAINST_USER = "/review/{userId}";
+    public static final String ALL_USERS_PAG = "/get/all/pag";
 
     // Subscription
     public static final String SUBSCRIPTION = "subscription";
@@ -57,5 +61,12 @@ public class ApiPath {
     public static final String SUBSCRIPTION_GET_ID= "/get/{id}";
     public static final String SUBSCRIPTION_GET_ALL = "/get";
     public static final String SUBSCRIPTION_CREATE = "/create";
+
+    //Complaint
+    public static final String BASE_COMPLAINT = "complaint";
+    public static final String COMPLAINT_PAG = "get/all/pag";
+    public static final String COMPLAINT_CREATE = "create";
+    public static final String COMPLAINT_UPDATE_STATUS = "/update/status";
+
 
 }
