@@ -1,0 +1,293 @@
+.admin-dashboard {
+  background-color: #1D2329;  /* Тёмный фон для всего контента */
+  min-height: 100vh;
+  color: white;
+  font-family: sans-serif;
+}
+
+.top-banner {
+  height: 429px;
+  background-image: url('../img/grayCarsBlur.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px; /* Добавим отступы для текста */
+}
+
+.title {
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+  margin: 0;
+}
+
+.content {
+  padding: 40px;
+}
+
+.main {
+  display: flex;
+  gap: 100px;
+}
+
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-panel {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.chart.placeholder {
+  background-color: #2f3640;
+  height: 250px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 18px;
+}
+
+/* Стиль для кнопок действий */
+.action-button-container {
+  display: flex;
+  gap: 10px;
+}
+
+.action-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 10px;
+  padding: 20px 16px; /* Меньшие отступы для компактности */
+  font-size: 16px;    /* Уменьшаем размер шрифта */
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: background-color 0.3s;
+  cursor: pointer;
+  /* color: #ffffff; */
+}
+
+.action-button:hover {
+  background-color: rgba(255, 217, 0, 0.26);
+}
+
+.parking-table .action-button, .modal-content .action-button{
+    margin-right: 10px;
+  padding: 8px 16px; /* Меньшие отступы для компактности */
+  font-size: 14px;    /* Уменьшаем размер шрифта */
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: background-color 0.3s;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.parking-table .action-button:hover , .modal-content .action-button:hover{
+  background-color: rgb(255, 226, 62);
+  color: black;
+}
+
+.parking-table .actionFlex{
+    display: flex;
+}
+
+.action-button .icon {
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.action-button:hover .icon {
+  opacity: 1;
+}
+
+/* Стиль для поля фильтра */
+.filter select,  .filter input{
+  width: 100%;
+  padding: 12px 16px;  /* Увеличены отступы для комфортного ввода */
+  margin-bottom: 20px;
+  background-color: #2f3640; /* Темный фон */
+  color: white;  /* Белый текст */
+  border: 2px solid #FFD700;  /* Желтая рамка */
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;  /* Плавное изменение стилей */
+}
+
+.filter select:focus,  .filter input:focus {
+  outline: none;  /* Убираем стандартный фокус */
+  border-color: #FFA500;  /* Более яркий цвет рамки при фокусе */
+  background-color: #3a434d;  /* Чуть более светлый фон при фокусе */
+}
+
+.filter select::placeholder{
+  color: #ccc;  /* Цвет плейсхолдера */
+}
+
+/* Дополнительный стиль для контейнера фильтра */
+.filter {
+  margin-bottom: 30px; /* Отступы снизу для отделения от других элементов */
+  display: flex;
+  /* flex-direction: column; */
+  align-items: baseline;
+  padding-top: 350px;
+  gap: 10px;
+}
+
+/* Стиль для таблицы */
+.parking-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2f3640;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.parking-table th, .parking-table td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.parking-table th {
+  background-color: #444;
+  color: #FFD700;
+}
+
+.parking-table td {
+  color: #ddd;
+  border-top: 1px solid #444;
+}
+
+.parking-table tr:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* Стиль для пагинации */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  background-color: #FFD700;
+  color: #1D2329;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #FFA500;
+}
+/* Стили для модального окна */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #1D2329;
+  padding: 25px;
+  border-radius: 8px;
+  width: 600px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.modal-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.modal-label {
+  font-weight: 600;
+  min-width: 120px;
+  color: #555;
+}
+
+.modal-value {
+  flex: 1;
+}
+
+.owner-link {
+  color: #2c7be5;
+  text-decoration: none;
+}
+
+.owner-link:hover {
+  text-decoration: underline;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+.action-button.danger {
+  background-color: #e63757;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
+
+/* Для таблицы - курсор при наведении */
+/* .parking-table tbody tr:hover {
+  background-color: #f5f7fa;
+} */

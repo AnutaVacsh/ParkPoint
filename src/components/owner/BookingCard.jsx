@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../../css/bookingCardStyle.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const BookingCardOwner = ({ booking }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,6 +9,7 @@ const BookingCardOwner = ({ booking }) => {
   const { id, price, startTime, endTime, parkingSpace } = booking;
   const { parkingZoneDto, order, idOwner } = parkingSpace;
   const { title, address } = parkingZoneDto;
+  const navigate = useNavigate(); 
 
   const translateStatus = (status) => {
     switch (status) {
@@ -67,7 +68,11 @@ const BookingCardOwner = ({ booking }) => {
 
   const handleComplain = (e) => {
     e.stopPropagation();
-    console.log('Жалоба на бронирование', id);
+    const userId = booking.client.id;
+    const bookingId = booking.id;
+    console.log('Жалоба на бронирование пользователя', userId);
+    
+    navigate(`/create/complain/${userId}/${bookingId}`);
   };
 
   const handleReview = (e) => {
@@ -224,11 +229,11 @@ const BookingCardOwner = ({ booking }) => {
                 <p><strong>Адрес:</strong> {address}</p>
                 <p><strong>Зона:</strong> {title}</p>
                 <p><strong>Место №:</strong> {order}</p>
-                {idOwner && (
+                {booking.client && (
                   <p>
-                    <strong>Владелец:</strong>
-                    <Link to={`/client/owner/${idOwner}`} className="ownerLink" onClick={(e) => e.stopPropagation()}>
-                      {idOwner}
+                    <strong>Клиент:</strong>
+                    <Link to={`/user/dashboard/${booking.client.id}`} className="ownerLink" onClick={(e) => e.stopPropagation()}>
+                      {booking.client.email}
                     </Link>
                   </p>
                 )}

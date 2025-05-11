@@ -18,6 +18,7 @@ const Login = () => {
       const userData = await apiLogin(loginInput, passwordInput);
       localStorage.setItem("userId", userData.id);
       console.log(userData);
+      localStorage.setItem("role", userData.role)
       setheaderState(userData.role);
       setUser(userData.role);
     

@@ -18,7 +18,6 @@ const OwnerPath = () => {
         <Route path="/profile" element={<OwnerDashboard/>} />
         <Route path="/chats" element={<></>} />
         <Route path="/parking/:id" element={<ParkingFullInfo/>} />
-        <Route path="/pay" element={<PayPage />} />
         <Route path="/parkingSpace" element={<AddParkingSpace />} />
         <Route path="*" element={<p>Cтраница не найдена</p>} />
     </Routes>

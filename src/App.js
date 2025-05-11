@@ -21,12 +21,16 @@ import OwnerRegisterStep1 from './components/register/OwnerRegisterStep1';
 import OwnerRegisterStep2 from './components/register/OwnerRegisterStep2';
 import HeaderOwner from './components/HeaderOwner';
 import OwnerPath from './components/owner/OwnerPath';
+import AdminPath from './components/ap/AdminPath';
+import UserDashboard from './components/UserDashboard';
+import CreateComplaint from './components/CreateComplaint';
+import PayPage from './components/PayPage';
 
 const App = () => {
-  const [headerState, setheaderState] = useState(HeaderStates.OWNER); //guest, client, none
+  const [headerState, setheaderState] = useState(localStorage.getItem("role") || HeaderStates.GUEST); //guest, client, none
   console.log(headerState)
 
-  const [user, setUser] = useState(UserStates.OWNER); //guest, client, owner, admin
+  const [user, setUser] = useState(localStorage.getItem("role") || UserStates.GUEST); //guest, client, owner, admin
   console.log(user)
 
   return (
@@ -53,6 +57,12 @@ const App = () => {
             <Route path="/client/*" element={(user === UserStates.CLIENT && <ClientPath />) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)} />
             <Route path="/owner" element={(user === UserStates.OWNER && <OwnerPath />) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)} />
             <Route path="/owner/*" element={(user === UserStates.OWNER && <OwnerPath />) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)} />
+            <Route path="/admin" element={<AdminPath />} />
+            <Route path="/admin/*" element={<AdminPath />} />
+            <Route path="/user/dashboard/:id" element={< UserDashboard/>} />
+            <Route path="/create/complain/:userId/:bookingId" element={< CreateComplaint/>} />
+            <Route path="/pay" element={<PayPage />} />
+            
           </Routes>
 
         </OwnerRegisterProvider> {/* <-- И закрываешь здесь */}

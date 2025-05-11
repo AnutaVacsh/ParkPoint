@@ -1,123 +1,114 @@
-import React, { useState } from 'react';
-import '../../css/clientProfile.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../../css/clientProfile.css"; // Подключаем обновлённые стили
 
 const ClientProfile = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    name: "Иван Иванов",
-    email: "ivan@example.com",
-    phone: "+7 (999) 123-45-67",
-    complaints: [
-      { id: 1, text: "Медленная доставка", date: "2023-10-15" },
-      { id: 2, text: "Некачественный товар", date: "2023-11-02" },
-    ],
-    cards: [
-      { id: 1, number: "**** **** **** 1234", type: "Visa" },
-      { id: 2, number: "**** **** **** 5678", type: "MasterCard" },
-    ],
-  });
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
-  const [newCard, setNewCard] = useState({ number: "", type: "" });
+  const [user, setUser] = useState(null);
+  const [cards, setCards] = useState([]);
+  const [complaints, setComplaints] = useState([]);
 
-  const handleEdit = () => setIsEditing(!isEditing);
+  // Запасные данные
+  const fallbackUser = { id: 0, email: "mockuser@mail.ru", role: "CLIENT" };
+  const fallbackCards = [{ last4: "1234" }, { last4: "5678" }];
+  const fallbackComplaints = [
+    {
+      id: 1,
+      complainant: { email: "mock1@mail.ru" },
+      accused: { email: "mock-accused@mail.ru" },
+      text: "Медленная доставка.",
+      status: "PENDING",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 2,
+      complainant: { email: "mock2@mail.ru" },
+      accused: { email: "mock-accused2@mail.ru" },
+      text: "Некачественный товар.",
+      status: "RESOLVED",
+      createdAt: new Date().toISOString(),
+    },
+  ];
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
+  // Загрузка данных при монтировании
+  useEffect(() => {
+    if (!userId) return;
 
-  const handleAddCard = () => {
-    if (newCard.number && newCard.type) {
-      setUserData({
-        ...userData,
-        cards: [...userData.cards, { id: Date.now(), ...newCard }],
-      });
-      setNewCard({ number: "", type: "" });
-    }
-  };
+    const fetchData = async () => {
+      try {
+        const userRes = await fetch(`http://localhost:8080/user/info/${userId}`);
+        setUser(userRes.ok ? await userRes.json() : fallbackUser);
+      } catch {
+        setUser(fallbackUser);
+      }
+
+      try {
+        const cardsRes = await fetch(`http://localhost:8080/user/get/cards/${userId}`);
+        setCards(cardsRes.ok ? await cardsRes.json() : fallbackCards);
+      } catch {
+        setCards(fallbackCards);
+      }
+
+      try {
+        const complaintsRes = await fetch(`http://localhost:8080/user/complaints/${userId}`);
+        setComplaints(complaintsRes.ok ? await complaintsRes.json() : fallbackComplaints);
+      } catch {
+        setComplaints(fallbackComplaints);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
+  const handleAddCard = () => navigate("/pay");
 
   return (
     <div className="client-profile">
-      <div className="profile-header">
-        <h1>Профиль клиента</h1>
-        <button onClick={handleEdit} className="edit-button">
-          {isEditing ? "Сохранить" : "Редактировать"}
-        </button>
+      <div className="left-column">
+        <div className="client-profile-header">
+          <div className="avatar" />
+          <div>
+            <div className="font-bold text-lg">{user?.email || "Загрузка..."}</div>
+            <div className="text-sm text-gray-400">{user?.email}</div>
+          </div>
+          <div className="profile-actions">
+            <button className="edit-btn">Редактировать профиль</button>
+          </div>
+        </div>
+
+        <div className="section">
+          <h2 className="section-title">Карты</h2>
+          <div className="card-list">
+            {cards.map((card, idx) => (
+              <div key={idx} className="card">💳 **** **** **** {card.last4}</div>
+            ))}
+            <button className="btn-outline-yellow" onClick={handleAddCard}>
+              Новая карта
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="profile-content">
-        {/* Основная информация */}
-        <div className="user-info">
-          <h2>Личные данные</h2>
-          {isEditing ? (
-            <div className="edit-form">
-              <input
-                type="text"
-                name="name"
-                value={userData.name}
-                onChange={handleInputChange}
-                placeholder="Имя"
-              />
-              <input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={handleInputChange}
-                placeholder="Email"
-              />
-              <input
-                type="tel"
-                name="phone"
-                value={userData.phone}
-                onChange={handleInputChange}
-                placeholder="Телефон"
-              />
-            </div>
-          ) : (
-            <div className="info-display">
-              <p><strong>Имя:</strong> {userData.name}</p>
-              <p><strong>Email:</strong> {userData.email}</p>
-              <p><strong>Телефон:</strong> {userData.phone}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Карты пользователя */}
-        <div className="user-cards">
-          <h2>Карты</h2>
-          <div className="cards-list">
-            {userData.cards.map((card) => (
-              <div key={card.id} className="card-item">
-                <p><strong>{card.type}</strong>: {card.number}</p>
+      <div className="right-column">
+        <div className="section complaints">
+          <h2 className="section-title">Жалобы</h2>
+          <div className="complaints">
+            {complaints.map((c) => (
+              <div key={c.id} className="complaint">
+                <div className="font-bold">
+                  {c.complainant?.email}{" "}
+                  <span className="font-normal text-xs">
+                    {new Date(c.createdAt).toLocaleDateString("ru-RU")}
+                  </span>
+                </div>
+                <div className="mt-2 text-gray-300">{c.text}</div>
               </div>
             ))}
-          </div>
-          <div className="add-card">
-            <input
-              type="text"
-              placeholder="Номер карты"
-              value={newCard.number}
-              onChange={(e) => setNewCard({ ...newCard, number: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Тип (Visa/MC)"
-              value={newCard.type}
-              onChange={(e) => setNewCard({ ...newCard, type: e.target.value })}
-            />
-            <button onClick={handleAddCard}>Добавить карту</button>
-          </div>
-        </div>
-
-        {/* Жалобы */}
-        <div className="user-complaints">
-          <h2>Жалобы</h2>
-          <div className="complaints-list">
-            {userData.complaints.map((complaint) => (
-              <div key={complaint.id} className="complaint-item">
-                <p><strong>{complaint.date}</strong>: {complaint.text}</p>
-              </div>
-            ))}
+            <a href="#" className="link-yellow">
+              Все жалобы
+            </a>
           </div>
         </div>
       </div>

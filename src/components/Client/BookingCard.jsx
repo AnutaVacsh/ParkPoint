@@ -167,10 +167,10 @@ const BookingCard = ({ booking }) => {
                   <p>
                     <strong>Владелец:</strong>
                     <Link
-                      to={`/client/owner/${idOwner}`} 
+                      to={`/user/dashboard/${idOwner}`} 
                       className="ownerLink"
                       onClick={(e) => e.stopPropagation()}
-                    >
+                    >{`/user/dashboard/${idOwner}`}
                     </Link>
                   </p>
                 )}

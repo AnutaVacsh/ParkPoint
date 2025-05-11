@@ -1,0 +1,98 @@
+/* Основной фон страницы */
+.create-complaint-page {
+  background-color: #1D2329;
+  padding: 40px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Контейнер для информации о бронировании и формы жалобы */
+.complaint-container {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 1200px;
+  background-color: #2A353B;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Секция с информацией о бронировании */
+.booking-info {
+  width: 45%;
+}
+
+.booking-info h3 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+.booking-details p {
+  margin: 10px 0;
+}
+
+.status-label {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #1D2329;
+}
+
+/* Секция с формой для жалобы */
+.complaint-form {
+    text-align: center;
+  width: 45%;
+  background-color: #3C474D;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.complaint-form h3 {
+  text-align: center;
+  font-size: 1.3em;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group textarea {
+  width: 95%;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #4A5A63;
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border: 2px solid #FEE174;
+}
+
+/* Кнопка "Отправить жалобу" */
+.submit-button {
+  background-color: #FEE174;
+  color: #1D2329;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #ffd642;
+  color: #1D2329;
+}

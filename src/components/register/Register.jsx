@@ -31,6 +31,7 @@ const OwnerRegisterStep1 = () => {
       const result = await apiRegister(registerRequest);
       localStorage.setItem("userId", result.id);
       console.log(result)
+      localStorage.setItem("role", result.role)
       setheaderState(result.role);
       setUser(result.role);
       navigate('/client');

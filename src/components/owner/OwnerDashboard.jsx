@@ -72,7 +72,7 @@ const OwnerDashboard = () => {
     fetchData();
   }, [userId]);
 
-  const handleAddCard = () => navigate("/owner/pay");
+  const handleAddCard = () => navigate("/pay");
   const handleAddParking = () => navigate("/owner/parkingSpace");
 
   const handleStatusChange = (id, currentState) => {
