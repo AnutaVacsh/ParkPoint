@@ -151,7 +151,6 @@ const OwnerDashboard = () => {
           <div className="avatar" />
           <div>
             <div className="font-bold text-lg">{user?.email || "Загрузка..."}</div>
-            <div className="text-sm text-gray-400">{user?.email}</div>
           </div>
           <div className="profile-actions">
             <button className="edit-btn">Редактировать профиль</button>
@@ -168,6 +167,13 @@ const OwnerDashboard = () => {
           </div>
         </div>
 
+        <div className="parking-header">
+          <h2>Мои парковочные места</h2>
+          <button className="btn-outline-yellow" onClick={handleAddParking}>
+            ➕ Добавить парковочное место
+          </button>
+        </div>
+
         {parkings.map((parking) => (
           <div key={parking.id} className="parking-card">
             <div className="parking-details">
@@ -177,7 +183,7 @@ const OwnerDashboard = () => {
             </div>
 
             <div className="parking-actions">
-              {console.log(parking.isAvailable) && ["ACTIVE", "INACTIVE"].includes(parking.isAvailable) ? (
+              {["ACTIVE", "INACTIVE"].includes(parking.isAvailable) ? (
                 <div className="status-switch">
                   <label htmlFor={`status-toggle-${parking.id}`}>
                     {parking.isAvailable === "ACTIVE" ? "Активна" : "Неактивна"}

@@ -94,6 +94,15 @@ const OwnerRegisterStep2 = () => {
                 </div>
           </div>
           <div className="formGroup">
+            <label htmlFor="photos" className="formLabel">Парковочное место</label>
+            <input
+              type="number"
+              id="photos"
+              className="formInput"
+              onChange={(e) => setPhotos(e.target.value)}
+            />
+          </div>
+          <div className="formGroup">
             <label htmlFor="spaceDescription" className="formLabel">Описание места</label>
             <textarea
               id="spaceDescription"
@@ -114,15 +123,7 @@ const OwnerRegisterStep2 = () => {
             />
           </div> */}
 
-          <div className="formGroup">
-            <label htmlFor="photos" className="formLabel">Парковочная зона</label>
-            <input
-              type="number"
-              id="photos"
-              className="formInput"
-              onChange={(e) => setPhotos(e.target.value)}
-            />
-          </div>
+          
 
           <div className="formRow">
             <div className="formGroup">

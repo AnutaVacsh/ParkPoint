@@ -53,7 +53,7 @@ const ParkingFullInfo = () => {
   const photos =
     parkingData.photos && parkingData.photos.length > 0
       ? parkingData.photos
-      : [{ url: img1 }];
+      : [{ url: img2 }];
 
   const prevSlide = () =>
     setCurrent((c) => (c - 1 + photos.length) % photos.length);

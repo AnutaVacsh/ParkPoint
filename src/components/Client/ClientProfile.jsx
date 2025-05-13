@@ -71,7 +71,6 @@ const ClientProfile = () => {
           <div className="avatar" />
           <div>
             <div className="font-bold text-lg">{user?.email || "Загрузка..."}</div>
-            <div className="text-sm text-gray-400">{user?.email}</div>
           </div>
           <div className="profile-actions">
             <button className="edit-btn">Редактировать профиль</button>

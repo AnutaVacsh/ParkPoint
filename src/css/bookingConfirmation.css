@@ -1,7 +1,12 @@
 .bc-container {
     position: relative;
     min-height: 100vh;
-    background: url('../img/bookingBlur.png') center/cover no-repeat;
+    /* background: url('../img/bookingBlur.png') center/cover no-repeat; */
+    background-image: linear-gradient(rgba(29, 35, 41, 0.421), rgba(29, 35, 41, 0.9)), 
+                    url('../img/bookingBlur.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
     color: #fff;
     overflow: hidden;
   }

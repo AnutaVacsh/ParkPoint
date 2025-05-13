@@ -88,6 +88,20 @@
     color: #FEE174;
 }
 
+.parking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.parking-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+
 .parking {
     display: flex;
     justify-content: space-between;

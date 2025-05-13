@@ -3,7 +3,9 @@
 } */
 .booking-container {
     background-color: #1D2329;
-    background-image: url('../img/bookingBlur.png');
+    /* background-image: url('../img/bookingBlur.png'); */
+    background-image: linear-gradient(rgba(29, 35, 41, 0.421), rgba(29, 35, 41, 0.9)), 
+                    url('../img/bookingBlur.png');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -132,8 +134,9 @@
   }
   
   .parking-space-number.selected {
-    border-color: #FEE174; /* Жёлтая рамка */
-    color: #FEE174; /* Жёлтый текст */
+    border-color: black; /* Жёлтая рамка */
+    color: black; /* Жёлтый текст */
+    background-color: #fee074d6;
   }
   
   .parking-space-timeline {

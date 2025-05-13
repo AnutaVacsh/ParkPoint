@@ -73,7 +73,7 @@ export default function Booking() {
         body: JSON.stringify(bookingRequest)
       });
       if (!response.ok) throw new Error(`Ошибка ${response.status}`);
-      navigate(`/client/parking/${id}/booking/confirmation/${selectionSpace.id}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`);
+      navigate(`/client/parking/${id}/booking/confirmation/${selectionSpace.order}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`);
     } catch (error) {
       console.error('Не удалось создать бронирование:', error);
       alert('Ошибка при создании бронирования. Попробуйте позже.');
@@ -317,12 +317,12 @@ export default function Booking() {
           </div>
           <div className="summary-row">
             <span>Стоимость за {selectedOption.toLowerCase()}:</span>
-            <span>{getUnitPrice(selectedOption)} ₽</span>
+            <span>{getUnitPrice(selectedOption)/100} ₽</span>
           </div>
           <hr className="summary-divider" />
           <div className="summary-row total">
             <span>Итоговая стоимость:</span>
-            <span>{price} ₽</span> {/* Используем состояние price */}
+            <span>{price/100} ₽</span> {/* Используем состояние price */}
           </div>
         </div>
 
