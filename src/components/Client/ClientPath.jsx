@@ -9,6 +9,7 @@ import Subscription from './booking/Subscription';
 import PayPage from '../PayPage';
 import SubscriptionConfirmation from './booking/SubscriptionConfirmation';
 import ClientProfile from './ClientProfile';
+import ChatPage from '../ChatPage';
 
 const ClientPath = () => {
   return (

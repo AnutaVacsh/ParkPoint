@@ -1,11 +1,14 @@
 .registerPage {
-    background: url('../img/loginBlur.png') no-repeat center center/cover; /* Путь к изображению */
+    background: 
+        url('../img/loginBlur.png') no-repeat center top/cover,
+        linear-gradient(to bottom, transparent 80%, #f0f0f0 100%);
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-  }
+    position: relative;
+}
   
   .registerContent {
     color: #fff;
@@ -62,7 +65,8 @@
   .registerPage .submitButton {
     display: block;
     text-align: center;
-    margin: 40px auto 0;
+    /* margin: 40px auto 50px; */
+    margin: auto;
     width: 317px;
     height: 53px;
     line-height: 53px;
@@ -160,4 +164,17 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-  
+  .photoPreviewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.photoPreview {
+  height: 96px; /* 6rem */
+  width: 128px; /* 8rem */
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}

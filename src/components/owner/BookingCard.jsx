@@ -78,7 +78,7 @@ const BookingCardOwner = ({ booking }) => {
   const handleReview = (e) => {
     e.stopPropagation();
     console.log('Отзыв о бронировании', id);
-  };
+  }; 
 
   const getStatusColor = (status) => {
     switch (status) {

@@ -104,8 +104,12 @@ const APParkingZones = () => {
               <option value="PENDING">Ожидает</option>
             </select>
           </div>
+          <button className="action-button" onClick={() => window.location.href = '/admin/add-parking-zone'}>
+            Добавить зону
+          </button>
         </div>
       </div>
+
 
       <div className="content">
         <div className="main">

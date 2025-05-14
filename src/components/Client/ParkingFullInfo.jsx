@@ -17,10 +17,11 @@ const mockParkingData = {
   parkingSpacesCount: 20,
   state: "Открыта",
   photos: [
-    { id: 1, url: img1 },
-    { id: 2, url: img2 },
-    { id: 3, url: img3 },
+    { id: 1, photoUrl: img1 },
+    { id: 2, photoUrl: img2 },
+    { id: 3, photoUrl: img3 },
   ],
+  map: img2, // Это заглушка, которую вы будете использовать для карты
 };
 
 const ParkingFullInfo = () => {
@@ -28,6 +29,7 @@ const ParkingFullInfo = () => {
   const { user } = useContext(UserContext);
   const [parkingData, setParkingData] = useState(null);
   const [current, setCurrent] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -53,7 +55,7 @@ const ParkingFullInfo = () => {
   const photos =
     parkingData.photos && parkingData.photos.length > 0
       ? parkingData.photos
-      : [{ url: img2 }];
+      : [{ photoUrl: img2 }];
 
   const prevSlide = () =>
     setCurrent((c) => (c - 1 + photos.length) % photos.length);
@@ -61,7 +63,11 @@ const ParkingFullInfo = () => {
     setCurrent((c) => (c + 1) % photos.length);
 
   const handleMapClick = () => {
-    console.log("Map button clicked");
+    setIsModalOpen(true); // Открытие модального окна при нажатии на карту
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false); // Закрытие модального окна
   };
 
   const handleBookingClick = () => {
@@ -73,7 +79,7 @@ const ParkingFullInfo = () => {
       {/* Слайдер-фон */}
       <div
         className="slide"
-        style={{ backgroundImage: `url(${photos[current].url})` }}
+        style={{ backgroundImage: `url(${photos[current].photoUrl})` }}
       />
 
       {/* Кнопка карты */}
@@ -103,10 +109,25 @@ const ParkingFullInfo = () => {
           <p><strong>Состояние:</strong> {parkingData.state}</p>
         </div>
         {user === "CLIENT" && 
-        <button className="book-button" onClick={handleBookingClick}>
-        Забронировать
-      </button>}
+          <button className="book-button" onClick={handleBookingClick}>
+            Забронировать
+          </button>
+        }
       </div>
+
+      {/* Модальное окно с картой */}
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={handleModalClose}>&times;</span>
+            <img
+              src={parkingData.map}
+              alt="Карта парковки"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

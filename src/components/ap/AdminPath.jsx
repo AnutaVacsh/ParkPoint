@@ -6,6 +6,7 @@ import APParkingSpaces from './APParkingSpaces';
 import APParkingZones from './APParkingZones';
 import APUsers from './APUsers';
 import APComplaints from './APComplaints';
+import AddParkingZonePage from './AddParkingZonePage';
 
 const AdminPath = () => {
   return (
@@ -15,6 +16,8 @@ const AdminPath = () => {
         <Route path="/complaints" element={<APComplaints />} />
         <Route path="/parking-zones" element={<APParkingZones/>} />
         <Route path="/users" element={<APUsers />} />
+        <Route path="/add-parking-zone" element={<AddParkingZonePage />} />
+        
         <Route path="*" element={<p>Cтраница не найдена</p>} />
     </Routes>
   );

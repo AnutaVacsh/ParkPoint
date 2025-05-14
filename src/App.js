@@ -25,6 +25,7 @@ import AdminPath from './components/ap/AdminPath';
 import UserDashboard from './components/UserDashboard';
 import CreateComplaint from './components/CreateComplaint';
 import PayPage from './components/PayPage';
+import ChatPage from './components/ChatPage';
 
 const App = () => {
   const [headerState, setheaderState] = useState(localStorage.getItem("role") || HeaderStates.GUEST); //guest, client, none
@@ -61,6 +62,7 @@ const App = () => {
             <Route path="/admin/*" element={<AdminPath />} />
             <Route path="/user/dashboard/:id" element={< UserDashboard/>} />
             <Route path="/create/complain/:userId/:bookingId" element={< CreateComplaint/>} />
+            <Route path="/chat/:chatId" element={<ChatPage />} />
             <Route path="/pay" element={<PayPage />} />
             
           </Routes>

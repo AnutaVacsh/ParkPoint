@@ -113,7 +113,7 @@ const APComplaints = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Жалобщик</th>
+                    <th>Обвинитель</th>
                     <th>Обвиняемый</th>
                     <th>Статус</th>
                     <th>Дата</th>

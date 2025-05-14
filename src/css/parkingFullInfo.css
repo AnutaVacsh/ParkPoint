@@ -104,3 +104,49 @@
 .book-button:hover {
   background: #FFC300;
 }
+/* Стили для модального окна */
+/* Стили для модального окна */
+.parking-full-info .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);  /* Темный фон */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.parking-full-info .modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  max-width: 80%;   /* Увеличиваем размер модального окна */
+  max-height: 80%;  /* Увеличиваем высоту модального окна */
+  overflow: hidden;
+  display: flex;
+  justify-content: center; /* Центрируем содержимое внутри окна */
+  align-items: center; /* Центрируем изображение */
+}
+
+/* Кнопка закрытия */
+.parking-full-info .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Стили для изображений */
+.parking-full-info img {
+  max-width: 100%;  /* Ограничиваем ширину изображения */
+  max-height: 80vh; /* Ограничиваем высоту изображения до 80% высоты экрана */
+  object-fit: contain; /* Сохраняет пропорции изображения */
+  display: block; /* Убирает пустое пространство вокруг картинки */
+  margin: 0 auto; /* Центрирует картинку по горизонтали */
+}

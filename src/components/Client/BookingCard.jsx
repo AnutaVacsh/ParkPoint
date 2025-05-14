@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import '../../css/bookingCardStyle.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { changeStateBooking } from '../../api/BookingApi';
 
 const BookingCard = ({ booking }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate(); 
   
   const { id, price, startTime, endTime, status, parkingSpace } = booking;
   const { parkingZoneDto, order, idOwner } = parkingSpace;
@@ -47,15 +48,6 @@ const BookingCard = ({ booking }) => {
     }
   };
 
-  const handleComplain = (e) => {
-    e.stopPropagation();
-    console.log('Жалоба на бронирование', id);
-  };
-
-  const handleReview = (e) => {
-    e.stopPropagation();
-    console.log('Отзыв о бронировании', id);
-  };
 
   const changeStateBooking = async (bookingId, stateBooking) => {
     const response = await fetch(`http://localhost:8080/booking/change/state/${bookingId}`, {
@@ -102,6 +94,20 @@ const BookingCard = ({ booking }) => {
         <span>{time}</span>
       </>
     );
+  };
+
+  const handleComplain = (e) => {
+    e.stopPropagation();
+    const userId = booking.client.id;
+    const bookingId = booking.id;
+    console.log('Жалоба на бронирование пользователя', userId);
+    
+    navigate(`/create/complain/${userId}/${bookingId}`);
+  };
+
+  const handleReview = (e) => {
+    e.stopPropagation();
+    console.log('Отзыв о бронировании', id);
   };
 
   const handleCardClick = () => {

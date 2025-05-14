@@ -33,7 +33,7 @@ const HeaderClient = () => {
           </li>
           <li>
             <NavLink 
-              to="/client/contacts" 
+              to="/chat/0" 
               className={({ isActive }) => isActive ? "active-link" : ""}
             >
               ЧАТЫ
