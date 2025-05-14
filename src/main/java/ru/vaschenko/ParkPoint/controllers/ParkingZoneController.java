@@ -11,9 +11,11 @@ import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
 import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
+import ru.vaschenko.ParkPoint.dto.request.ParkingZoneCreateDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
 import ru.vaschenko.ParkPoint.enams.StateParkingZone;
+import ru.vaschenko.ParkPoint.models.ParkingZone;
 import ru.vaschenko.ParkPoint.services.ParkingZoneService;
 
 import java.util.List;
@@ -56,6 +58,11 @@ public class ParkingZoneController implements ParkingZoneApi {
         Page<ParkingZoneAPDto> pageResult = parkingZoneService.searchParkingZones(page, size, sortBy, sortDirection, filters);
 
         return ResponseEntity.ok(pageResult);
+    }
+
+    @Override
+    public ResponseEntity<ParkingZone> createParkingZoneWithPag(ParkingZoneCreateDto requestDTO) {
+        return parkingZoneService.createParkingZone(requestDTO);
     }
 
 }

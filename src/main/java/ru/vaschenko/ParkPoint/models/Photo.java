@@ -18,6 +18,7 @@ public class Photo {
     @JsonBackReference
     private ParkingZone parkingZone;
 
+    @Column(name = "photo_order")
     private Integer order;
     private String photoUrl;
 

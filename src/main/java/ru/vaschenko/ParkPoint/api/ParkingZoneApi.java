@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
 import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.ParkingZoneCreateDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
 import ru.vaschenko.ParkPoint.enams.StateParkingZone;
+import ru.vaschenko.ParkPoint.models.ParkingZone;
 import ru.vaschenko.ParkPoint.util.ApiPath;
 
 import java.util.List;
@@ -36,4 +38,7 @@ public interface ParkingZoneApi {
 
     @PostMapping(ApiPath.PARKING_ZONE_PAG)
     ResponseEntity<Page<ParkingZoneAPDto>> getAllParkingZoneWithPag(@RequestBody APSearchRequestDto requestDTO);
+
+    @PostMapping(ApiPath.PARKING_ZONE_CREATE)
+    ResponseEntity<ParkingZone> createParkingZoneWithPag(@RequestBody ParkingZoneCreateDto requestDTO);
 }

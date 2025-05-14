@@ -1,20 +1,19 @@
 package ru.vaschenko.ParkPoint.mappers;
 
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
+import ru.vaschenko.ParkPoint.dto.request.ParkingZoneCreateDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
 import ru.vaschenko.ParkPoint.models.ParkingZone;
 import ru.vaschenko.ParkPoint.models.User;
 import ru.vaschenko.ParkPoint.services.UserService;
 
-@Mapper(componentModel = "spring", uses = RevParkingZoneMapper.class)
+@Mapper(componentModel = "spring", uses = {RevParkingZoneMapper.class, UserMapper.class})
 public abstract class ParkingZoneMapper {
     @Autowired
     private UserService userService;
@@ -40,6 +39,8 @@ public abstract class ParkingZoneMapper {
     @Mapping(target = "parkingSpacesCount", expression = "java(zone.getParkingSpaces() != null ? zone.getParkingSpaces().size() : 0)")
     @Mapping(source = "photos", target = "photos")
     public abstract ParkingZoneAPDto parkingZoneToParkingZoneAPDto(ParkingZone zone);
+
+//    public abstract ParkingZone toEntityFromCreateDto(ParkingZoneCreateDto dto);
 
     @Named("longToUser")
     public User map(Long id) {

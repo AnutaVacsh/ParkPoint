@@ -2,6 +2,7 @@ package ru.vaschenko.ParkPoint.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -107,6 +109,18 @@ public class UserService {
         Page<User> users = userRepository.findAll(spec, pageRequest);
 
         return users.map(userMapper::userToUserDto);
+    }
+
+    public User findBuEmailOrCreate(UserDto userDto) {
+        log.debug("find user by email");
+        return userRepository.findByEmail(userDto.email())
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setEmail(userDto.email());
+                    newUser.setRole(userDto.role());
+                    log.debug("user not found, create new user: {}", newUser);
+                    return userRepository.save(newUser);
+                });
     }
 
     public User findById(Long id) {
