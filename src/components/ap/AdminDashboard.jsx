@@ -43,8 +43,8 @@ const AdminDashboard = () => {
             ))}
           </div>
           <div className="right-panel">
-            <Chart1 />
             <Chart2 />
+            <Chart1 />
           </div>
         </div>
       </div>

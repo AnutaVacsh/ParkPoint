@@ -29,6 +29,7 @@
 
 .main {
   display: flex;
+  align-items: center;
   gap: 100px;
 }
 
@@ -291,6 +292,11 @@
 
 .action-button:hover {
   opacity: 0.9;
+}
+
+.recharts-bar-rectangle:hover {
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 /* Для таблицы - курсор при наведении */
