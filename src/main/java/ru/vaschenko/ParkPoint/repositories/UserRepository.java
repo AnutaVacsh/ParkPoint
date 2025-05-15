@@ -3,6 +3,7 @@ package ru.vaschenko.ParkPoint.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import ru.vaschenko.ParkPoint.enams.Role;
 import ru.vaschenko.ParkPoint.models.ParkingSpace;
 import ru.vaschenko.ParkPoint.models.User;
 
@@ -13,5 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByEmailAndPassword(String email, String password);
 
     Optional<User> findByEmail(String email);
+
+    int countByRole(Role role);
 }
 

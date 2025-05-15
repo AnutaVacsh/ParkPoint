@@ -69,5 +69,8 @@ public class ApiPath {
     public static final String COMPLAINT_CREATE = "create";
     public static final String COMPLAINT_UPDATE_STATUS = "/update/status";
 
-
+    //Stats
+    public static final String STATS = "stats";
+    public static final String ST_USER = "/user";
+    public static final String ST_BOOKING = "/booking";
 }
