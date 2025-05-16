@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.vaschenko.ParkPoint.dto.ComplaintDto;
+import ru.vaschenko.ParkPoint.dto.UserCardDto;
 import ru.vaschenko.ParkPoint.dto.UserDto;
 import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
@@ -17,6 +18,7 @@ import ru.vaschenko.ParkPoint.mappers.UserCardMapper;
 import ru.vaschenko.ParkPoint.mappers.UserMapper;
 import ru.vaschenko.ParkPoint.models.Complaint;
 import ru.vaschenko.ParkPoint.models.User;
+import ru.vaschenko.ParkPoint.models.UserCard;
 import ru.vaschenko.ParkPoint.repositories.ComplaintRepository;
 import ru.vaschenko.ParkPoint.repositories.PasswordRepository;
 import ru.vaschenko.ParkPoint.repositories.UserCardRepository;
@@ -43,6 +45,7 @@ public class UserService {
     private final UserCardMapper userCardMapper;
     private final UserMapper userMapper;
     private final ComplaintMapper complaintMapper;
+
 
     public UserDto getUserInfo(Long id){
         return userMapper.userToUserDto(findById(id));
@@ -121,6 +124,21 @@ public class UserService {
                     log.debug("user not found, create new user: {}", newUser);
                     return userRepository.save(newUser);
                 });
+    }
+
+    public ResponseEntity<Void> saveCard(UserCardDto dto) {
+        User user = findById(dto.userId());
+
+        UserCard userCard = new UserCard();
+        userCard.setEncryptedCard(dto.encryptedCard());
+        userCard.setClient(user);
+        userCard.setLast4(dto.last4());
+        userCard.setExpirationDate(dto.expirationDate());
+
+        userCardRepository.save(userCard);
+        log.debug("save card");
+
+        return ResponseEntity.ok().build();
     }
 
     public User findById(Long id) {

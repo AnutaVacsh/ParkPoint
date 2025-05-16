@@ -34,6 +34,11 @@ public class SubscriptionController implements SubscriptionApi {
     }
 
     @Override
+    public ResponseEntity<List<SubscriptionDto>> getOwnerSubscriptions(Long userId) {
+        return subscriptionService.getOwnerSubscriptions(userId);
+    }
+
+    @Override
     public ResponseEntity<SubscriptionDto> createSubscriptions(SubscriptionCreateRequestDto createRequestDto) {
         return subscriptionService.createSubscriptions(createRequestDto);
     }

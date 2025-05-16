@@ -9,6 +9,7 @@ import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
 import ru.vaschenko.ParkPoint.dto.request.ParkingZoneCreateDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
+import ru.vaschenko.ParkPoint.enams.StateParkingSpace;
 import ru.vaschenko.ParkPoint.models.ParkingZone;
 import ru.vaschenko.ParkPoint.models.User;
 import ru.vaschenko.ParkPoint.services.UserService;
@@ -26,9 +27,15 @@ public abstract class ParkingZoneMapper {
     @Mapping(target = "zoneManager", source = "zoneManager.id")
     public abstract ParkingZoneDto toDto(ParkingZone entity);
 
-    @Mapping(target = "parkingSpacesCount",
-            expression = "java(entity.getParkingSpaces() != null ? entity.getParkingSpaces().size() : 0)")
+    @Mapping(target = "parkingSpacesCount", expression = "java(countActiveParkingSpaces(entity))")
     public abstract ParkingZoneResponseDto toResponseDto(ParkingZone entity);
+
+    protected int countActiveParkingSpaces(ParkingZone entity) {
+        if (entity.getParkingSpaces() == null) return 0;
+        return (int) entity.getParkingSpaces().stream()
+                .filter(p -> p.getIsAvailable() == StateParkingSpace.ACTIVE)
+                .count();
+    }
 
     @Mapping(target = "parkingSpacesCount",
             expression = "java(entity.getParkingSpaces() != null ? entity.getParkingSpaces().size() : 0)")

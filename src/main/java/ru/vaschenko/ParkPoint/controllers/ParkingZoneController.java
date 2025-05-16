@@ -28,7 +28,7 @@ public class ParkingZoneController implements ParkingZoneApi {
 
     @Override
     public ResponseEntity<List<ParkingZoneResponseDto>> getAllParkingZones() {
-        return parkingZoneService.getAllParkingZones();
+        return parkingZoneService.getActiveParkingZones();
     }
 
     @Override

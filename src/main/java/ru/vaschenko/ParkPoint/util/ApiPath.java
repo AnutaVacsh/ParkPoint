@@ -55,6 +55,7 @@ public class ApiPath {
     public static final String COMPLAINTS_AGAINST_USER = "/complaints/{userId}";
     public static final String REVIEW_AGAINST_USER = "/review/{userId}";
     public static final String ALL_USERS_PAG = "/get/all/pag";
+    public static final String USER_CARD_ADD = "/card/add";
 
     // Subscription
     public static final String SUBSCRIPTION = "subscription";
@@ -62,6 +63,7 @@ public class ApiPath {
     public static final String SUBSCRIPTION_GET_ID= "/get/{id}";
     public static final String SUBSCRIPTION_GET_ALL = "/get";
     public static final String SUBSCRIPTION_CREATE = "/create";
+    public static final String SUBSCRIPTION_GET_ALL_OWNER = "/get/owner/{ownerId}";
 
     //Complaint
     public static final String BASE_COMPLAINT = "complaint";
@@ -73,4 +75,11 @@ public class ApiPath {
     public static final String STATS = "stats";
     public static final String ST_USER = "/user";
     public static final String ST_BOOKING = "/booking";
+
+    //Chat
+    public static final String CHAT = "chat";
+    public static final String CHAT_LIST = "list/{userId}";
+    public static final String CHAT_MESSAGE = "getMes/{chatId}";
+    public static final String CHAT_MESSAGE2 = "getMes/{userId1}/{userId2}";
+    public static final String SEND = "/create/message";
 }

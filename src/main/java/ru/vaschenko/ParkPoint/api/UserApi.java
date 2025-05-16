@@ -41,6 +41,9 @@ public interface UserApi {
     @PostMapping(ApiPath.ALL_USERS_PAG)
     ResponseEntity<Page<UserDto>> getAllUsersWithPag(@RequestBody APSearchRequestDto requestDTO);
 
+    @PostMapping(ApiPath.USER_CARD_ADD)
+    ResponseEntity<Void> saveCard(@RequestBody UserCardDto dto);
+
 //    @GetMapping(ApiPath.REVIEW_AGAINST_USER)
 //    ResponseEntity<List<>> getReviewAgainstUser(@PathVariable Long userId);
 }

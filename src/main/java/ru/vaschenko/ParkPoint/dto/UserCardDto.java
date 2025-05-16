@@ -1,7 +1,7 @@
 package ru.vaschenko.ParkPoint.dto;
 
 public record UserCardDto(
-        Long UserId,
+        Long userId,
         byte[] encryptedCard,
         String last4,
         String expirationDate

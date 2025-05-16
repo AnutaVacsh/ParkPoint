@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     List<Subscription> findByClientId(Long clientId);
+
+    List<Subscription> findByParkingSpaceOwnerId(Long userId);
 }

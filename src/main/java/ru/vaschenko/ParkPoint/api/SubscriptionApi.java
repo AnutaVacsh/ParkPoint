@@ -24,6 +24,9 @@ public interface SubscriptionApi {
     @GetMapping(ApiPath.SUBSCRIPTION_GET_ALL)
     public ResponseEntity<List<SubscriptionDto>> getAllSubscriptions();
 
+    @GetMapping(ApiPath.SUBSCRIPTION_GET_ALL_OWNER)
+    public ResponseEntity<List<SubscriptionDto>> getOwnerSubscriptions(@PathVariable("ownerId") Long ownerId);
+
     @PostMapping(ApiPath.SUBSCRIPTION_CREATE)
     public ResponseEntity<SubscriptionDto> createSubscriptions(@RequestBody SubscriptionCreateRequestDto createRequestDto);
 }

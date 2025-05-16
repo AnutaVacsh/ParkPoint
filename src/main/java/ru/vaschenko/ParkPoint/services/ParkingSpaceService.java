@@ -49,6 +49,7 @@ public class ParkingSpaceService {
         log.debug("Все места зоны {}", parkingZoneId);
 
         List<ParkingSpaceBookingDto> psbd = ps.stream()
+                .filter(p -> p.getIsAvailable() == StateParkingSpace.ACTIVE)
                 .map(p -> new ParkingSpaceBookingDto(
                         parkingSpaceMapper.parkingSpaceToParkingSpaceDto(p),
                         bookingService.getTimeSlotForParkingSpace(p.getId())))
@@ -142,7 +143,7 @@ public class ParkingSpaceService {
 
 
 
-    private ParkingSpace getById(Long id){
+    public ParkingSpace getById(Long id){
         log.info("getById called with id: {}", id);
         return parkingSpaceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Parking space not found"));

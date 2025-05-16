@@ -66,4 +66,9 @@ public class UserController implements UserApi {
 
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    public ResponseEntity<Void> saveCard(UserCardDto dto) {
+        return userService.saveCard(dto);
+    }
 }

@@ -48,6 +48,11 @@ public class ParkingZoneService {
         return ResponseEntity.ok(parkingZoneRepository.findAll().stream().map(parkingZoneMapper::toResponseDto).toList());
     }
 
+    public ResponseEntity<List<ParkingZoneResponseDto>> getActiveParkingZones() {
+        return ResponseEntity.ok(parkingZoneRepository.findAllByState(StateParkingZone.ACTIVE)
+                .stream().map(parkingZoneMapper::toResponseDto).toList());
+    }
+
     public ResponseEntity<ParkingZonePartDto> getPartialZoneInfo(Long id) {
         ParkingZone pz = parkingZoneRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Parking zone with id " + id + " not found"));
