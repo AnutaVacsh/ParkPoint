@@ -33,7 +33,7 @@ const HeaderOwner = () => {
           </li>
           <li>
             <NavLink 
-              to="/owner/contacts" 
+              to="/chat/0" 
               className={({ isActive }) => isActive ? "active-link" : ""}
             >
               ЧАТЫ

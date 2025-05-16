@@ -14,7 +14,9 @@ export default function TimeLine({
   range,
   setRange,
   selectionSpace,
-  setSelectionSpace
+  setSelectionSpace,
+  setIsUnavailable,
+  isUnavailable
 }) {
   const { id } = useParams();
   const timelineRef = useRef(null);
@@ -56,6 +58,84 @@ export default function TimeLine({
 
     setTimelineValues(values);
   }, [selectedOption, selectedDate]);
+
+  useEffect(() => {
+    if (!selectionSpace || !range || !timelineValues.length) {
+      setIsUnavailable(false);
+      return;
+    }
+
+    const startDate = positionToDate(range.start);
+    const endDate = positionToDate(range.end);
+
+    const selectedSpace = parkingSpaces.find(space => space.parkingSpaceDto.id === selectionSpace.id);
+    if (!selectedSpace) {
+      setIsUnavailable(false);
+      return;
+    }
+
+    const hasOverlap = selectedSpace.timeSlots.some(slot => {
+      const slotStart = new Date(slot.startTime);
+      const slotEnd = new Date(slot.endTime);
+      return startDate < slotEnd && endDate > slotStart;
+    });
+
+    setIsUnavailable(hasOverlap);
+  }, [range, selectionSpace, timelineValues]);
+
+  useEffect(() => {
+  if (!selectionSpace || !range || !timelineValues.length) {
+    console.log("Недостаточно данных для проверки доступности");
+    setIsUnavailable(false);
+    return;
+  }
+
+  const startDate = positionToDate(range.start);
+  const endDate = positionToDate(range.end);
+
+  console.log("Проверка на доступность:", {
+    selectionSpace,
+    range,
+    startDate,
+    endDate
+  });
+
+  const selectedSpaceWrapper = parkingSpaces.find(space => space.parkingSpaceDto.id === selectionSpace.id);
+
+  if (!selectedSpaceWrapper) {
+    console.warn("Не найдено парковочное место с id:", selectionSpace.id);
+    setIsUnavailable(false);
+    return;
+  }
+
+  const hasOverlap = selectedSpaceWrapper.timeSlots.some(slot => {
+    const slotStart = new Date(slot.startTime);
+    const slotEnd = new Date(slot.endTime);
+    return startDate < slotEnd && endDate > slotStart;
+  });
+
+  console.log("Результат проверки занятости:", hasOverlap);
+  setIsUnavailable(hasOverlap);
+}, [range, selectionSpace, timelineValues, parkingSpaces]);
+
+  const positionToDate = ({ major, minor }) => {
+    const base = new Date(timelineValues[major]);
+    switch (selectedOption) {
+      case 'Часы':
+        base.setMinutes(minor);
+        break;
+      case 'Дни':
+      case 'Дни недели':
+        base.setHours(minor);
+        break;
+      case 'Месяцы':
+        base.setDate(base.getDate() + minor);
+        break;
+      default:
+        break;
+    }
+    return base;
+  };
 
   useEffect(() => {
     const fetchSpaces = async () => {
@@ -187,12 +267,13 @@ export default function TimeLine({
           ))}
 
           <div
-            className="selected-range"
+            className={`selected-range ${isUnavailable ? 'unavailable' : ''}`}
             style={{
               left: `${calculatePercent(range.start)}%`,
               width: `${calculatePercent(range.end) - calculatePercent(range.start)}%`
             }}
           />
+          {console.log(isUnavailable)}
 
           {['start', 'end'].map(type => (
             <div

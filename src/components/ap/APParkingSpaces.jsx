@@ -184,11 +184,14 @@ const APParkingSpaces = () => {
                       <td>{space.order}</td>
                       <td>{getStatusLabel(space.isAvailable)}</td>
                       <td className='actionFlex' onClick={(e) => e.stopPropagation()}>
-                        {space.isAvailable === 'ACTIVE' || space.isAvailable === 'INACTIVE' ? (
-                          <button onClick={() => handleActionClick(space.id, space.isAvailable)} className="action-button">
-                            Заблокировать
+                        {(space.isAvailable === 'ACTIVE' || space.isAvailable === 'INACTIVE') && (
+                          <button
+                            onClick={() => handleActionClick(space.id, space.isAvailable)}
+                            className="action-button"
+                          >
+                            {space.isAvailable === 'ACTIVE' ? 'Заблокировать' : 'Разблокировать'}
                           </button>
-                        ) : ''}
+                        )}
                         {space.isAvailable === 'PENDING' ? (
                           <>
                             <button onClick={() => handleActionClick(space.id, space.isAvailable, 'approve')} className="action-button">

@@ -315,6 +315,22 @@
     resize: vertical; /* Оставим возможность изменять размер textarea по вертикали */
     min-height: 80px; /* Минимальная высота для textarea */
   }
+
+  .modal-content input,
+  .modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #FEE174;
+    background-color: #1f2937;
+    color: white;
+    font-size: 14px;
+  }
+  
+  .modal-content textarea {
+    resize: vertical; /* Оставим возможность изменять размер textarea по вертикали */
+    min-height: 80px; /* Минимальная высота для textarea */
+  }
   
   /* Стили для кнопок */
   .modal-actions {

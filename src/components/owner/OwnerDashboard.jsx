@@ -63,7 +63,15 @@ const OwnerDashboard = () => {
 
       try {
         const parkingsRes = await fetch(`http://localhost:8080/parking-spaces/get/user/${userId}`);
-        setParkings(parkingsRes.ok ? await parkingsRes.json() : []);
+        if (parkingsRes.ok) {
+          const data = await parkingsRes.json();
+          const sorted = data.sort((a, b) => {
+            return (b.isAvailable === "ACTIVE") - (a.isAvailable === "ACTIVE");
+          });
+          setParkings(sorted);
+        } else {
+          setParkings([]);
+        }
       } catch {
         setParkings([]);
       }
@@ -254,7 +262,6 @@ const OwnerDashboard = () => {
               rows="4"
               placeholder="Описание парковки..."
             />
-
             {["hourlyPrice", "dailyPrice", "weeklyPrice", "monthlyPrice"].map((field) => (
               <div key={field}>
                 <label>{{
@@ -265,15 +272,28 @@ const OwnerDashboard = () => {
                 }[field]}:</label>
                 <input
                   type="number"
-                  value={selectedParking[field] || ""}
-                  onChange={(e) =>
-                    setSelectedParking({ ...selectedParking, [field]: e.target.value })
+                  value={
+                    selectedParking[field] !== undefined && selectedParking[field] !== null
+                      ? (selectedParking[field] / 100).toString()
+                      : ""
                   }
+                  onChange={(e) => {
+                    // берем значение из input в рублях, переводим в копейки (целое число)
+                    const valueInRub = e.target.value;
+                    // parseFloat, умножаем на 100, округляем до целого
+                    const valueInCents = Math.round(parseFloat(valueInRub) * 100);
+                    if (isNaN(valueInCents)) {
+                      setSelectedParking({ ...selectedParking, [field]: null });
+                    } else {
+                      setSelectedParking({ ...selectedParking, [field]: valueInCents });
+                    }
+                  }}
                   placeholder={`Введите ${field}`}
+                  step="0.01"
+                  min="0"
                 />
               </div>
             ))}
-
             <div className="modal-actions">
               <button className="btn-yellow" onClick={handleSaveChanges}>
                 Сохранить

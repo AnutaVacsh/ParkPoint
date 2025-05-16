@@ -541,4 +541,6 @@
     background-color: #e6c741;
   }
   
-  
+  .selected-range.unavailable {
+  background-color: rgba(255, 0, 0, 0.5);
+}

@@ -1,13 +1,14 @@
 import '../../css/bookingStyle.css';
 import React, { useEffect, useState, useContext } from 'react';
 import SearchRequestDTO from '../../dto/SearchRequestDTO';
-import BookingCard from '../Client/BookingCard';
-import { getOwnerBookingsWithPagination } from '../../api/BookingApi';
+import BookingCard from './BookingCard'; // общий компонент карточки брони/подписки
+import { getOwnerBookingsWithPagination, getOwnerSubscriptions } from '../../api/BookingApi';
 import { UserContext } from '../../contexts/UserContext';
-import BookingCardOwner from './BookingCard';
 
 const MyBookingOwner = () => {
   const { user } = useContext(UserContext);
+  const userId = localStorage.getItem("userId");
+
   const [sortBy, setSortBy] = useState('startTime');
   const [sortDirection, setSortDirection] = useState('DESC');
   const [filter, setFilter] = useState('');
@@ -20,7 +21,7 @@ const MyBookingOwner = () => {
     { value: 'dateCreated', label: 'Дате создания' },
     { value: 'startTime', label: 'Дате начала' },
     { value: 'endTime', label: 'Дате окончания' },
-    { value: 'price', label: 'Стоимости' }
+    { value: 'price', label: 'Стоимости' },
   ];
 
   const statusFilters = [
@@ -30,27 +31,118 @@ const MyBookingOwner = () => {
     { value: 'COMPLETED', label: 'Завершенные' },
     { value: 'CANCELLED', label: 'Отмененные' },
     { value: 'REJECTED', label: 'Отклоненные' },
-    { value: 'EXPIRED', label: 'Истекшие' }
+    { value: 'EXPIRED', label: 'Истекшие' },
+    { value: 'SUBSCRIPTION', label: 'Подписки' }
   ];
 
-  const fetchBookings = async () => {
-    setLoading(true);
-    try {
-      const request = new SearchRequestDTO(page, 20, sortDirection, sortBy, filter);
-      const response = await getOwnerBookingsWithPagination(localStorage.getItem("userId"), request);
-      setBookings(response.content);
-      setTotalPages(response.totalPages);
-    } catch (error) {
-      console.error('Ошибка загрузки бронирований владельца:', error);
-    } finally {
-      setLoading(false);
-    }
+  // Функция для конвертации подписки в объект, похожий на бронирование
+  const convertSubscriptionToBooking = (subscription) => {
+    const today = new Date();
+
+    // subscription.dayOfWeak хранит дни недели 1 (Пн) - 7 (Вс)
+    const subscriptionToJsDay = (day) => (day === 7 ? 0 : day);
+
+    // Найдем ближайший день подписки
+    const getNextDateForDay = (targetDay) => {
+      const jsDay = subscriptionToJsDay(targetDay);
+      const daysUntilNext =
+        jsDay >= today.getDay()
+          ? jsDay - today.getDay()
+          : 7 - today.getDay() + jsDay;
+      const nextDate = new Date(today);
+      nextDate.setDate(today.getDate() + daysUntilNext);
+      return nextDate.toISOString().split('T')[0]; // Формат YYYY-MM-DD
+    };
+
+    const nextDay = [...subscription.dayOfWeak]
+      .sort((a, b) => {
+        const d1 = (subscriptionToJsDay(a) - today.getDay() + 7) % 7;
+        const d2 = (subscriptionToJsDay(b) - today.getDay() + 7) % 7;
+        return d1 - d2;
+      })[0];
+
+    const nextDate = getNextDateForDay(nextDay);
+
+    const toDateTime = (date, localTime) => `${date}T${localTime}`;
+
+    return {
+      id: subscription.id,
+      client: subscription.client,
+      parkingSpace: subscription.parkingSpace,
+      startTime: toDateTime(nextDate, subscription.startTime),
+      endTime: toDateTime(nextDate, subscription.endTime),
+      dateCreated: null,
+      status: 'SUBSCRIPTION',
+      price: null,
+    };
   };
 
   useEffect(() => {
-    console.log('user:', user);
-    if (user) fetchBookings();
-  }, [filter, sortBy, sortDirection, page, user]);
+    if (!user) return;
+
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        if (filter === 'SUBSCRIPTION') {
+          // Если выбран фильтр по подпискам — загрузить только подписки владельца
+          const subs = await getOwnerSubscriptions(userId);
+          const converted = subs.map(convertSubscriptionToBooking);
+          setBookings(converted);
+          setTotalPages(1);
+          setPage(1);
+        } else if (filter === '') {
+          // Если фильтр "Все" — подгрузить и брони, и подписки, объединить и отсортировать по выбранному полю и направлению
+
+          const [bookingResp, subs] = await Promise.all([
+            getOwnerBookingsWithPagination(userId, new SearchRequestDTO(page, 20, sortDirection, sortBy, filter)),
+            getOwnerSubscriptions(userId)
+          ]);
+
+          const convertedSubs = subs.map(convertSubscriptionToBooking);
+
+          // Объединяем брони и подписки
+          let combined = [...bookingResp.content, ...convertedSubs];
+
+          // Фильтруем по статусу, если нужно (кроме пустого filter - "Все")
+          // Но т.к. filter === '', фильтрация не нужна
+
+          // Сортируем вручную, т.к. сервер дал брони только, подписки пришлось добавить
+          combined.sort((a, b) => {
+            let valA = a[sortBy];
+            let valB = b[sortBy];
+
+            // Для null или undefined ставим "в хвост"
+            if (valA == null) return 1;
+            if (valB == null) return -1;
+
+            // Для дат — парсим в timestamp
+            if (sortBy.toLowerCase().includes('date') || sortBy.toLowerCase().includes('time')) {
+              valA = new Date(valA).getTime();
+              valB = new Date(valB).getTime();
+            }
+
+            if (valA < valB) return sortDirection === 'ASC' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'ASC' ? 1 : -1;
+            return 0;
+          });
+
+          setBookings(combined);
+          setTotalPages(bookingResp.totalPages); // для подписок пагинация не поддерживается
+        } else {
+          const request = new SearchRequestDTO(page, 20, sortDirection, sortBy, filter);
+          const response = await getOwnerBookingsWithPagination(userId, request);
+          setBookings(response.content);
+          setTotalPages(response.totalPages);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user, filter, sortBy, sortDirection, page]);
 
   const handleSortChange = (e) => {
     const value = e.target.value;
@@ -68,7 +160,7 @@ const MyBookingOwner = () => {
     <div className="myBookingPage">
       <div className="myBookingHeader">
         <div className="headerBackground">
-          <h1 className="headerTitle">Бронирования ваших мест</h1>
+          <h1 className="headerTitle">Мои брони и подписки</h1>
         </div>
       </div>
 
@@ -96,9 +188,7 @@ const MyBookingOwner = () => {
             <span className="sortLabel">Сортировать по:</span>
             <select className="sortSelect" value={sortBy} onChange={handleSortChange}>
               {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
+                <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
             <button
@@ -113,18 +203,19 @@ const MyBookingOwner = () => {
         <div className="bookingsList">
           {loading ? (
             <div className="loadingIndicator">Загрузка...</div>
-          ) : !bookings ? (
-            <div className="noResults">Нет бронирований</div>
+          ) : bookings.length === 0 ? (
+            <div className="noResults">Нет бронирований и подписок</div>
           ) : (
-            bookings.map((booking) => <BookingCardOwner key={booking.id} booking={booking} />)
+            bookings.map((booking) => (
+              <BookingCard key={booking.id} booking={booking} />
+            ))
           )}
         </div>
 
-        {totalPages > 1 && (
+        {/* Пагинация показывается, если фильтр не "SUBSCRIPTION" (подписки без пагинации) */}
+        {filter !== 'SUBSCRIPTION' && totalPages > 1 && (
           <div className="pagination">
-            <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
-              Назад
-            </button>
+            <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>Назад</button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
               <button
                 key={pageNum}
@@ -134,9 +225,7 @@ const MyBookingOwner = () => {
                 {pageNum}
               </button>
             ))}
-            <button disabled={page === totalPages} onClick={() => handlePageChange(page + 1)}>
-              Вперед
-            </button>
+            <button disabled={page === totalPages} onClick={() => handlePageChange(page + 1)}>Вперед</button>
           </div>
         )}
       </div>

@@ -2,121 +2,182 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const ChatPage = () => {
-  const { chatId } = useParams(); // Получаем id чата из URL
+  const { userId2 } = useParams();
   const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
+  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
+  const role = localStorage.getItem('role');
 
-  console.log(chatId)
-
- // Моки для чатов и сообщений
-  const mockChats = [
-    { id: '1', client: { username: 'b' }, messages: [] },
-    { id: '2', client: { username: 'owner@mail.ru' }, messages: [] },
-    // { id: '3', client: { username: 'User 3' }, messages: [] },
-  ];
-
-  const mockChat = {
-    id: '2',
-    owner: { id: '123', username: 'Owner' },
-    client: { id: '1', username: 'owner@mail.ru' },
-    messages: [
-      { id: '1', content: 'Привет!', sender: { id: '123', username: 'Owner' }, time: '2025-05-12T10:00:00Z' },
-      { id: '2', content: 'Привет, как дела?', sender: { id: '1', username: 'User 1' }, time: '2025-05-12T10:05:00Z' },
-    ],
-  };
-
-  // Замокаем загрузку чатов
+  // Загрузка списка чатов
   useEffect(() => {
-    setChats(mockChats);
-  }, []);
+    const fetchChats = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/chat/list/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setChats(data);
+        } else {
+          console.error('Ошибка загрузки чатов');
+        }
+      } catch (error) {
+        console.error('Ошибка сети при загрузке чатов:', error);
+      }
+    };
 
-  // Замокаем загрузку выбранного чата, если chatId не 0
+    fetchChats();
+  }, [userId]);
+
+  // При изменении userId2 или списка чатов — ищем чат и загружаем сообщения
   useEffect(() => {
-    if (chatId === '0') {
-      setSelectedChat(null); // Если chatId 0, значит чат не выбран
+    if (!userId2 || userId2 === '0') {
+      setSelectedChatId(null);
+      setMessages([]);
       return;
     }
 
-    if (chatId) {
-      setSelectedChat(mockChat); // Замокаем данные для выбранного чата
-    }
-  }, [chatId]);
+    const otherUserId = parseInt(userId2);
 
-  const handleChatClick = (id) => {
-    setSelectedChat(mockChat)
-    navigate(`/chat/${id}`); // Переход на страницу выбранного чата
+    // Находим чат, если он уже есть
+    const chatWithUser = chats.find(c =>
+      c.owner?.id === otherUserId || c.client?.id === otherUserId
+    );
+
+    // Устанавливаем chatId, если найден
+    if (chatWithUser) {
+      setSelectedChatId(chatWithUser.id);
+    } else {
+      setSelectedChatId(null); // ещё не создан
+    }
+
+    // Загружаем сообщения в любом случае
+    fetch(`http://localhost:8080/chat/getMes/${userId}/${otherUserId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Ошибка загрузки сообщений');
+        return res.json();
+      })
+      .then(data => {
+        // Отсортируем сообщения по времени (от старого к новому)
+        const sortedMessages = data.slice().sort((a, b) => new Date(a.time) - new Date(b.time));
+        setMessages(sortedMessages);
+      })
+
+      .catch(e => {
+        console.error(e);
+        setMessages([]);
+      });
+
+  }, [userId2, userId, chats]);
+
+
+  const handleChatClick = (otherUserId) => {
+    navigate(`/chat/${otherUserId}`);
   };
 
-  const sendMessage = () => {
-    if (!messageText.trim() || !selectedChat) return;
+  const sendMessage = async () => {
+  if (!messageText.trim() || !selectedChatId) return;
 
-    const newMessage = {
-      id: Date.now(),
-      content: messageText,
-      time: new Date().toISOString(),
-      sender: selectedChat.owner,
-      recipient: selectedChat.client,
-    };
+  const chat = chats.find(c => c.id === selectedChatId);
+  if (!chat) return;
 
-    // Имитация отправки сообщения
-    fetch(`/api/chats/${selectedChat.id}/messages`, {
+  const recipientUserId = role === "OWNER" ? chat.client?.id : chat.owner?.id;
+  if (!recipientUserId) return;
+
+  const messageDto = {
+    id: null,
+    chatId: selectedChatId,
+    sender: parseInt(userId),
+    recipient: recipientUserId,
+    content: messageText,
+    time: new Date().toISOString(),
+    status: "SENT"
+  };
+
+  try {
+    const response = await fetch('http://localhost:8080/chat/create/message', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: messageText }),
+      body: JSON.stringify(messageDto),
     });
 
-    setSelectedChat({
-      ...selectedChat,
-      messages: [...selectedChat.messages, newMessage],
-    });
+    if (response.ok) {
+      const savedMessage = await response.json();
+      setMessages(prev => [...prev, savedMessage]);
+      setMessageText('');
+    } else {
+      console.error('Не удалось отправить сообщение');
+    }
+  } catch (error) {
+    console.error('Ошибка отправки сообщения:', error);
+  }
+};
 
-    setMessageText('');
-  };
+  // Выбранный чат для отображения данных (имя собеседника и т.п.)
+  const selectedChat = chats.find(c => c.id === selectedChatId);
+
+  // Определяем имя собеседника для заголовка
+  const chatPartnerName = (() => {
+    if (!selectedChat) return '';
+    if (role === 'OWNER') return selectedChat.client?.username || selectedChat.client?.email || 'Неизвестный пользователь';
+    return selectedChat.owner?.username || selectedChat.owner?.email || 'Неизвестный пользователь';
+  })();
 
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
         <h2>Чаты</h2>
-        {chats.map(chat => (
+        {chats.map(chat => {
+          const otherUser = role === "OWNER" ? chat.client : chat.owner;
+          return (
             <div
-                key={chat.id}
-                style={{
+              key={chat.id}
+              style={{
                 ...styles.chatItem,
-                backgroundColor: selectedChat?.id === chat.id ? '#2C323A' : 'transparent',
-                color: selectedChat?.id === chat.id ? '#FFD700' : '#fff', // Цвет текста для выбранного чата
-                transition: 'background-color 0.3s ease, color 0.3s ease', // Плавный переход для фона и текста
-                }}
-                onClick={() => handleChatClick(chat.id)}
+                backgroundColor: selectedChatId === chat.id ? '#2C323A' : 'transparent',
+                color: selectedChatId === chat.id ? '#FFD700' : '#fff',
+                transition: 'background-color 0.3s ease, color 0.3s ease',
+              }}
+              onClick={() => handleChatClick(otherUser?.id)}
             >
-                {chat.client.username}
+              {otherUser?.email || 'Неизвестный пользователь'}
             </div>
-            ))}
+          );
+        })}
       </div>
 
       <div style={styles.chatWindow}>
         {selectedChat ? (
           <>
             <div style={styles.chatHeader}>
-              Чат с {selectedChat.client.username}
+              Чат с {chatPartnerName}
             </div>
 
             <div style={styles.messagesContainer}>
-              {selectedChat.messages.map(msg => (
-                <div
-                  key={msg.id}
-                  style={{
-                    ...styles.message,
-                    alignSelf: msg.sender.id === selectedChat.owner.id ? 'flex-end' : 'flex-start',
-                    backgroundColor: msg.sender.id === selectedChat.owner.id ? '#FFD700' : '#333',
-                    color: msg.sender.id === selectedChat.owner.id ? '#000' : '#fff',
-                  }}
-                >
-                  <div>{msg.content}</div>
-                  <div style={styles.messageTime}>{new Date(msg.time).toLocaleString()}</div>
-                </div>
-              ))}
+              {messages.length > 0 ? (
+                messages.map(msg => {
+                  const isCurrentUserSender = msg.sender?.id === parseInt(userId);
+                  return (
+                    <div
+                      key={msg.id}
+                      style={{
+                        ...styles.message,
+                        alignSelf: isCurrentUserSender ? 'flex-end' : 'flex-start',
+                        backgroundColor: isCurrentUserSender ? '#FFD700' : '#333',
+                        color: isCurrentUserSender ? '#000' : '#fff',
+                      }}
+                    >
+                      <div>{msg.content}</div>
+                      <div style={styles.messageTime}>
+                        {new Date(msg.time).toLocaleString()}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div style={{ color: '#aaa', fontStyle: 'italic' }}>Сообщений пока нет</div>
+              )}
             </div>
 
             <div style={styles.inputContainer}>
@@ -126,6 +187,7 @@ const ChatPage = () => {
                 value={messageText}
                 onChange={e => setMessageText(e.target.value)}
                 placeholder="Введите сообщение..."
+                onKeyDown={e => { if (e.key === 'Enter') sendMessage(); }}
               />
               <button style={styles.sendButton} onClick={sendMessage}>Отправить</button>
             </div>

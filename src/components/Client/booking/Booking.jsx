@@ -22,6 +22,8 @@ export default function Booking() {
   const [range, setRange] = useState({ start: { major: 0, minor: 0 }, end: { major: 1, minor: 0 } });
   const [price, setPrice] = useState(0);
   const {id} = useParams();
+  const [isUnavailable, setIsUnavailable] = useState(false);
+
 
   useEffect(() => {
     setLoading(true);
@@ -33,10 +35,10 @@ export default function Booking() {
 
   const handleBooking = async () => {
     if (!validateBooking()) return;
-  
+
     const start = new Date(selectedDate);
     let end = new Date(start);
-  
+
     // Обработка в зависимости от выбранной опции
     if (selectedOption === 'Часы') {
       start.setHours(range.start.major, range.start.minor);
@@ -54,10 +56,23 @@ export default function Booking() {
       end.setDate(end.getDate() + range.end.minor);
       end.setHours(range.end.minor);
     }
-  
+
+    // 🔒 Проверка на isUnavailable
+    if (isUnavailable) {
+      alert('На это время парковочное место занято. Выберите другое время.');
+      return;
+    }
+
+    // 🔒 Проверка на дату в прошлом
+    const now = new Date();
+    if (start < now) {
+      alert('Нельзя бронировать парковку на прошедшее время.');
+      return;
+    }
+
     const startTime = toLocalISOString(start);
     const endTime = toLocalISOString(end);
-  
+
     const bookingRequest = {
       clientId: localStorage.getItem("userId"),
       parkingSpaceId: selectionSpace.id,
@@ -65,7 +80,7 @@ export default function Booking() {
       endTime,
       price
     };
-  
+
     try {
       const response = await fetch('http://localhost:8080/booking/create', {
         method: 'POST',
@@ -79,6 +94,7 @@ export default function Booking() {
       alert('Ошибка при создании бронирования. Попробуйте позже.');
     }
   };
+
 
   const handleSubscription = () => {
 
@@ -291,6 +307,8 @@ export default function Booking() {
           setSelectedOption={setSelectedOption}
           setSelectionSpace={setSelectionSpace}
           setRange={setRange}
+          isUnavailable={isUnavailable}
+          setIsUnavailable={setIsUnavailable}
         />
       )}
       

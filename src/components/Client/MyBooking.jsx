@@ -2,7 +2,7 @@ import '../../css/bookingStyle.css';
 import React, { useEffect, useState } from 'react';
 import SearchRequestDTO from '../../dto/SearchRequestDTO';
 import BookingCard from './BookingCard';
-import { getBookingsWithPagination } from '../../api/BookingApi';
+import { getAllSubscriptionsForUser, getBookingsWithPagination } from '../../api/BookingApi';
 import { parkingSubscriptionsMock } from '../../dto/mock/BookingMock';
 
 const MyBooking = () => {
@@ -28,33 +28,103 @@ const MyBooking = () => {
     { value: 'COMPLETED', label: 'Завершенные' },
     { value: 'CANCELLED', label: 'Отмененные' },
     { value: 'REJECTED', label: 'Отклоненные' },
-    { value: 'EXPIRED', label: 'Истекшие' }
+    { value: 'EXPIRED', label: 'Истекшие' },
+    { value: 'SUBSCRIPTION', label: 'Подписки' }
   ];
 
-  const fetchBookings = async () => {
-    setLoading(true);
-    try {
-      const request = new SearchRequestDTO(
-        page, 
-        20, 
-        sortDirection, 
-        sortBy, 
-        filter
-      );
+  const convertSubscriptionToBooking = (subscription) => {
+    const today = new Date();
+    const todayDay = today.getDay(); // Воскресенье — 0, Понедельник — 1, ..., Суббота — 6
 
-      const response = await getBookingsWithPagination(request);
-      setBookings(response.content);
-      setTotalPages(response.totalPages);
-    } catch (error) {
-      console.error('Ошибка загрузки:', error);
-    } finally {
-      setLoading(false);
-    }
+    // Учитываем, что dayOfWeak в subscription хранит дни недели от 1 (Пн) до 7 (Вс)
+    const jsDayOfWeekToSubscription = (day) => (day === 0 ? 7 : day);
+    const subscriptionToJsDay = (day) => (day === 7 ? 0 : day);
+
+    // Найти ближайший день из подписки
+    const getNextDateForDay = (targetDay) => {
+      const jsDay = subscriptionToJsDay(targetDay);
+      const daysUntilNext =
+        jsDay >= today.getDay()
+          ? jsDay - today.getDay()
+          : 7 - today.getDay() + jsDay;
+      const nextDate = new Date(today);
+      nextDate.setDate(today.getDate() + daysUntilNext);
+      return nextDate.toISOString().split('T')[0]; // YYYY-MM-DD
+    };
+
+    const nextDay = [...subscription.dayOfWeak]
+      .sort((a, b) => {
+        const d1 = (subscriptionToJsDay(a) - today.getDay() + 7) % 7;
+        const d2 = (subscriptionToJsDay(b) - today.getDay() + 7) % 7;
+        return d1 - d2;
+      })[0];
+
+    const nextDate = getNextDateForDay(nextDay);
+
+    const toDateTime = (date, localTime) => `${date}T${localTime}`;
+
+    return {
+      id: subscription.id,
+      client: subscription.client,
+      parkingSpace: subscription.parkingSpace,
+      startTime: toDateTime(nextDate, subscription.startTime),
+      endTime: toDateTime(nextDate, subscription.endTime),
+      dateCreated: null,
+      status: 'SUBSCRIPTION',
+      price: null
+    };
   };
 
+
   useEffect(() => {
-    fetchBookings();
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        if (filter === 'SUBSCRIPTION') {
+          const subs = await getAllSubscriptionsForUser(localStorage.getItem('userId'));
+          const converted = subs.map(convertSubscriptionToBooking);
+          setBookings(converted);
+          setTotalPages(1);
+          setPage(1);
+        } else {
+          const request = new SearchRequestDTO(
+            page,
+            20,
+            sortDirection,
+            sortBy,
+            filter
+          );
+          const response = await getBookingsWithPagination(request);
+          setBookings(response.content);
+          setTotalPages(response.totalPages);
+        }
+      } catch (e) {
+        console.error('Ошибка загрузки данных:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [filter, sortBy, sortDirection, page]);
+
+  // const fetchSubscriptions = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await getAllSubscriptionsForUser(localStorage.getItem('userId'));
+  //     setBookings(response); // предположим, что структура аналогична бронированиям
+  //     setTotalPages(1); // подписки без пагинации
+  //     setPage(1);
+  //   } catch (error) {
+  //     console.error('Ошибка загрузки подписок:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchBookings();
+  // }, [filter, sortBy, sortDirection, page]);
 
   const handleSortChange = (e) => {
     const value = e.target.value;

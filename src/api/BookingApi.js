@@ -136,4 +136,15 @@ export const getBookingsWithPagination = async (searchRequestDTO) => {
       return []; // или возврат мока
     }
   };
-  
+
+export const getAllSubscriptionsForUser = async (userId) => {
+  const response = await fetch(`${BASE_URL}/subscription/get/user/${userId}`);
+  if (!response.ok) throw new Error('Ошибка загрузки подписок');
+  return await response.json();
+};
+
+export const getOwnerSubscriptions = async (ownerId) => {
+  const response = await fetch(`${BASE_URL}/subscription/get/owner/${ownerId}`);
+  if (!response.ok) throw new Error('Ошибка при получении подписок владельца');
+  return response.json();
+};
