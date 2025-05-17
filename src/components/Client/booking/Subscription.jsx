@@ -8,15 +8,18 @@ const Subscription = () => {
   const [showNewCard, setShowNewCard] = useState(false);
   const [parkingInfo, setParkingInfo] = useState(null);
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [occupiedSlots, setOccupiedSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [formError, setFormError] = useState(null); // Добавим состояние для ошибок формы
+  const [formError, setFormError] = useState(null);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
 
   const navigate = useNavigate();
   const { id, spaceId, startDate, endDate } = useParams();
   const userId = localStorage.getItem('userId');
 
   const formatTime = (isoDate) => {
+    if (!isoDate) return '';
     const date = new Date(isoDate);
     return date.toISOString().slice(11, 16);
   };
@@ -68,7 +71,7 @@ const Subscription = () => {
         setParkingInfo(data);
       } catch (error) {
         console.error('Ошибка при получении информации о парковке:', error);
-        setParkingInfo(mockParkingInfo); // Используем мок
+        setParkingInfo(mockParkingInfo);
       }
     };
 
@@ -82,27 +85,47 @@ const Subscription = () => {
         setPaymentMethods(data);
       } catch (error) {
         console.error('Ошибка при получении карт:', error);
-        setPaymentMethods(mockPaymentMethods); // Используем моки
+        setPaymentMethods(mockPaymentMethods);
       }
     };
 
     if (userId && spaceId) {
-      fetchParkingInfo();
-      fetchPaymentMethods();
+      Promise.all([fetchParkingInfo(), fetchPaymentMethods()]).then(() => setLoading(false));
     } else {
       setError('Не найден userId или spaceId');
+      setLoading(false);
     }
-
-    setLoading(false);
   }, [userId, spaceId]);
 
-  if (loading) {
-    return <div>Загрузка...</div>;
-  }
+  // Загрузка занятых слотов для выбранного пространства и периода (месяц)
+  // useEffect(() => {
+  //   if (!spaceId || !startDate) return;
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  //   const fetchOccupiedSlots = async () => {
+  //     try {
+  //       const startDateStr = startDate.slice(0, 10);
+  //       const endDateObj = new Date(startDate);
+  //       endDateObj.setMonth(endDateObj.getMonth() + 1);
+  //       const endDateStr = endDateObj.toISOString().slice(0, 10);
+
+  //       const response = await fetch(
+  //         `http://localhost:8080/booking/occupiedSlots?spaceId=${spaceId}&startDate=${startDateStr}&endDate=${endDateStr}`
+  //       );
+  //       if (!response.ok) throw new Error('Ошибка при загрузке занятых слотов');
+
+  //       const data = await response.json();
+  //       setOccupiedSlots(data);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setOccupiedSlots([]); // Можно обработать ошибку по-другому
+  //     }
+  //   };
+
+  //   fetchOccupiedSlots();
+  // }, [spaceId, startDate]);
+
+  if (loading) return <div>Загрузка...</div>;
+  if (error) return <div>{error}</div>;
 
   const daysOfWeek = [
     { id: 1, label: 'пн' },
@@ -115,12 +138,9 @@ const Subscription = () => {
   ];
 
   const handleDaySelect = (dayId) => {
-    setSelectedDays((prev) => {
-      const updatedDays = prev.includes(dayId)
-        ? prev.filter((d) => d !== dayId)
-        : [...prev, dayId];
-      return updatedDays;
-    });
+    setSelectedDays((prev) =>
+      prev.includes(dayId) ? prev.filter((d) => d !== dayId) : [...prev, dayId]
+    );
   };
 
   const handleCardSelect = (cardId) => {
@@ -128,10 +148,72 @@ const Subscription = () => {
     setShowNewCard(false);
   };
 
-  const handleSubmit = (e) => {
+  const isTimeOverlap = (startA, endA, startB, endB) => {
+    return startA < endB && startB < endA;
+  };
+
+  const checkSlotsFree = () => {
+    for (const selectedDay of selectedDays) {
+      for (const slot of occupiedSlots) {
+        if (slot.dayOfWeek === selectedDay) {
+          if (isTimeOverlap(startTime, endTime, slot.startTime, slot.endTime)) {
+            return false; // пересечение найдено
+          }
+        }
+      }
+    }
+    return true; // пересечений нет
+  };
+
+  const checkAvailability = async () => {
+    try {
+      setIsCheckingAvailability(true);
+      
+      // Преобразуем время из формата "HH:mm" в объект времени
+      const parseTime = (timeStr) => {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return {
+          hour: hours,
+          minute: minutes,
+          second: 0,
+          nano: 0
+        };
+      };
+
+      const requestBody = {
+        parkingSpaceId: parkingInfo.id,
+        dayOfWeak: selectedDays,
+        startTime: startTime + ':00',
+        endTime: endTime + ':00'
+      };
+
+      const response = await fetch('http://localhost:8080/subscription/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      }
+    );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json(); // Ожидаем boolean ответ
+    } catch (error) {
+      console.error('Ошибка при проверке доступности:', error);
+      setFormError('Ошибка при проверке доступности. Попробуйте позже.');
+      return false;
+    } finally {
+      setIsCheckingAvailability(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Проверяем, что время, дни недели и карта выбраны
+    // Валидация формы
     if (!startTime || !endTime) {
       setFormError('Пожалуйста, выберите время для бронирования.');
       return;
@@ -147,9 +229,23 @@ const Subscription = () => {
       return;
     }
 
-    setFormError(null); // Сбрасываем ошибку, если все поля выбраны
+    // Проверка локальных пересечений
+    if (!checkSlotsFree()) {
+      setFormError('Выбранные дни и время пересекаются с уже занятыми слотами.');
+      return;
+    }
 
-    // Формируем объект Subscription
+    // Проверка доступности через API
+    const isAvailable = await checkAvailability();
+    if (!isAvailable) {
+      setFormError('Выбранное время уже занято. Пожалуйста, выберите другое время.');
+      return;
+    }
+
+    setFormError(null);
+
+    // Подготовка данных для подписки
+      // Формируем объект Subscription
   const subscription = {
     parkingSpaceId: parkingInfo.id,
     clientId: userId,
@@ -250,7 +346,7 @@ const Subscription = () => {
           </div>
         </div>
 
-        {formError && <div className="error-message">{formError}</div>} {/* Отображаем ошибку */}
+        {formError && <div className="error-message">{formError}</div>}
 
         <button type="submit" className="continue-button">
           Продолжить

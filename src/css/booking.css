@@ -217,6 +217,7 @@
     position: relative;
   }
   
+  
   .timeline-segment.busy {
     background-color: yellow;
   }
@@ -481,6 +482,7 @@
     padding: 12px;
     margin-bottom: 16px;
     width: 40%;
+    color: #fff;
   }
   
   .time-column {
@@ -494,9 +496,47 @@
     margin-bottom: 4px;
   }
   
-  .time-value {
-    font-size: 16px;
+  .summary-time-block .time-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;        /* Минимальная ширина колонки для ровного вида */
+}
+
+.summary-time-block .time-label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  /* color: #222; */
+  user-select: none;       /* Чтобы текст метки не выделялся случайно */
+}
+
+.summary-time-block input[type="time"],
+.summary-time-block input[type="date"] {
+  padding: 7px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #bbb;
+  outline-offset: 2px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  width: 100%;             /* Чтобы инпут занимал всю ширину колонки */
+  cursor: pointer;
+  background-color: #ffd70000;
+  color: #fff;
+}
+
+.summary-time-block input[type="time"]:focus,
+.summary-time-block input[type="date"]:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 6px #1a73e8aa;
+}
+
+@media (max-width: 480px) {
+  .summary-time-block {
+    flex-direction: column;
+    gap: 20px;
   }
+}
   
   .summary-price {
     font-size: 16px;
@@ -544,3 +584,81 @@
   .selected-range.unavailable {
   background-color: rgba(255, 0, 0, 0.5);
 }
+
+/* Общий затемнённый фон */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Контейнер модального окна */
+.modal-container {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Заголовок модалки */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Кнопка закрытия */
+.modal-close-button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.modal-close-button:hover {
+  color: #000;
+}
+
+/* Содержимое */
+.modal-body {
+  font-size: 16px;
+  color: #444;
+}
+
+/* Кнопка ℹ️ слева */
+.info-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+  margin-right: 8px;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.info-button:hover {
+  color: #000;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

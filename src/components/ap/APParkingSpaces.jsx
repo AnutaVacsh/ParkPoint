@@ -14,7 +14,6 @@ const APParkingSpaces = () => {
 
   console.log(parkingSpaces)
 
-  // Отправка запроса на сервер
   const fetchParkingSpaces = async (page, statusFilter, ownerFilter) => {
     setLoading(true);
     
@@ -25,7 +24,6 @@ const APParkingSpaces = () => {
       sortBy: "id",
       filters: [
         { field: "isAvailable", value: statusFilter, operator: "=" },
-        // { field: "owner.email", value: ownerFilter, operator: "LIKE" }
       ]
     };
 
@@ -143,17 +141,6 @@ const APParkingSpaces = () => {
               <option value="BAN">Заблокировано</option>
             </select>
           </div>
-
-          {/* <div className="filter">
-            <label htmlFor="ownerFilter">Владелец:</label>
-            <input
-              id="ownerFilter"
-              type="text"
-              placeholder="Поиск по email..."
-              value={ownerFilter}
-              onChange={(e) => setOwnerFilter(e.target.value)}
-            />
-          </div> */}
         </div>
       </div>
 

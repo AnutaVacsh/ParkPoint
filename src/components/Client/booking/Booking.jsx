@@ -33,6 +33,34 @@ export default function Booking() {
 
   const navigate = useNavigate();
 
+  const isFormValid = () => {
+  // Проверяем наличие даты
+  if (!selectedDate) return false;
+  // Проверяем наличие выбранного места (объект)
+  if (!selectionSpace || !selectionSpace.id) return false;
+
+  if(isUnavailable) return false
+
+  // Для выбранной опции "Часы" - проверяем, что время начала меньше времени конца
+  if (selectedOption === 'Часы') {
+    const startMinutes = range.start.major * 60 + range.start.minor;
+    const endMinutes = range.end.major * 60 + range.end.minor;
+    if (startMinutes >= endMinutes) return false;
+  }
+
+  // Для "Дни" и "Месяцы" можно проверить аналогично (например, что конечный диапазон больше начального)
+  if (selectedOption === 'Дни' || selectedOption === 'Дни недели') {
+    if (range.start.major >= range.end.major) return false;
+  }
+
+  if (selectedOption === 'Месяцы') {
+    if (range.start.major > range.end.major) return false;
+  }
+
+  return true;
+};
+
+
   const handleBooking = async () => {
     if (!validateBooking()) return;
 
@@ -88,7 +116,7 @@ export default function Booking() {
         body: JSON.stringify(bookingRequest)
       });
       if (!response.ok) throw new Error(`Ошибка ${response.status}`);
-      navigate(`/client/parking/${id}/booking/confirmation/${selectionSpace.order}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`);
+      navigate(`/client/parking/${id}/booking/confirmation/${selectionSpace.id}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`);
     } catch (error) {
       console.error('Не удалось создать бронирование:', error);
       alert('Ошибка при создании бронирования. Попробуйте позже.');
@@ -316,18 +344,268 @@ export default function Booking() {
       {/* Итог */}
      <div className="summary-container">
         <h2 className="summary-title">Итог</h2>
+         <div className="summary-time-block">
+          {selectedOption === "Часы" && (
+            <>
+              <div className="time-column">
+                <div className="time-label">Начало</div>
+                <input
+                  type="time"
+                  value={`${range.start.major.toString().padStart(2, '0')}:${range.start.minor.toString().padStart(2, '0')}`}
+                  onChange={(e) => {
+                    const [h, m] = e.target.value.split(":").map(Number);
+                    setRange(prev => {
+                      const startMinutes = h * 60 + m;
+                      const endMinutes = prev.end.major * 60 + prev.end.minor;
+                      if (startMinutes > endMinutes) {
+                        return { start: { major: h, minor: m }, end: { major: h, minor: m } };
+                      }
+                      return { ...prev, start: { major: h, minor: m } };
+                    });
+                  }}
+                />
+              </div>
+              <div className="time-column">
+                <div className="time-label">Конец</div>
+                <input
+                  type="time"
+                  value={`${range.end.major.toString().padStart(2, '0')}:${range.end.minor.toString().padStart(2, '0')}`}
+                  onChange={(e) => {
+                    const [h, m] = e.target.value.split(":").map(Number);
+                    setRange(prev => {
+                      const endMinutes = h * 60 + m;
+                      const startMinutes = prev.start.major * 60 + prev.start.minor;
+                      if (endMinutes < startMinutes) {
+                        return { start: { major: h, minor: m }, end: { major: h, minor: m } };
+                      }
+                      return { ...prev, end: { major: h, minor: m } };
+                    });
+                  }}
+                />
+              </div>
+            </>
+          )}
 
-        <div className="summary-time-block">
-          <div className="time-column">
-            <div className="time-label">Начало</div>
-            <div className="time-value">{positionToLabel(range.start)}</div>
-          </div>
-          <div className="time-column">
-            <div className="time-label">Конец</div>
-            <div className="time-value">{positionToLabel(range.end)}</div>
-          </div>
-        </div>
+          {selectedOption === "Дни" && (
+  <>
+    <div className="time-column">
+      <div className="time-label">Начало</div>
+      <input
+        type="date"
+        min={selectedDate}
+        max={(() => {
+          const dt = new Date(selectedDate);
+          dt.setDate(dt.getDate() + 7);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        value={(() => {
+          const dt = new Date(selectedDate);
+          dt.setDate(dt.getDate() + range.start.major);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        onChange={(e) => {
+          const newDate = new Date(e.target.value);
+          const selected = new Date(selectedDate);
+          // Ограничим newDate сверху max (selectedDate + 7 дней)
+          const maxDate = new Date(selectedDate);
+          maxDate.setDate(maxDate.getDate() + 7);
 
+          if (newDate < selected) {
+            newDate.setTime(selected.getTime());
+          } else if (newDate > maxDate) {
+            newDate.setTime(maxDate.getTime());
+          }
+
+          const dayOffset = Math.round((newDate - selected) / (1000 * 60 * 60 * 24));
+
+          setRange(prev => {
+            if (dayOffset > prev.end.major) {
+              return {
+                start: { ...prev.start, major: dayOffset },
+                end: { ...prev.end, major: dayOffset }
+              };
+            }
+            return {
+              ...prev,
+              start: { ...prev.start, major: dayOffset }
+            };
+          });
+        }}
+      />
+    </div>
+
+    <div className="time-column">
+      <div className="time-label">Конец</div>
+      <input
+        type="date"
+        min={selectedDate}
+        max={(() => {
+          const dt = new Date(selectedDate);
+          dt.setDate(dt.getDate() + 7);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        value={(() => {
+          const dt = new Date(selectedDate);
+          dt.setDate(dt.getDate() + range.end.major);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        onChange={(e) => {
+          const newDate = new Date(e.target.value);
+          const selected = new Date(selectedDate);
+
+          const maxDate = new Date(selectedDate);
+          maxDate.setDate(maxDate.getDate() + 7);
+
+          if (newDate < selected) {
+            newDate.setTime(selected.getTime());
+          } else if (newDate > maxDate) {
+            newDate.setTime(maxDate.getTime());
+          }
+
+          const dayOffset = Math.round((newDate - selected) / (1000 * 60 * 60 * 24));
+
+          setRange(prev => {
+            if (dayOffset < prev.start.major) {
+              return {
+                start: { ...prev.start, major: dayOffset },
+                end: { ...prev.end, major: dayOffset }
+              };
+            }
+            return {
+              ...prev,
+              end: { ...prev.end, major: dayOffset }
+            };
+          });
+        }}
+      />
+    </div>
+  </>
+)}
+
+{selectedOption === "Месяцы" && (
+  <>
+    <div className="time-column">
+      <div className="time-label">Начало</div>
+      <input
+        type="date"
+        min={selectedDate}
+        max={(() => {
+          const dt = new Date(selectedDate);
+          dt.setFullYear(dt.getFullYear() + 1);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        value={(() => {
+          const dt = new Date(selectedDate);
+          dt.setMonth(dt.getMonth() + range.start.major);
+          dt.setDate(range.start.minor);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        onChange={(e) => {
+          const d = new Date(e.target.value);
+          const selected = new Date(selectedDate);
+
+          // Ограничения для даты
+          const maxDate = new Date(selectedDate);
+          maxDate.setFullYear(maxDate.getFullYear() + 1);
+
+          if (d < selected) {
+            d.setTime(selected.getTime());
+          } else if (d > maxDate) {
+            d.setTime(maxDate.getTime());
+          }
+
+          const monthOffset =
+            (d.getFullYear() - selected.getFullYear()) * 12 +
+            (d.getMonth() - selected.getMonth());
+          const day = d.getDate();
+
+          setRange((prev) => {
+            const startDate = new Date(selected);
+            startDate.setMonth(selected.getMonth() + monthOffset);
+            startDate.setDate(day);
+
+            const endDate = new Date(selected);
+            endDate.setMonth(selected.getMonth() + prev.end.major);
+            endDate.setDate(prev.end.minor);
+
+            if (startDate > endDate) {
+              return {
+                start: { major: monthOffset, minor: day },
+                end: { major: monthOffset, minor: day },
+              };
+            }
+
+            return {
+              ...prev,
+              start: { major: monthOffset, minor: day },
+            };
+          });
+        }}
+      />
+    </div>
+
+    <div className="time-column">
+      <div className="time-label">Конец</div>
+      <input
+        type="date"
+        min={selectedDate}
+        max={(() => {
+          const dt = new Date(selectedDate);
+          dt.setFullYear(dt.getFullYear() + 1);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        value={(() => {
+          const dt = new Date(selectedDate);
+          dt.setMonth(dt.getMonth() + range.end.major);
+          dt.setDate(range.end.minor);
+          return dt.toISOString().slice(0, 10);
+        })()}
+        onChange={(e) => {
+          const d = new Date(e.target.value);
+          const selected = new Date(selectedDate);
+
+          const maxDate = new Date(selectedDate);
+          maxDate.setFullYear(maxDate.getFullYear() + 1);
+
+          if (d < selected) {
+            d.setTime(selected.getTime());
+          } else if (d > maxDate) {
+            d.setTime(maxDate.getTime());
+          }
+
+          const monthOffset =
+            (d.getFullYear() - selected.getFullYear()) * 12 +
+            (d.getMonth() - selected.getMonth());
+          const day = d.getDate();
+
+          setRange((prev) => {
+            const endDate = new Date(selected);
+            endDate.setMonth(selected.getMonth() + monthOffset);
+            endDate.setDate(day);
+
+            const startDate = new Date(selected);
+            startDate.setMonth(selected.getMonth() + prev.start.major);
+            startDate.setDate(prev.start.minor);
+
+            if (endDate < startDate) {
+              return {
+                start: { major: monthOffset, minor: day },
+                end: { major: monthOffset, minor: day },
+              };
+            }
+
+            return {
+              ...prev,
+              end: { major: monthOffset, minor: day },
+            };
+          });
+        }}
+      />
+    </div>
+  </>
+)}
+
+         </div>
         <div className="summary-price">
           <div className="summary-row">
             <span>Общее время:</span>
@@ -340,15 +618,15 @@ export default function Booking() {
           <hr className="summary-divider" />
           <div className="summary-row total">
             <span>Итоговая стоимость:</span>
-            <span>{price/100} ₽</span> {/* Используем состояние price */}
+            <span>{(price/100).toFixed(2)} ₽</span> {/* Используем состояние price */}
           </div>
         </div>
 
         <div className="summary-buttons">
-          <button className="btn-yellow" onClick={handleBooking}>
+          <button className="btn-yellow" onClick={handleBooking} disabled={!isFormValid()}>
             Забронировать
           </button>
-          <button className="btn-yellow" onClick={handleSubscription}>
+          <button className="btn-yellow" onClick={handleSubscription} disabled={!isFormValid()}>
             Оформить подписку на место
           </button>
         </div>

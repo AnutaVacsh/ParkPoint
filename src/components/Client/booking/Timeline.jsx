@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { mockParkingSpaceBooking } from "../../../dto/mock/ParkingSpaceBooking";
 import { useParams } from "react-router-dom";
+import ParkingSpaceInfo from "./ParkingSpaceInfo";
 
 const WEEK_DAYS_RU = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const MONTH_NAMES_RU = [
@@ -24,6 +25,11 @@ export default function TimeLine({
   const [loading, setLoading] = useState(true);
   const [dragging, setDragging] = useState(null);
   const [timelineValues, setTimelineValues] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedInfo, setSelectedInfo] = useState(null);
+  const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
+
+  console.log(selectedDate)
 
   useEffect(() => {
     const baseDate = new Date(selectedDate);
@@ -38,26 +44,36 @@ export default function TimeLine({
         }
         break;
       case 'Дни':
-      case 'Дни недели':
+      case 'Дни недели': {
         for (let i = 0; i < 7; i++) {
           const d = new Date(baseDate);
           d.setDate(baseDate.getDate() + i);
           values.push(d);
         }
         break;
-      case 'Месяцы':
-        for (let i = 0; i < 12; i++) {
-          const d = new Date(baseDate);
-          d.setMonth(baseDate.getMonth() + i);
-          values.push(d);
-        }
-        break;
+      }
+      case 'Месяцы': {
+      const base = new Date(baseDate);
+      base.setDate(1); // Сбросить день на 1 число месяца
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(base);
+        d.setMonth(base.getMonth() + i);
+        values.push(d);
+      }
+      break;
+    }
       default:
         break;
     }
 
     setTimelineValues(values);
   }, [selectedOption, selectedDate]);
+
+  const openInfoModal = (space) => {
+  setSelectedInfo(space);
+  setShowModal(true);
+};
+
 
   useEffect(() => {
     if (!selectionSpace || !range || !timelineValues.length) {
@@ -108,6 +124,12 @@ export default function TimeLine({
     return;
   }
 
+  const openInfoModal = (space) => {
+  setSelectedSpaceInfo(space);
+  setShowModal(true);
+};
+
+
   const hasOverlap = selectedSpaceWrapper.timeSlots.some(slot => {
     const slotStart = new Date(slot.startTime);
     const slotEnd = new Date(slot.endTime);
@@ -119,23 +141,24 @@ export default function TimeLine({
 }, [range, selectionSpace, timelineValues, parkingSpaces]);
 
   const positionToDate = ({ major, minor }) => {
-    const base = new Date(timelineValues[major]);
-    switch (selectedOption) {
-      case 'Часы':
-        base.setMinutes(minor);
-        break;
-      case 'Дни':
-      case 'Дни недели':
-        base.setHours(minor);
-        break;
-      case 'Месяцы':
-        base.setDate(base.getDate() + minor);
-        break;
-      default:
-        break;
-    }
-    return base;
-  };
+  const base = new Date(timelineValues[major]);
+  switch (selectedOption) {
+    case 'Часы':
+      base.setMinutes(minor);
+      break;
+    case 'Дни':
+    case 'Дни недели':
+      base.setHours(minor);
+      break;
+    case 'Месяцы':
+      base.setDate(base.getDate() + minor);
+      break;
+    default:
+      break;
+  }
+  return base;
+};
+
 
   useEffect(() => {
     const fetchSpaces = async () => {
@@ -195,7 +218,7 @@ export default function TimeLine({
 
   const pxToPosition = (px) => {
     const width = timelineRef.current.clientWidth;
-    const segments = timelineValues.length - 1;
+    const segments = timelineValues.length;
     const majorRaw = (px / width) * segments;
     const major = Math.floor(majorRaw);
     const minor = Math.round((majorRaw - major) * getMinorDivisor());
@@ -205,13 +228,13 @@ export default function TimeLine({
   const getMinorDivisor = () => {
     switch (selectedOption) {
       case 'Часы': return 60;
-      case 'Месяцы': return 31;
+      case 'Месяцы': return 30;
       default: return 24;
     }
   };
 
   const calculatePercent = ({ major, minor }) => {
-    const segments = timelineValues.length - 1;
+    const segments = timelineValues.length;
     return ((major + minor / getMinorDivisor()) / segments) * 100;
   };
 
@@ -241,6 +264,7 @@ export default function TimeLine({
   const comparePositions = (a, b) => (a.major - b.major) || (a.minor - b.minor);
 
   const handleSpaceClick = (space) => {
+    console.log(space)
     setSelectionSpace(space);
   };
 
@@ -290,6 +314,13 @@ export default function TimeLine({
       <div className="parking-selection-container">
         {parkingSpaces.map(space => (
           <div key={space.parkingSpaceDto.id} className="parking-space-row">
+            <button
+              className="info-button"
+              onClick={() => openInfoModal(space.parkingSpaceDto)}
+              title="Инфо"
+            >
+              ℹ️
+            </button>
             <div
               className={`parking-space-number ${selectionSpace?.id === space.parkingSpaceDto.id ? 'selected' : ''}`}
               onClick={() => handleSpaceClick(space.parkingSpaceDto)}
@@ -299,72 +330,87 @@ export default function TimeLine({
             <div className="parking-space-bar">
               <div className="bar-bg" />
               {space.timeSlots.map((slot, idx) => {
-  const start = new Date(slot.startTime);
-  const end = new Date(slot.endTime);
-  const selectedDateObj = new Date(selectedDate);
-  selectedDateObj.setHours(0, 0, 0, 0);
+              const start = new Date(slot.startTime);
+              const end = new Date(slot.endTime);
+              const selectedDateObj = new Date(selectedDate);
+              selectedDateObj.setHours(0, 0, 0, 0);
 
-  let startPosition = 0;
-  let endPosition = 0;
+              let startPosition = 0;
+              let endPosition = 0;
 
-  switch (selectedOption) {
-    case 'Часы': {
-      const startTimeInMinutes = (start - selectedDateObj) / (1000 * 60);
-      const endTimeInMinutes = (end - selectedDateObj) / (1000 * 60);
-      startPosition = startTimeInMinutes / (60 * 24);
-      endPosition = endTimeInMinutes / (60 * 24);
-      break;
-    }
-    case 'Дни': {
-      const daysDifferenceStart = (start - selectedDateObj) / (1000 * 60 * 60 * 24);
-      const daysDifferenceEnd = (end - selectedDateObj) / (1000 * 60 * 60 * 24);
-      startPosition = daysDifferenceStart / (timelineValues.length - 1);
-      endPosition = daysDifferenceEnd / (timelineValues.length - 1);
-      break;
-    }
-    case 'Дни недели': {
-      startPosition = (start.getDay() + start.getHours() / 24) / 7;
-      endPosition = (end.getDay() + end.getHours() / 24) / 7;
-      break;
-    }
-    case 'Месяцы': {
-      const timelineStartMonth = new Date(timelineValues[0]).getMonth();
-      const startMonth = start.getMonth();
-      const endMonth = end.getMonth();
-      const daysInStartMonth = new Date(start.getFullYear(), startMonth + 1, 0).getDate();
-      const daysInEndMonth = new Date(end.getFullYear(), endMonth + 1, 0).getDate();
-      const startMonthOffset = (startMonth - timelineStartMonth + 12) % 12;
-      const endMonthOffset = (endMonth - timelineStartMonth + 12) % 12;
-      startPosition = (startMonthOffset + start.getDate() / daysInStartMonth) / timelineValues.length;
-      endPosition = (endMonthOffset + end.getDate() / daysInEndMonth) / timelineValues.length;
-      break;
-    }
-    default:
-      break;
-  }
+              switch (selectedOption) {
+                case 'Часы': {
+                  const startTimeInMinutes = (start - selectedDateObj) / (1000 * 60);
+                  const endTimeInMinutes = (end - selectedDateObj) / (1000 * 60);
+                  startPosition = startTimeInMinutes / (60 * 24);
+                  endPosition = endTimeInMinutes / (60 * 24);
+                  break;
+                }
+                case 'Дни': {
+                  const daysDifferenceStart = (start - selectedDateObj) / (1000 * 60 * 60 * 24);
+                  const daysDifferenceEnd = (end - selectedDateObj) / (1000 * 60 * 60 * 24);
+                  startPosition = daysDifferenceStart / (timelineValues.length -1);
+                  endPosition = daysDifferenceEnd / (timelineValues.length -1);
+                  break;
+                }
+                case 'Дни недели': {
+                  startPosition = (start.getDay() + start.getHours() / 24) / (timelineValues.length -1) ;
+                  endPosition = (end.getDay() + end.getHours() / 24) / (timelineValues.length -1);
+                  break;
+                }
+                case 'Месяцы': {
+                  const timelineStartMonth = new Date(timelineValues[0]).getMonth();
+                  const startMonth = start.getMonth();
+                  const endMonth = end.getMonth();
+                  const daysInStartMonth = new Date(start.getFullYear(), startMonth + 1, 0).getDate();
+                  const daysInEndMonth = new Date(end.getFullYear(), endMonth + 1, 0).getDate();
+                  const startMonthOffset = (startMonth - timelineStartMonth + 12) % 12;
+                  const endMonthOffset = (endMonth - timelineStartMonth + 12) % 12;
+                  startPosition = (startMonthOffset + start.getDate() / daysInStartMonth) / (timelineValues.length -1);
+                  endPosition = (endMonthOffset + end.getDate() / daysInEndMonth) / (timelineValues.length -1);
+                  break;
+                }
+                default:
+                  break;
+              }
 
-  const startPercent = startPosition * 100;
-  const widthPercent = (endPosition - startPosition) * 100;
+              const startPercent = startPosition * 100;
+              const widthPercent = (endPosition - startPosition) * 100;
 
-  // Минимальная ширина 2 пикселя
-  const minWidth = 0.2; // пикселей
-  const actualWidth = widthPercent < minWidth ? minWidth : widthPercent;
+              // Минимальная ширина 2 пикселя
+              const minWidth = 0.2; // пикселей
+              const actualWidth = widthPercent < minWidth ? minWidth : widthPercent;
 
-  return (
-    <div
-      key={idx}
-      className="bar-busy"
-      style={{
-        left: `${startPercent}%`,
-        width: `${actualWidth}%`
-      }}
-    />
-  );
-})}
-
+              return (
+                <div
+                  key={idx}
+                  className="bar-busy"
+                  style={{
+                    left: `${startPercent}%`,
+                    width: `${actualWidth}%`
+                  }}
+                />
+              );
+            })}
             </div>
           </div>
         ))}
+
+        {showModal && selectedInfo && (
+  <div className="modal-overlay" onClick={() => setShowModal(false)}>
+    <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-header">
+        <h2 className="modal-title">Информация о месте</h2>
+        <button className="modal-close-button" onClick={() => setShowModal(false)}>✕</button>
+      </div>
+      <div className="modal-body">
+        <ParkingSpaceInfo space={selectedInfo} />
+      </div>
+    </div>
+  </div>
+)}
+
+
       </div>
     </div>
   );

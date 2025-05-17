@@ -27,7 +27,9 @@ export default function SubscriptionConfirmation() {
         clientId: Number(params.get('clientId')),
         dayOfWeak: params.get('dayOfWeak')?.split(',').map(Number) || [],
         startTime: params.get('startTime'),
-        endTime: params.get('endTime')
+        endTime: params.get('endTime'),
+        price:params.get('price'),
+        createTime: params.get('createTime')
       };
       setSubscription(subData);
     }
@@ -50,6 +52,7 @@ export default function SubscriptionConfirmation() {
 
   // Отправка подписки на сервер
   useEffect(() => {
+    console.log(subscription)
     if (!subscription || !zone) return;
 
     const createSubscription = async () => {
@@ -64,7 +67,9 @@ export default function SubscriptionConfirmation() {
             clientId: subscription.clientId,
             dayOfWeak: subscription.dayOfWeak,
             startTime: subscription.startTime,
-            endTime: subscription.endTime
+            endTime: subscription.endTime,
+            price: subscription.price,
+            createTime: subscription.createTime
           })
         });
 

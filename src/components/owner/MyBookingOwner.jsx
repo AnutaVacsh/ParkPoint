@@ -35,14 +35,11 @@ const MyBookingOwner = () => {
     { value: 'SUBSCRIPTION', label: 'Подписки' }
   ];
 
-  // Функция для конвертации подписки в объект, похожий на бронирование
   const convertSubscriptionToBooking = (subscription) => {
     const today = new Date();
 
-    // subscription.dayOfWeak хранит дни недели 1 (Пн) - 7 (Вс)
     const subscriptionToJsDay = (day) => (day === 7 ? 0 : day);
 
-    // Найдем ближайший день подписки
     const getNextDateForDay = (targetDay) => {
       const jsDay = subscriptionToJsDay(targetDay);
       const daysUntilNext =
@@ -51,7 +48,7 @@ const MyBookingOwner = () => {
           : 7 - today.getDay() + jsDay;
       const nextDate = new Date(today);
       nextDate.setDate(today.getDate() + daysUntilNext);
-      return nextDate.toISOString().split('T')[0]; // Формат YYYY-MM-DD
+      return nextDate.toISOString().split('T')[0]; 
     };
 
     const nextDay = [...subscription.dayOfWeak]
@@ -84,14 +81,12 @@ const MyBookingOwner = () => {
       setLoading(true);
       try {
         if (filter === 'SUBSCRIPTION') {
-          // Если выбран фильтр по подпискам — загрузить только подписки владельца
           const subs = await getOwnerSubscriptions(userId);
           const converted = subs.map(convertSubscriptionToBooking);
           setBookings(converted);
           setTotalPages(1);
           setPage(1);
         } else if (filter === '') {
-          // Если фильтр "Все" — подгрузить и брони, и подписки, объединить и отсортировать по выбранному полю и направлению
 
           const [bookingResp, subs] = await Promise.all([
             getOwnerBookingsWithPagination(userId, new SearchRequestDTO(page, 20, sortDirection, sortBy, filter)),
@@ -100,22 +95,15 @@ const MyBookingOwner = () => {
 
           const convertedSubs = subs.map(convertSubscriptionToBooking);
 
-          // Объединяем брони и подписки
           let combined = [...bookingResp.content, ...convertedSubs];
 
-          // Фильтруем по статусу, если нужно (кроме пустого filter - "Все")
-          // Но т.к. filter === '', фильтрация не нужна
-
-          // Сортируем вручную, т.к. сервер дал брони только, подписки пришлось добавить
           combined.sort((a, b) => {
             let valA = a[sortBy];
             let valB = b[sortBy];
 
-            // Для null или undefined ставим "в хвост"
             if (valA == null) return 1;
             if (valB == null) return -1;
 
-            // Для дат — парсим в timestamp
             if (sortBy.toLowerCase().includes('date') || sortBy.toLowerCase().includes('time')) {
               valA = new Date(valA).getTime();
               valB = new Date(valB).getTime();
@@ -127,7 +115,7 @@ const MyBookingOwner = () => {
           });
 
           setBookings(combined);
-          setTotalPages(bookingResp.totalPages); // для подписок пагинация не поддерживается
+          setTotalPages(bookingResp.totalPages); 
         } else {
           const request = new SearchRequestDTO(page, 20, sortDirection, sortBy, filter);
           const response = await getOwnerBookingsWithPagination(userId, request);
