@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import ru.vaschenko.ParkPoint.enams.StateBooking;
 import ru.vaschenko.ParkPoint.models.Booking;
 
 import java.time.LocalDateTime;
@@ -14,5 +15,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     List<Booking> findByParkingSpaceId(Long parkingSpaceId);
 
     List<Booking> findByDateCreatedAfter(LocalDateTime fromDate);
+
+    List<Booking> findByParkingSpaceIdAndStatusAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Long parkingSpaceId, StateBooking stateBooking, LocalDateTime bookingEnd, LocalDateTime bookingStart);
 }
 

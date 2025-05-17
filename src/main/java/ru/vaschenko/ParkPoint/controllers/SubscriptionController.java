@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vaschenko.ParkPoint.api.SubscriptionApi;
 import ru.vaschenko.ParkPoint.dto.SubscriptionDto;
+import ru.vaschenko.ParkPoint.dto.request.SubscriptionCheckRequest;
 import ru.vaschenko.ParkPoint.dto.request.SubscriptionCreateRequestDto;
 import ru.vaschenko.ParkPoint.models.Subscription;
 import ru.vaschenko.ParkPoint.services.SubscriptionService;
@@ -41,5 +42,10 @@ public class SubscriptionController implements SubscriptionApi {
     @Override
     public ResponseEntity<SubscriptionDto> createSubscriptions(SubscriptionCreateRequestDto createRequestDto) {
         return subscriptionService.createSubscriptions(createRequestDto);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> check(SubscriptionCheckRequest createRequestDto) {
+        return subscriptionService.check(createRequestDto);
     }
 }

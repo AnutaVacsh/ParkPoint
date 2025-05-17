@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.vaschenko.ParkPoint.dto.SubscriptionDto;
+import ru.vaschenko.ParkPoint.dto.request.SubscriptionCheckRequest;
 import ru.vaschenko.ParkPoint.dto.request.SubscriptionCreateRequestDto;
 import ru.vaschenko.ParkPoint.util.ApiPath;
 
@@ -29,4 +30,7 @@ public interface SubscriptionApi {
 
     @PostMapping(ApiPath.SUBSCRIPTION_CREATE)
     public ResponseEntity<SubscriptionDto> createSubscriptions(@RequestBody SubscriptionCreateRequestDto createRequestDto);
+
+    @PostMapping(ApiPath.SUBSCRIPTION_CHECK)
+    public ResponseEntity<Boolean> check(@RequestBody SubscriptionCheckRequest createRequestDto);
 }

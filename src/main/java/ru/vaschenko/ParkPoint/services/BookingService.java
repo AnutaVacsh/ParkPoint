@@ -12,17 +12,21 @@ import ru.vaschenko.ParkPoint.dto.response.TimeSlotDto;
 import ru.vaschenko.ParkPoint.enams.StateBooking;
 import ru.vaschenko.ParkPoint.mappers.BookingMapper;
 import ru.vaschenko.ParkPoint.models.Booking;
+import ru.vaschenko.ParkPoint.models.Subscription;
 import ru.vaschenko.ParkPoint.repositories.BookingRepository;
 import ru.vaschenko.ParkPoint.repositories.ParkingSpaceRepository;
+import ru.vaschenko.ParkPoint.repositories.SubscriptionRepository;
 import ru.vaschenko.ParkPoint.repositories.UserRepository;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.*;
 
 import java.awt.print.Book;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -30,6 +34,7 @@ import java.util.stream.Collectors;
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final BookingMapper bookingMapper;
 
@@ -45,12 +50,51 @@ public class BookingService {
     }
 
     public List<TimeSlotDto> getTimeSlotForParkingSpace(Long parkingSpaceId) {
-        log.debug("Временный слоты для {}", parkingSpaceId);
+        log.debug("Временные слоты для {}", parkingSpaceId);
         List<Booking> bookings = bookingRepository.findByParkingSpaceId(parkingSpaceId);
+        List<Subscription> subscriptions = subscriptionRepository.findByParkingSpaceId(parkingSpaceId);
 
-        return bookings.stream()
+        List<TimeSlotDto> bookingSlots = bookings.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+
+        List<TimeSlotDto> subscriptionSlots = subscriptions.stream()
+                .flatMap(this::expandSubscriptionToTimeSlots)
+                .collect(Collectors.toList());
+
+        bookingSlots.addAll(subscriptionSlots);
+        return bookingSlots;
+    }
+
+    private Stream<TimeSlotDto> expandSubscriptionToTimeSlots(Subscription sub) {
+        if (sub.getCreateTime() == null) {
+            return Stream.empty();
+        }
+
+        LocalDateTime start = sub.getCreateTime();
+        LocalDateTime end = start.plusMonths(1);
+        List<Integer> daysOfWeek = sub.getDayOfWeak();
+
+        List<TimeSlotDto> slots = new ArrayList<>();
+        LocalDateTime current = start.toLocalDate().atStartOfDay();
+
+        while (!current.isAfter(end)) {
+            int dayOfWeekJava = current.getDayOfWeek().getValue(); // 1 - понедельник, 7 - воскресенье
+
+            if (daysOfWeek.contains(dayOfWeekJava)) {
+                LocalDateTime slotStart = current.withHour(sub.getStartTime().getHour())
+                        .withMinute(sub.getStartTime().getMinute());
+
+                LocalDateTime slotEnd = current.withHour(sub.getEndTime().getHour())
+                        .withMinute(sub.getEndTime().getMinute());
+
+                slots.add(new TimeSlotDto(slotStart, slotEnd));
+            }
+
+            current = current.plusDays(1);
+        }
+
+        return slots.stream();
     }
 
     public ResponseEntity<Booking> changeStateBooking(Long bookingId, StateBooking state) {

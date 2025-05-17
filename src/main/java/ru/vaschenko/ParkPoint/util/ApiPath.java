@@ -64,6 +64,7 @@ public class ApiPath {
     public static final String SUBSCRIPTION_GET_ALL = "/get";
     public static final String SUBSCRIPTION_CREATE = "/create";
     public static final String SUBSCRIPTION_GET_ALL_OWNER = "/get/owner/{ownerId}";
+    public static final String SUBSCRIPTION_CHECK = "/check";
 
     //Complaint
     public static final String BASE_COMPLAINT = "complaint";

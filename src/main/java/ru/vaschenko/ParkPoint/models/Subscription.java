@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Data;
@@ -34,4 +36,7 @@ public class Subscription {
     private List<Integer> dayOfWeak;
     private LocalTime startTime;
     private LocalTime endTime;
+
+    private Integer price;
+    private LocalDateTime createTime;
 }

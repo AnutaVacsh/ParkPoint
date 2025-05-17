@@ -1,5 +1,6 @@
 package ru.vaschenko.ParkPoint.dto;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -9,6 +10,8 @@ public record SubscriptionDto(
         UserDto client,
         List<Integer> dayOfWeak,
         LocalTime startTime,
-        LocalTime endTime
+        LocalTime endTime,
+        Integer price,
+        LocalDateTime createTime
 ) {
 }

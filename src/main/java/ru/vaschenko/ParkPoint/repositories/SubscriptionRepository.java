@@ -3,10 +3,15 @@ package ru.vaschenko.ParkPoint.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.vaschenko.ParkPoint.models.Subscription;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     List<Subscription> findByClientId(Long clientId);
 
     List<Subscription> findByParkingSpaceOwnerId(Long userId);
+
+    List<Subscription> findByParkingSpaceId(Long parkingSpaceId);
+
+    List<Subscription> findByParkingSpaceIdAndCreateTimeAfter(Long aLong, LocalDateTime cutoff);
 }
