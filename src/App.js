@@ -26,6 +26,11 @@ import UserDashboard from './components/UserDashboard';
 import CreateComplaint from './components/CreateComplaint';
 import PayPage from './components/PayPage';
 import ChatPage from './components/ChatPage';
+import ChooseRoleAP from './components/ap/ChooseRoleAP';
+import TakePart from './components/TakePart';
+import Application from './components/ApplicationModal';
+import ZoneManagerDashboard from './components/zoneManager/ZoneManagerDashboard';
+import ManagerPath from './components/zoneManager/ManagerPath';
 
 const App = () => {
   const [headerState, setheaderState] = useState(localStorage.getItem("role") || HeaderStates.GUEST); //guest, client, none
@@ -46,7 +51,8 @@ const App = () => {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/parking' element={<></>} />
-            <Route path='/owners' element={<></>} />
+            <Route path='/takePart' element={<TakePart/>} />
+            <Route path='/sendApplication' element={<Application/>} />
             <Route path='/contacts' element={<></>} />
             <Route path='/chooseRolePage' element={<ChooseRolePage />} />
             <Route path='/register/client' element={<Register />} />
@@ -58,8 +64,15 @@ const App = () => {
             <Route path="/client/*" element={(user === UserStates.CLIENT && <ClientPath />) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)} />
             <Route path="/owner" element={(user === UserStates.OWNER && <OwnerPath />) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)} />
             <Route path="/owner/*" element={(user === UserStates.OWNER && <OwnerPath />) || (<p>СТРАНИЦА НЕДОСТУПНА</p>)} />
+
+            <Route path="/ap" element={<ChooseRoleAP />} />
+
             <Route path="/admin" element={<AdminPath />} />
             <Route path="/admin/*" element={<AdminPath />} />
+
+            <Route path="/manager" element={<ManagerPath />} />
+            <Route path="/manager/*" element={<ManagerPath />} />
+
             <Route path="/user/dashboard/:id" element={< UserDashboard/>} />
             <Route path="/create/complain/:userId/:bookingId" element={< CreateComplaint/>} />
             <Route path="/chat/:userId2" element={<ChatPage />} />

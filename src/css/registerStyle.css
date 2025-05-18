@@ -1,7 +1,7 @@
 .registerPage {
     background: 
-        url('../img/loginBlur.png') no-repeat center top/cover,
-        linear-gradient(to bottom, transparent 80%, #f0f0f0 100%);
+  linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 80%, rgba(0, 0, 0, 0) 100%),
+  url('../img/loginBlur.png') no-repeat center top/cover;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -177,4 +177,24 @@
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  text-align: center;
 }

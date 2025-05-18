@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import '../css/homeStyle.css';
 import { Link } from 'react-router-dom';
+import { HeaderContext } from '../contexts/HeaderContext';
+import { UserContext } from '../contexts/UserContext';
 
 const Home = () => {
+  const { setheaderState } = useContext(HeaderContext);
+  const { setUser } = useContext(UserContext);
+
+  useEffect(() => {
+      localStorage.setItem("role", "GUEST")
+      setUser('GUEST');
+      setheaderState('GUEST');
+      console.log("GUEST")
+  }, [setUser, setheaderState]);
+
   return (
     <div className="home">
       <div className="homeContent">

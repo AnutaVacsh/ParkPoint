@@ -1,27 +1,44 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Импортируем хук useNavigate для переходов
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../css/adminDashboard.css';
 
-import carIcon from '../../img/ap0.png';
-import alertIcon from '../../img/ap1.png';
 import zoneIcon from '../../img/ap2.png';
-import userIcon from '../../img/ap3.png';
-import applicIcon from '../../img/applic.png';
+import carIcon from '../../img/ap0.png';
 import chatIcon from '../../img/chat.png';
-import Chart1 from './Chart1';
-import Chart2 from './Chart2';
 
 const actions = [
+  { label: 'Мои зоны', icon: zoneIcon, path: 'parking-zones' },
   { label: 'Парковочные места', icon: carIcon, path: 'parking-spaces' },
-  { label: 'Жалобы', icon: alertIcon, path: 'complaints' },
-  { label: 'Парковочные зоны', icon: zoneIcon, path: 'parking-zones' },
-  { label: 'Пользователи', icon: userIcon, path: 'users' },
-  { label: 'Заявки', icon: applicIcon, path: 'application' },
   { label: 'Чаты', icon: chatIcon, path: '/chat/0' },
 ];
 
-const AdminDashboard = () => {
+const fallbackUser = { email: 'неизвестный пользователь' };
+
+const ZoneManagerDashboard = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(fallbackUser);
+
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userRes = await fetch(`http://localhost:8080/user/info/${userId}`);
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setUser(userData);
+        } else {
+          setUser(fallbackUser);
+        }
+      } catch (e) {
+        setUser(fallbackUser);
+      }
+    };
+
+    if (userId) {
+      fetchUser();
+    }
+  }, [userId]);
 
   const handleClick = (path) => {
     navigate(path);
@@ -30,7 +47,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <div className="top-banner">
-        <h1 className="title">Admin8557648</h1>
+        <h1 className="title">{user?.email}</h1>
       </div>
       <div className="content">
         <div className="main">
@@ -39,7 +56,7 @@ const AdminDashboard = () => {
               <div
                 className="action-button"
                 key={label}
-                onClick={() => handleClick(path)} 
+                onClick={() => handleClick(path)}
               >
                 <span className="label">{label}</span>
                 <img src={icon} alt="" className="icon" />
@@ -47,8 +64,7 @@ const AdminDashboard = () => {
             ))}
           </div>
           <div className="right-panel">
-            <Chart2 />
-            <Chart1 />
+  
           </div>
         </div>
       </div>
@@ -56,4 +72,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default ZoneManagerDashboard;

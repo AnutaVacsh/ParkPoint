@@ -26,7 +26,7 @@ export const mockParkingZonesAP = [
         zoneManager: {
             id: 102,
             email: "manager2@example.com",
-            role: "MANAGER"
+            role: "ZONE_MANAGER"
         },
         title: "Mall Parking",
         address: "456 Shopping Ave, Townsville",
@@ -45,7 +45,7 @@ export const mockParkingZonesAP = [
         zoneManager: {
             id: 103,
             email: "manager3@example.com",
-            role: "MANAGER"
+            role: "ZONE_MANAGER"
         },
         title: "Pending Approval Zone",
         address: "789 New St, Villagetown",
@@ -68,6 +68,6 @@ export const StateParkingZone = {
 
 export const Role = {
     ADMIN: "ADMIN",
-    MANAGER: "MANAGER",
+    ZONE_MANAGER: "ZONE_MANAGER",
     USER: "USER"
 };

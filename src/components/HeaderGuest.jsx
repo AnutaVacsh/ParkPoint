@@ -25,10 +25,10 @@ const HeaderGuest = () => {
           </li>
           <li>
             <NavLink 
-              to="/owners"
+              to="/takePart"
               className={({ isActive }) => isActive ? "active-link" : ""}
             >
-              ДЛЯ ВЛАДЕЛЬЦЕВ
+              УЧАСТВОВАТЬ В ПРОГРАММЕ
             </NavLink>
           </li>
           <li>

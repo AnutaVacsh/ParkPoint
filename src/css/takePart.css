@@ -1,0 +1,142 @@
+/* takePart.css */
+
+.takepart-container {
+  background-color: #1D2329;
+  color: white;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  /* padding: 40px 20px; */
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Фон с картинкой для всего блока */
+.takepart-background {
+  background-image:
+    linear-gradient(to bottom, rgba(29, 35, 41, 0) 0%, #1D2329 100%),
+    url('../img/loginBlur.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+  padding: 40px 20px;
+  /* border-radius: 8px; */
+  position: relative;
+  /* max-width: 1000px; */
+  padding-top: 150px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  color: white;
+  /* Опционально — затемнение для контраста */
+  background-blend-mode: multiply;
+  /* background-color: rgba(29, 35, 41, 0.7); */
+}
+
+/* Контейнер с текстом поверх */
+.takepart-overlay {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Заголовок - жёлтый, по левому краю */
+.takepart-title {
+  color: #FEE174;
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* Абзацы — по левому краю, удобные отступы и размер */
+.takepart-paragraph {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Кнопка под текстом */
+.takepart-button {
+  padding: 12px 32px;
+  background-color: transparent;
+  border: 2px solid #FEE174;
+  border-radius: 25px;
+  color: #FFFFFF;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+  display: block;
+  margin: 100px auto 0px;
+  max-width: fit-content;
+}
+
+.takepart-button:hover {
+  border-color: #FEE174;
+  color: #FEE174;
+  background-color: rgba(254, 225, 116, 0.2);
+}
+
+/* Подзаголовок — по центру */
+.takepart-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+  margin: 50px 0 30px 0;
+}
+
+/* Список шагов */
+.takepart-steps {
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  position: relative;
+  padding-left: 40px; /* пространство для кружков */
+}
+
+/* Вертикальная линия между шагами */
+.step-line {
+  position: absolute;
+  left: 15px; /* выравнивание по центру кружков */
+  width: 2px;
+  background-color: #FEE174;
+  top: 40px;
+  bottom: 40px;
+  margin-left: -1px;
+  z-index: 0;
+}
+
+/* Каждый шаг — флекс контейнер, чтобы кружок слева, текст справа */
+.step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Кружок с номером */
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #FEE174;
+  color: #1D2329;
+  font-weight: bold;
+  font-size: 1.1rem;
+  line-height: 30px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-right: 15px;
+  user-select: none;
+}
+
+/* Текст шагов — по левому краю */
+.step-text {
+  color: white;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  text-align: left;
+  max-width: 600px;
+}

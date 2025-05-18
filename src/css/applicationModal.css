@@ -1,0 +1,103 @@
+/* Фон под модальным окном */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(29, 35, 41, 0.8); /* полупрозрачный тёмный фон */
+  backdrop-filter: blur(5px); /* размытие фона */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Контейнер модального окна */
+.modal-content {
+  background-color: #1d2329; /* фон как у страницы */
+  color: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Кнопка закрытия */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  color: #bbb;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.modal-close:hover {
+  color: #fff;
+}
+
+/* Заголовок */
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* Форма */
+.modal-form label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.modal-form input[type="text"],
+.modal-form input[type="email"],
+.modal-form input[type="number"],
+.modal-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2a313a;
+  color: #eee;
+  font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.modal-form input:focus,
+.modal-form textarea:focus {
+  outline: none;
+  border-color: #f5c518; /* желтый акцент */
+}
+
+/* Кнопка отправки */
+.modal-submit {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  margin-top: 10px;
+  background-color: #f5c518;
+  color: #1d2329;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-submit:hover {
+  background-color: #d4ac0d;
+}

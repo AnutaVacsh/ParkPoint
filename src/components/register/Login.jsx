@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../css/loginStyle.css';
 import { HeaderContext } from '../../contexts/HeaderContext';
 import { UserContext } from '../../contexts/UserContext';
@@ -11,21 +11,42 @@ const Login = () => {
   const [loginInput, setLoginInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   async function login() {
     try {
+      setError(null); // сброс предыдущей ошибки
       const userData = await apiLogin(loginInput, passwordInput);
+
+      if (!userData?.role) {
+        throw new Error("Нет роли в данных пользователя");
+      }
+
       localStorage.setItem("userId", userData.id);
-      console.log(userData);
-      localStorage.setItem("role", userData.role)
+      localStorage.setItem("role", userData.role);
       setheaderState(userData.role);
       setUser(userData.role);
-    
-      userData.role === "CLIENT" ? navigate('/client') : navigate('/owner');
+
+      if (userData.role === "CLIENT") {
+        navigate('/client');
+      } else if (userData.role === "OWNER") {
+        navigate('/owner');
+      } else if (userData.role === "ZONE_MANAGER") {
+        navigate('/manager');
+      } else {
+        setError("Неизвестная роль");
+      }
+
     } catch (err) {
-      setError('Ошибка авторизации');
       console.error('Login error:', err);
+
+      if (err.response?.status === 500) {
+        setError("Сервер недоступен. Попробуйте позже.");
+      } else if (err.response?.status === 401) {
+        setError("Неверный логин или пароль.");
+      } else {
+        setError("Ошибка авторизации");
+      }
     }
   }
 
@@ -56,19 +77,21 @@ const Login = () => {
               required
             />
           </div>
-          {error && <p className="error">{error}</p>} {/* Отображаем ошибку при логине */}
+          {error && <p className="error">{error}</p>}
           <button
             type="button"
             className="submitButton"
-            onClick={login} // Вызываем функцию login при клике на кнопку
+            onClick={login}
           >
             Войти
           </button>
         </form>
-        <p className="registerPrompt">
-          Нет аккаунта?{' '}
-          <Link to="/chooseRolePage" className="registerLink">Зарегистрироваться</Link>
-        </p>
+        {localStorage.getItem('role') !== 'ZONE_MANAGER' && (
+          <p className="registerPrompt">
+            Нет аккаунта?{' '}
+            <Link to="/chooseRolePage" className="registerLink">Зарегистрироваться</Link>
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import '../../css/bookingStyle.css';
 import React, { useEffect, useState, useContext } from 'react';
 import SearchRequestDTO from '../../dto/SearchRequestDTO';
-import BookingCard from './BookingCard'; // общий компонент карточки брони/подписки
+import BookingCard from './BookingCard';
 import { getOwnerBookingsWithPagination, getOwnerSubscriptions } from '../../api/BookingApi';
 import { UserContext } from '../../contexts/UserContext';
 

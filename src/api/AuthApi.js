@@ -25,8 +25,7 @@ export const login = async (login, password) => {
     return new UserDto(user.id, user.email, user.role);
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
-    console.warn('[MOCK] Ошибка соединения, возвращаем мок-данные');
-    return userMockData;
+    return error;
   }
 };
 
