@@ -1,5 +1,6 @@
 package ru.vaschenko.ParkPoint.api;
 
+import org.apache.kafka.shaded.com.google.protobuf.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
 import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
+import ru.vaschenko.ParkPoint.dto.request.NearestZonesRequest;
 import ru.vaschenko.ParkPoint.dto.request.ParkingZoneCreateDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingSpaceAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
@@ -25,7 +27,7 @@ import java.util.List;
 @RequestMapping(ApiPath.PARKING_ZONES)
 public interface ParkingZoneApi {
     @GetMapping(ApiPath.PARKING_ZONES_LIST)
-    ResponseEntity<List<ParkingZoneResponseDto>> getAllParkingZones(); //TODO только активные
+    ResponseEntity<List<ParkingZoneResponseDto>> getAllParkingZones();
 
     @GetMapping(ApiPath.PARKING_ZONE_PARTIAL)
     ResponseEntity<ParkingZonePartDto> getPartialZoneInfo(@PathVariable Long id);
@@ -41,4 +43,7 @@ public interface ParkingZoneApi {
 
     @PostMapping(ApiPath.PARKING_ZONE_CREATE)
     ResponseEntity<ParkingZone> createParkingZoneWithPag(@RequestBody ParkingZoneCreateDto requestDTO);
+
+    @PostMapping(ApiPath.PARKING_ZONE_NEAREST)
+    public List<ParkingZoneDto> findNearestZones(@RequestBody NearestZonesRequest request);
 }

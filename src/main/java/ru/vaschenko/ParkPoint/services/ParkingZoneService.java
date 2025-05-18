@@ -29,8 +29,13 @@ import jakarta.persistence.criteria.Predicate;
 import ru.vaschenko.ParkPoint.repositories.PhotoRepository;
 import ru.vaschenko.ParkPoint.repositories.UserRepository;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.awt.geom.Point2D.distance;
 
 @Slf4j
 @Service
@@ -150,5 +155,18 @@ public class ParkingZoneService {
         log.debug("create new parking zone: {}", savedZone.getId());
 
         return ResponseEntity.ok(savedZone);
+    }
+
+    public List<ParkingZoneDto> findNearestZones(double latitude, double longitude, int limit) {
+        List<ParkingZone> allZones = parkingZoneRepository.findAll();
+
+        return allZones.stream()
+                .filter(zone -> zone.getLatitude() != null && zone.getLongitude() != null)
+                .filter(zone -> zone.getState() == StateParkingZone.ACTIVE)
+                .map(zone -> new AbstractMap.SimpleEntry<>(zone, distance(latitude, longitude, zone.getLatitude(), zone.getLongitude())))
+                .sorted(Comparator.comparingDouble(AbstractMap.SimpleEntry::getValue))
+                .limit(limit)
+                .map(entry -> parkingZoneMapper.toDto(entry.getKey()))
+                .collect(Collectors.toList());
     }
 }

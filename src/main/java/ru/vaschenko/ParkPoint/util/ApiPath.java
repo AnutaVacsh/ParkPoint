@@ -20,6 +20,7 @@ public class ApiPath {
     public static final String PARKING_ZONE_PAG = "/get/all/pag";
     public static final String PARKING_ZONE_UPDATE_STATE = "/update/state/{id}";
     public static final String PARKING_ZONE_CREATE = "/create";
+    public static final String PARKING_ZONE_NEAREST = "/nearest";
 
     // ParkingSpace
     public static final String PARKING_SPACES = "/parking-spaces";

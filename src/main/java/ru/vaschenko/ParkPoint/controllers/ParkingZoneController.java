@@ -11,6 +11,7 @@ import ru.vaschenko.ParkPoint.dto.ParkingZoneDto;
 import ru.vaschenko.ParkPoint.dto.ParkingZonePartDto;
 import ru.vaschenko.ParkPoint.dto.request.APSearchRequestDto;
 import ru.vaschenko.ParkPoint.dto.request.FilterDTO;
+import ru.vaschenko.ParkPoint.dto.request.NearestZonesRequest;
 import ru.vaschenko.ParkPoint.dto.request.ParkingZoneCreateDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneAPDto;
 import ru.vaschenko.ParkPoint.dto.response.ParkingZoneResponseDto;
@@ -63,6 +64,11 @@ public class ParkingZoneController implements ParkingZoneApi {
     @Override
     public ResponseEntity<ParkingZone> createParkingZoneWithPag(ParkingZoneCreateDto requestDTO) {
         return parkingZoneService.createParkingZone(requestDTO);
+    }
+
+    @Override
+    public List<ParkingZoneDto> findNearestZones(NearestZonesRequest request) {
+        return parkingZoneService.findNearestZones(request.latitude(), request.longitude(), 3);
     }
 
 }
