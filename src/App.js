@@ -31,6 +31,7 @@ import TakePart from './components/TakePart';
 import Application from './components/ApplicationModal';
 import ZoneManagerDashboard from './components/zoneManager/ZoneManagerDashboard';
 import ManagerPath from './components/zoneManager/ManagerPath';
+import UserParkingMapPage from './components/map/UserParkingMapPage';
 
 const App = () => {
   const [headerState, setheaderState] = useState(localStorage.getItem("role") || HeaderStates.GUEST); //guest, client, none
@@ -50,7 +51,7 @@ const App = () => {
 
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/parking' element={<></>} />
+            <Route path='/parking' element={<UserParkingMapPage/>} />
             <Route path='/takePart' element={<TakePart/>} />
             <Route path='/sendApplication' element={<Application/>} />
             <Route path='/contacts' element={<></>} />

@@ -185,3 +185,10 @@
 .reviewContainer .stars {
     margin-bottom: 10px;
 }
+.ymaps-2-1-79-search {
+  position: absolute !important;
+  top: 150px !important;
+  left: 10px !important;
+  float: none !important;
+  z-index: 1000;
+}
