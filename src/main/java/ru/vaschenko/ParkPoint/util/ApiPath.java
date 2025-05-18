@@ -83,4 +83,11 @@ public class ApiPath {
     public static final String CHAT_MESSAGE = "getMes/{chatId}";
     public static final String CHAT_MESSAGE2 = "getMes/{userId1}/{userId2}";
     public static final String SEND = "/create/message";
+
+    //Application
+    public static final String APPLICATION = "application";
+    public static final String APPLICATION_GET_ALL_PAG = "get/pag";
+    public static final String APPLICATION_CREATE = "create";
+    public static final String APPLICATION_STATUS = "update/state/{id}";
+    public static final String APPLICATION_GET_ID = "get/{id}";
 }

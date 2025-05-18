@@ -59,15 +59,21 @@ public class ChatService {
         User owner;
         User client;
 
-        // Определяем, кто есть кто
+        // Проверяем комбинации ролей:
         if (user1.getRole() == Role.OWNER && user2.getRole() == Role.CLIENT) {
             owner = user1;
             client = user2;
         } else if (user1.getRole() == Role.CLIENT && user2.getRole() == Role.OWNER) {
             owner = user2;
             client = user1;
+        } else if (user1.getRole() == Role.ADMIN && user2.getRole() == Role.ZONE_MANAGER) {
+            owner = user1;  // ADMIN - владелец
+            client = user2; // ZONE_MANAGER - клиент
+        } else if (user1.getRole() == Role.ZONE_MANAGER && user2.getRole() == Role.ADMIN) {
+            owner = user2;  // ADMIN - владелец
+            client = user1; // ZONE_MANAGER - клиент
         } else {
-            throw new IllegalArgumentException("Чат может быть создан только между OWNER и CLIENT");
+            throw new IllegalArgumentException("Чат может быть создан только между OWNER и CLIENT или ADMIN и ZONE_MANAGER");
         }
 
         Chat newChat = new Chat();
@@ -76,6 +82,7 @@ public class ChatService {
 
         return chatRepository.save(newChat);
     }
+
 
     public ResponseEntity<MessageDto> saveMessage(SaveMessageRequestDto message) {
         User recipient = userService.findById(message.recipient());
