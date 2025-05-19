@@ -170,7 +170,7 @@ const UserParkingMapPage = () => {
                 padding: 0,
                 margin: 0,
                 border: '1px solid #ccc',
-                maxHeight: '200px',
+                maxHeight: '400px',
                 overflowY: 'auto'
               }}>
                 {results.map((item, idx) => {

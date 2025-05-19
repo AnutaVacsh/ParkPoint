@@ -13,7 +13,7 @@ const APComplaints = () => {
   const fetchComplaints = async (page, status) => {
     setLoading(true);
     const requestDTO = {
-      page: page,
+      page,
       size: 10,
       sortDirection: "DESC",
       sortBy: "createdAt",
@@ -50,6 +50,7 @@ const APComplaints = () => {
       case 'PENDING': return 'Ожидает';
       case 'RESOLVED': return 'Решено';
       case 'REJECTED': return 'Отклонено';
+      case 'PAYING': return 'Возврат средств';
       default: return 'Неизвестно';
     }
   };
@@ -82,6 +83,11 @@ const APComplaints = () => {
     }
   };
 
+  // Обработчик возврата денег - меняет статус на PAYING
+  const handleRefund = async (id) => {
+    await handleStatusChange(id, 'PAYING');
+  };
+
   return (
     <div className="admin-dashboard">
       <div className="top-banner">
@@ -98,6 +104,7 @@ const APComplaints = () => {
               <option value="PENDING">Ожидает</option>
               <option value="RESOLVED">Решено</option>
               <option value="REJECTED">Отклонено</option>
+              <option value="PAYING">Возврат средств</option>
             </select>
           </div>
         </div>
@@ -135,6 +142,12 @@ const APComplaints = () => {
                             <button className="action-button danger" onClick={() => handleStatusChange(complaint.id, 'REJECTED')}>Отклонить</button>
                           </>
                         )}
+                        {complaint.status === 'RESOLVED' && (
+                          <button className="action-button refund" onClick={() => handleRefund(complaint.id)}>Вернуть деньги клиенту</button>
+                        )}
+                        {complaint.status === 'PAYING' && (
+                          <span style={{ color: '#e8a317', fontWeight: 'bold' }}>Возврат средств в процессе...</span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -158,6 +171,7 @@ const APComplaints = () => {
             <h2>Жалоба #{selectedComplaint.id}</h2>
             <p><strong>Жалобщик:</strong> {selectedComplaint.complainant?.email}</p>
             <p><strong>Обвиняемый:</strong> {selectedComplaint.accused?.email}</p>
+            <p><strong>id брони:</strong> {selectedComplaint.bookingId}</p>
             <p><strong>Статус:</strong> {getStatusLabel(selectedComplaint.status)}</p>
             <p><strong>Дата создания:</strong> {new Date(selectedComplaint.createdAt).toLocaleString()}</p>
             <p><strong>Текст жалобы:</strong> {selectedComplaint.text || '—'}</p>

@@ -5,6 +5,7 @@ import { HeaderContext } from '../../contexts/HeaderContext';
 import { UserContext } from '../../contexts/UserContext';
 import ZoneManagerDashboard from './ZoneManagerDashboard';
 import ZMParkingZones from './ZMParkingZones';
+import ZMParkingSpaces from './ZMParkingSpaces';
 
 const ManagerPath = () => {
   const { setheaderState } = useContext(HeaderContext);
@@ -19,7 +20,7 @@ const ManagerPath = () => {
   return (
     <Routes>
         <Route path='/' element={<ZoneManagerDashboard />}/>
-        {/* <Route path="/parking-spaces" element={<ZMParkingSpaces />} /> */}
+        <Route path="/parking-spaces" element={<ZMParkingSpaces />} />
         <Route path="/parking-zones" element={<ZMParkingZones/>} />
         {/* <Route path="/users" element={<APUsers />} /> */}
         

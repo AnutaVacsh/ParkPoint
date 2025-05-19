@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import '../../css/bookingCardStyle.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 const SubscriptionCard = ({ subscription }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [ownerEmail, setOwnerEmail] = useState(null);
+  const [emailLoading, setEmailLoading] = useState(true);
+  const [emailError, setEmailError] = useState(null);
 
   const {
     id,
@@ -26,6 +29,26 @@ const SubscriptionCard = ({ subscription }) => {
     const dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
     return days.map((d) => dayNames[d]).join(', ');
   };
+
+
+  useEffect(() => {
+    if (!idOwner) return;
+
+    fetch(`http://localhost:8080/user/info/${idOwner}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Ошибка при загрузке данных владельца');
+        return res.json();
+      })
+      .then((data) => {
+        setOwnerEmail(data.email || null);
+        setEmailLoading(false);
+      })
+      .catch((e) => {
+        setEmailError(e.message);
+        setEmailLoading(false);
+      });
+  }, [idOwner]);
+
 
   const formatTime = (time) => time.slice(0, 5); // HH:mm
 
@@ -107,15 +130,26 @@ const SubscriptionCard = ({ subscription }) => {
                 <p><strong>Адрес:</strong> {address}</p>
                 <p><strong>Зона:</strong> {title}</p>
                 <p><strong>Место №:</strong> {order}</p>
-                {idOwner && (
-                  <p><strong>Владелец:</strong> 
-                    <Link 
-                      to={`/user/dashboard/${idOwner}`} 
-                      className="ownerLink"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      /user/dashboard/{idOwner}
-                    </Link>
+                { idOwner && client && (
+                  <p>
+                    <strong>{localStorage.getItem('role') === 'CLIENT' ? 'Владелец' : 'Клиент'}:</strong>{' '}
+                    {emailLoading ? (
+                      <span>Загрузка...</span>
+                    ) : emailError ? (
+                      <span style={{ color: 'red' }}>Ошибка: {emailError}</span>
+                    ) : (
+                      <Link
+                        to={
+                          localStorage.getItem('role') === 'CLIENT'
+                            ? `/user/dashboard/${idOwner}`
+                            : `/user/dashboard/${client.id}`
+                        }
+                        className="ownerLink"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {localStorage.getItem('role') === 'CLIENT' ? ownerEmail : client.email}
+                      </Link>
+                    )}
                   </p>
                 )}
               </div>

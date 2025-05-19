@@ -95,6 +95,7 @@ const CreateComplaint = () => {
             complainantId,
             accusedId,
             text: complaintText,
+            bookingId
         }),
         });
 

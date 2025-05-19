@@ -4,8 +4,10 @@ import SearchRequestDTO from '../../dto/SearchRequestDTO';
 import BookingCard from './BookingCard';
 import { getOwnerBookingsWithPagination, getOwnerSubscriptions } from '../../api/BookingApi';
 import { UserContext } from '../../contexts/UserContext';
+import SubscriptionCard from '../Client/booking/SubscriptionCard';
 
 const MyBookingOwner = () => {
+  const [activeTab, setActiveTab] = useState('BOOKING'); // BOOKING | SUBSCRIPTION
   const { user } = useContext(UserContext);
   const userId = localStorage.getItem("userId");
 
@@ -16,6 +18,7 @@ const MyBookingOwner = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   const sortOptions = [
     { value: 'dateCreated', label: 'Дате создания' },
@@ -35,102 +38,142 @@ const MyBookingOwner = () => {
     { value: 'SUBSCRIPTION', label: 'Подписки' }
   ];
 
-  const convertSubscriptionToBooking = (subscription) => {
-    const today = new Date();
+  // const convertSubscriptionToBooking = (subscription) => {
+  //   const today = new Date();
 
-    const subscriptionToJsDay = (day) => (day === 7 ? 0 : day);
+  //   const subscriptionToJsDay = (day) => (day === 7 ? 0 : day);
 
-    const getNextDateForDay = (targetDay) => {
-      const jsDay = subscriptionToJsDay(targetDay);
-      const daysUntilNext =
-        jsDay >= today.getDay()
-          ? jsDay - today.getDay()
-          : 7 - today.getDay() + jsDay;
-      const nextDate = new Date(today);
-      nextDate.setDate(today.getDate() + daysUntilNext);
-      return nextDate.toISOString().split('T')[0]; 
-    };
+  //   const getNextDateForDay = (targetDay) => {
+  //     const jsDay = subscriptionToJsDay(targetDay);
+  //     const daysUntilNext =
+  //       jsDay >= today.getDay()
+  //         ? jsDay - today.getDay()
+  //         : 7 - today.getDay() + jsDay;
+  //     const nextDate = new Date(today);
+  //     nextDate.setDate(today.getDate() + daysUntilNext);
+  //     return nextDate.toISOString().split('T')[0]; 
+  //   };
 
-    const nextDay = [...subscription.dayOfWeak]
-      .sort((a, b) => {
-        const d1 = (subscriptionToJsDay(a) - today.getDay() + 7) % 7;
-        const d2 = (subscriptionToJsDay(b) - today.getDay() + 7) % 7;
-        return d1 - d2;
-      })[0];
+  //   const nextDay = [...subscription.dayOfWeak]
+  //     .sort((a, b) => {
+  //       const d1 = (subscriptionToJsDay(a) - today.getDay() + 7) % 7;
+  //       const d2 = (subscriptionToJsDay(b) - today.getDay() + 7) % 7;
+  //       return d1 - d2;
+  //     })[0];
 
-    const nextDate = getNextDateForDay(nextDay);
+  //   const nextDate = getNextDateForDay(nextDay);
 
-    const toDateTime = (date, localTime) => `${date}T${localTime}`;
+  //   const toDateTime = (date, localTime) => `${date}T${localTime}`;
 
-    return {
-      id: subscription.id,
-      client: subscription.client,
-      parkingSpace: subscription.parkingSpace,
-      startTime: toDateTime(nextDate, subscription.startTime),
-      endTime: toDateTime(nextDate, subscription.endTime),
-      dateCreated: null,
-      status: 'SUBSCRIPTION',
-      price: null,
-    };
-  };
+  //   return {
+  //     id: subscription.id,
+  //     client: subscription.client,
+  //     parkingSpace: subscription.parkingSpace,
+  //     startTime: toDateTime(nextDate, subscription.startTime),
+  //     endTime: toDateTime(nextDate, subscription.endTime),
+  //     dateCreated: null,
+  //     status: 'SUBSCRIPTION',
+  //     price: null,
+  //   };
+  // };
 
   useEffect(() => {
-    if (!user) return;
-
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        if (filter === 'SUBSCRIPTION') {
-          const subs = await getOwnerSubscriptions(userId);
-          const converted = subs.map(convertSubscriptionToBooking);
-          setBookings(converted);
-          setTotalPages(1);
-          setPage(1);
-        } else if (filter === '') {
-
-          const [bookingResp, subs] = await Promise.all([
-            getOwnerBookingsWithPagination(userId, new SearchRequestDTO(page, 20, sortDirection, sortBy, filter)),
-            getOwnerSubscriptions(userId)
-          ]);
-
-          const convertedSubs = subs.map(convertSubscriptionToBooking);
-
-          let combined = [...bookingResp.content, ...convertedSubs];
-
-          combined.sort((a, b) => {
-            let valA = a[sortBy];
-            let valB = b[sortBy];
-
-            if (valA == null) return 1;
-            if (valB == null) return -1;
-
-            if (sortBy.toLowerCase().includes('date') || sortBy.toLowerCase().includes('time')) {
-              valA = new Date(valA).getTime();
-              valB = new Date(valB).getTime();
-            }
-
-            if (valA < valB) return sortDirection === 'ASC' ? -1 : 1;
-            if (valA > valB) return sortDirection === 'ASC' ? 1 : -1;
-            return 0;
-          });
-
-          setBookings(combined);
-          setTotalPages(bookingResp.totalPages); 
-        } else {
-          const request = new SearchRequestDTO(page, 20, sortDirection, sortBy, filter);
-          const response = await getOwnerBookingsWithPagination(userId, request);
+      const loadBookings = async () => {
+        setLoading(true);
+        try {
+          const request = new SearchRequestDTO(
+            page,
+            20,
+            sortDirection,
+            sortBy,
+            filter
+          );
+          const response = await getOwnerBookingsWithPagination(localStorage.getItem('userId'), request);
           setBookings(response.content);
           setTotalPages(response.totalPages);
+        } catch (e) {
+          console.error('Ошибка загрузки бронирований:', e);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
-      } finally {
-        setLoading(false);
+      };
+  
+      const loadSubscriptions = async () => {
+        setLoading(true);
+        try {
+          const subs = await getOwnerSubscriptions(localStorage.getItem('userId'));
+          setSubscriptions(subs);
+        } catch (e) {
+          console.error('Ошибка загрузки подписок:', e);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      if (activeTab === 'BOOKING') {
+        loadBookings();
+      } else {
+        loadSubscriptions();
       }
-    };
+    }, [activeTab, filter, sortBy, sortDirection, page]);
 
-    loadData();
-  }, [user, filter, sortBy, sortDirection, page]);
+  // useEffect(() => {
+  //   if (!user) return;
+
+  //   const loadData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       if (filter === 'SUBSCRIPTION') {
+  //         const subs = await getOwnerSubscriptions(userId);
+  //         const converted = subs.map(convertSubscriptionToBooking);
+  //         setBookings(converted);
+  //         setTotalPages(1);
+  //         setPage(1);
+  //       } else if (filter === '') {
+
+  //         const [bookingResp, subs] = await Promise.all([
+  //           getOwnerBookingsWithPagination(userId, new SearchRequestDTO(page, 20, sortDirection, sortBy, filter)),
+  //           getOwnerSubscriptions(userId)
+  //         ]);
+
+  //         const convertedSubs = subs.map(convertSubscriptionToBooking);
+
+  //         let combined = [...bookingResp.content, ...convertedSubs];
+
+  //         combined.sort((a, b) => {
+  //           let valA = a[sortBy];
+  //           let valB = b[sortBy];
+
+  //           if (valA == null) return 1;
+  //           if (valB == null) return -1;
+
+  //           if (sortBy.toLowerCase().includes('date') || sortBy.toLowerCase().includes('time')) {
+  //             valA = new Date(valA).getTime();
+  //             valB = new Date(valB).getTime();
+  //           }
+
+  //           if (valA < valB) return sortDirection === 'ASC' ? -1 : 1;
+  //           if (valA > valB) return sortDirection === 'ASC' ? 1 : -1;
+  //           return 0;
+  //         });
+
+  //         setBookings(combined);
+  //         setTotalPages(bookingResp.totalPages); 
+  //       } else {
+  //         const request = new SearchRequestDTO(page, 20, sortDirection, sortBy, filter);
+  //         const response = await getOwnerBookingsWithPagination(userId, request);
+  //         setBookings(response.content);
+  //         setTotalPages(response.totalPages);
+  //       }
+  //     } catch (error) {
+  //       console.error('Ошибка загрузки данных:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadData();
+  // }, [user, filter, sortBy, sortDirection, page]);
 
   const handleSortChange = (e) => {
     const value = e.target.value;
@@ -153,6 +196,30 @@ const MyBookingOwner = () => {
       </div>
 
       <div className="myBookingContent">
+        {/* Переключатель вкладок */}
+        <div className="tabSelector">
+          <button
+            className={`navButton ${activeTab === 'BOOKING' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('BOOKING');
+              setPage(1);
+            }}
+          >
+            Бронирования
+          </button>
+          <button
+            className={`navButton ${activeTab === 'SUBSCRIPTION' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('SUBSCRIPTION');
+              setPage(1);
+            }}
+          >
+            Подписки
+          </button>
+        </div>
+        <br/>
+        {activeTab === 'BOOKING' && (
+        <>
         <nav className="myBookingNav">
           <ul className="navList">
             {statusFilters.map((status) => (
@@ -187,16 +254,26 @@ const MyBookingOwner = () => {
             </button>
           </div>
         </div>
+        </>
+        )}
 
         <div className="bookingsList">
           {loading ? (
             <div className="loadingIndicator">Загрузка...</div>
-          ) : bookings.length === 0 ? (
-            <div className="noResults">Нет бронирований и подписок</div>
-          ) : (
-            bookings.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} />
+          ) : activeTab === 'BOOKING' ? (
+            bookings.length > 0 ? (
+              bookings.map((booking) => (
+                <BookingCard key={booking.id} booking={booking} />
+              ))
+            ) : (
+              <div className="noResults">Нет бронирований</div>
+            )
+          ) : subscriptions.length > 0 ? (
+            subscriptions.map((subscription, index) => (
+              <SubscriptionCard key={index} subscription={subscription} />
             ))
+          ) : (
+            <div className="noResults">Нет подписок</div>
           )}
         </div>
 

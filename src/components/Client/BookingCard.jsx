@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../css/bookingCardStyle.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { changeStateBooking } from '../../api/BookingApi';
@@ -6,6 +6,10 @@ import { changeStateBooking } from '../../api/BookingApi';
 const BookingCard = ({ booking }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate(); 
+  const [ownerEmail, setOwnerEmail] = useState(null);
+  const [emailLoading, setEmailLoading] = useState(true);
+  const [emailError, setEmailError] = useState(null);
+  
   
   const { id, price, startTime, endTime, status, parkingSpace } = booking;
   const { parkingZoneDto, order, idOwner } = parkingSpace;
@@ -24,6 +28,24 @@ const BookingCard = ({ booking }) => {
       default: return status;
     }
   };
+
+  useEffect(() => {
+    if (!idOwner) return;
+
+    fetch(`http://localhost:8080/user/info/${idOwner}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Ошибка при загрузке данных владельца');
+        return res.json();
+      })
+      .then((data) => {
+        setOwnerEmail(data.email || null);
+        setEmailLoading(false);
+      })
+      .catch((e) => {
+        setEmailError(e.message);
+        setEmailLoading(false);
+      });
+  }, [idOwner]);
 
   const handleCancel = async (e) => {
     e.stopPropagation();
@@ -171,13 +193,21 @@ const BookingCard = ({ booking }) => {
                 <p><strong>Место №:</strong> {order}</p>
                 {idOwner && (
                   <p>
-                    <strong>Владелец:</strong>
-                    <Link
-                      to={`/user/dashboard/${idOwner}`} 
-                      className="ownerLink"
-                      onClick={(e) => e.stopPropagation()}
-                    >{`/user/dashboard/${idOwner}`}
-                    </Link>
+                    <strong>Владелец:</strong>{' '}
+                    {emailLoading ? (
+                      'Загрузка...'
+                    ) : emailError ? (
+                      <span style={{ color: 'red' }}>Ошибка: {emailError}</span>
+                    ) : (
+                      <Link
+                        to={`/user/dashboard/${idOwner}`}
+                        className="ownerLink"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {ownerEmail}
+                      </Link>
+                    )}
+
                   </p>
                 )}
               </div>

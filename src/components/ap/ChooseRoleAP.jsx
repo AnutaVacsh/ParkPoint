@@ -13,6 +13,7 @@ const ChooseRoleAP = () => {
         setUser(role);
         setheaderState(role);
         localStorage.setItem('role', role);
+        if(role == "ADMIN") localStorage.setItem('userId', 13)
         novigate(url);
     };
 

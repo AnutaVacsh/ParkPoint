@@ -303,3 +303,17 @@
 /* .parking-table tbody tr:hover {
   background-color: #f5f7fa;
 } */
+
+.delete-button {
+  background-color: #d9534f; /* красный */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-top: 15px;
+  border-radius: 4px;
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
+}
