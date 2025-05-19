@@ -1,5 +1,5 @@
 package ru.vaschenko.ParkPoint.enams;
 
 public enum StateComplaint {
-    PENDING, RESOLVED, REJECTED
+    PENDING, RESOLVED, REJECTED, PAYING
 }

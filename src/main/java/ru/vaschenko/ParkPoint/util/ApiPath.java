@@ -31,6 +31,7 @@ public class ApiPath {
     public static final String PARKING_SPACES_UPDATE = "/update";
     public static final String PARKING_SPACE_UPDATE_STATE = "/state/update";
     public static final String PARKING_SPACES_PAG = "/get/all/pag";
+    public static final String PARKING_SPACES_DELETE = "/delete/{id}";
 
     // Bookings
     public static final String BOOKING = "/booking";

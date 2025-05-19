@@ -1,6 +1,7 @@
 package ru.vaschenko.ParkPoint.services;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -111,21 +113,46 @@ public class ParkingSpaceService {
                         continue; // пропускаем фильтр
                     }
 
-                    switch (filter.operator()) {
-                        case "=":
-                            predicates.add(cb.equal(root.get(filter.field()), filter.value()));
-                            break;
-                        case "LIKE":
-                            predicates.add(cb.like(root.get(filter.field()), "%" + filter.value() + "%"));
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Unsupported operator: " + filter.operator());
+                    if (filter.field().contains(".")) {
+                        String[] parts = filter.field().split("\\.");
+                        // Первый join из root
+                        Join<?, ?> join = root.join(parts[0]);
+                        // если есть промежуточные, например zoneManager
+                        for (int i = 1; i < parts.length - 1; i++) {
+                            join = join.join(parts[i]);
+                        }
+                        // последнее поле — к нему применяем сравнение
+                        String lastField = parts[parts.length - 1];
+
+                        switch (filter.operator()) {
+                            case "=":
+                                predicates.add(cb.equal(join.get(lastField), filter.value()));
+                                break;
+                            case "LIKE":
+                                predicates.add(cb.like(join.get(lastField), "%" + filter.value() + "%"));
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unsupported operator: " + filter.operator());
+                        }
+
+                    } else {
+                        switch (filter.operator()) {
+                            case "=":
+                                predicates.add(cb.equal(root.get(filter.field()), filter.value()));
+                                break;
+                            case "LIKE":
+                                predicates.add(cb.like(root.get(filter.field()), "%" + filter.value() + "%"));
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unsupported operator: " + filter.operator());
+                        }
                     }
                 }
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+
 
         if (sortBy == null || sortBy.trim().isEmpty()) {
             throw new IllegalArgumentException("Sort field cannot be null or empty.");
@@ -147,5 +174,17 @@ public class ParkingSpaceService {
         log.info("getById called with id: {}", id);
         return parkingSpaceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Parking space not found"));
+    }
+
+    public ResponseEntity<Void> deleteParkingSpace(Long id) {
+        Optional<ParkingSpace> parkingSpaceOpt = parkingSpaceRepository.findById(id);
+        if (parkingSpaceOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        parkingSpaceRepository.deleteById(id);
+
+        log.debug("delete space {}", id);
+        return ResponseEntity.noContent().build();
     }
 }

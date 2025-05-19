@@ -23,6 +23,7 @@
     <include file="ddl/17-add-subscription-fields.xml" relativeToChangelogFile="true"/>
     <include file="ddl/18-create-application.xml" relativeToChangelogFile="true"/>
     <include file="ddl/19-add-application-status.xml" relativeToChangelogFile="true"/>
+    <include file="ddl/20-add-id-booking-to-complaint.xml" relativeToChangelogFile="true"/>
 
     <include file="dml/15-add-data.xml" relativeToChangelogFile="true"/>
 

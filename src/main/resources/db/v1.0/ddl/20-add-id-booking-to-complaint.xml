@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="20" author="AnutaVacsh">
+        <addColumn tableName="complaint">
+            <column name="id_booking" type="BIGINT"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="complaint"
+                                 baseColumnNames="id_booking"
+                                 referencedTableName="booking"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_complaint_booking"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="SET NULL"/>
+    </changeSet>
+
+</databaseChangeLog>

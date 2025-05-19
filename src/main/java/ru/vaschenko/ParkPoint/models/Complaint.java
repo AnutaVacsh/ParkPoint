@@ -38,4 +38,7 @@ public class Complaint {
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "id_booking")
+    private Long bookingId;
 }

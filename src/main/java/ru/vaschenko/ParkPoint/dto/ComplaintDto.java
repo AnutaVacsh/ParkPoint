@@ -10,5 +10,6 @@ public record ComplaintDto(
     UserDto accused,
     String text,
     StateComplaint status,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    Long bookingId
 ) {}

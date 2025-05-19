@@ -41,6 +41,7 @@ public class ComplaintService {
         complaint.setComplainant(complainant);
         complaint.setAccused(accused);
         complaint.setText(requestDTO.text());
+        complaint.setBookingId(requestDTO.bookingId());
 
         complaintRepository.save(complaint);
 

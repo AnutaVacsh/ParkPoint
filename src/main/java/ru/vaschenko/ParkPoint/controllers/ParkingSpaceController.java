@@ -72,4 +72,9 @@ public class ParkingSpaceController implements ParkingSpaceApi {
     public ResponseEntity<ParkingSpaceDto> createParkingSpace(ParkingSpaceRequestDto parkingSpaceDto) {
         return parkingSpaceService.createParkingSpace(parkingSpaceDto);
     }
+
+    @Override
+    public ResponseEntity<Void> deleteParkingSpace(Long id) {
+        return parkingSpaceService.deleteParkingSpace(id);
+    }
 }

@@ -5,5 +5,6 @@ import ru.vaschenko.ParkPoint.models.User;
 public record ComplaintRequestDto(
         Long complainantId,
         Long accusedId,
-        String text
+        String text,
+        Long bookingId
 ) {}

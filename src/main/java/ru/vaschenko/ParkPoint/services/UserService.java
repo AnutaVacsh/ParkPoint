@@ -17,6 +17,7 @@ import ru.vaschenko.ParkPoint.mappers.ComplaintMapper;
 import ru.vaschenko.ParkPoint.mappers.UserCardMapper;
 import ru.vaschenko.ParkPoint.mappers.UserMapper;
 import ru.vaschenko.ParkPoint.models.Complaint;
+import ru.vaschenko.ParkPoint.models.Password;
 import ru.vaschenko.ParkPoint.models.User;
 import ru.vaschenko.ParkPoint.models.UserCard;
 import ru.vaschenko.ParkPoint.repositories.ComplaintRepository;
@@ -118,9 +119,14 @@ public class UserService {
         log.debug("find user by email");
         return userRepository.findByEmail(userDto.email())
                 .orElseGet(() -> {
+                    Password password = new Password();
+                    password.setPassword("qwerty");
+
                     User newUser = new User();
                     newUser.setEmail(userDto.email());
                     newUser.setRole(userDto.role());
+                    newUser.setPassword(password);
+
                     log.debug("user not found, create new user: {}", newUser);
                     return userRepository.save(newUser);
                 });
