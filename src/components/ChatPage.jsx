@@ -120,7 +120,7 @@ const ChatPage = () => {
   // Определяем имя собеседника для заголовка
   const chatPartnerName = (() => {
     if (!selectedChat) return '';
-    if (role === 'OWNER') return selectedChat.client?.username || selectedChat.client?.email || 'Неизвестный пользователь';
+    if (role === 'OWNER' || role === "ADMIN") return selectedChat.client?.username || selectedChat.client?.email || 'Неизвестный пользователь';
     return selectedChat.owner?.username || selectedChat.owner?.email || 'Неизвестный пользователь';
   })();
 
@@ -129,7 +129,7 @@ const ChatPage = () => {
       <div style={styles.sidebar}>
         <h2>Чаты</h2>
         {chats.map(chat => {
-          const otherUser = role === "OWNER" ? chat.client : chat.owner;
+          const otherUser = role === "OWNER" || role === "ADMIN" ? chat.client : chat.owner;
           return (
             <div
               key={chat.id}

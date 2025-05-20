@@ -15,7 +15,7 @@ const MONTH_NAMES_RU = [
 export default function Booking() {
   const [, setParkingSpaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState();
   const [endDate, setEndDate] = useState('');
   const [selectedOption, setSelectedOption] = useState('Часы');
   const [selectionSpace, setSelectionSpace] = useState('');

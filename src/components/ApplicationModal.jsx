@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { YMaps, Map } from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import "../css/registerStyle.css";
 
 const Application = () => {
   const navigate = useNavigate();
+  const mapRef = useRef(null);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -19,6 +20,13 @@ const Application = () => {
   const [notifications, setNotifications] = useState([]);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState(null);
+  const [mapState, setMapState] = useState({
+    center: [51.533562, 46.034257],
+    zoom: 13,
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,11 +43,54 @@ const Application = () => {
       latitude: coords[0],
       longitude: coords[1],
     }));
-    setIsMapOpen(false); // закрываем карту после выбора точки
+    setMapState(prev => ({
+      ...prev,
+      center: coords,
+      zoom: 16
+    }));
+
+    setIsMapOpen(false);
   };
 
   const handleOpenMap = () => setIsMapOpen(true);
   const handleMapClose = () => setIsMapOpen(false);
+
+  const handleSearch = async (text) => {
+    setSearchQuery(text);
+    if (!text) return setSearchResults([]);
+
+    try {
+      setIsSearching(true);
+      const response = await fetch(
+        `https://geocode-maps.yandex.ru/1.x/?apikey=79c4dca7-80ed-4233-b785-8cce6955f1b4&format=json&geocode=${encodeURIComponent(text)}&results=15`
+      );
+      const data = await response.json();
+      const found = data.response.GeoObjectCollection.featureMember;
+      setSearchResults(found || []);
+    } catch (e) {
+      console.warn('Ошибка поиска по адресу:', e);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSelectResult = (result) => {
+    const coords = result.GeoObject.Point.pos.split(' ').map(Number).reverse();
+    setFormData(prev => ({
+      ...prev,
+      latitude: coords[0],
+      longitude: coords[1],
+      address: result.GeoObject.metaDataProperty.GeocoderMetaData.text
+    }));
+    setMapState(prev => ({
+      ...prev,
+      center: coords,
+      zoom: 16
+    }));
+    setSearchQuery(result.GeoObject.metaDataProperty.GeocoderMetaData.text);
+    setSearchResults([]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -100,7 +151,6 @@ const Application = () => {
 
         <form className="registerForm" onSubmit={handleSubmit}>
           {/* ... остальные поля формы без изменений ... */}
-
           <div className="formGroup">
             <label htmlFor="email" className="formLabel">
               Email
@@ -132,7 +182,7 @@ const Application = () => {
 
           <div className="formGroup">
             <label htmlFor="title" className="formLabel">
-              Заголовок
+              Название зоны
             </label>
             <input
               id="title"
@@ -202,19 +252,56 @@ const Application = () => {
               ✖
             </div>
             <div className="mapContainer" style={{ width: "100%", height: "400px" }}>
-              <YMaps>
+              <YMaps query={{ apikey: "79c4dca7-80ed-4233-b785-8cce6955f1b4" }}>
                 <Map
-                  defaultState={{ center: [51.533562, 46.034257], zoom: 13 }}
+                  state={mapState}
                   width="100%"
                   height="100%"
                   onClick={handleMapClick}
-                />
+                  instanceRef={mapRef}
+                >
+                  {formData.latitude && formData.longitude && (
+                    <Placemark 
+                      geometry={[formData.latitude, formData.longitude]}
+                      options={{ preset: "islands#redDotIcon" }}
+                      onClick={handleMapClose}
+                    />
+                  )}
+                </Map>
               </YMaps>
+            </div>
+            
+            <div className="searchContainer">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Поиск адреса..."
+                className="searchInput"
+              />
+              {isSearching && <div className="searchLoading">Поиск...</div>}
+              
+              {searchResults.length > 0 && (
+                <ul className="searchResults">
+                  {searchResults.map((result, index) => (
+                    <li 
+                      key={index} 
+                      className="searchResultItem"
+                      onClick={() => handleSelectResult(result)}
+                    >
+                      {result.GeoObject.metaDataProperty.GeocoderMetaData.text}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            
+            <div className="mapInstructions">
+              Нажмите на карту или найдите адрес с помощью поиска
             </div>
           </div>
         )}
 
-        {/* Модальное окно уведомления */}
         {modalMessage && (
           <div style={modalStyles.overlay}>
             <div style={modalStyles.modal}>

@@ -164,6 +164,8 @@ const Subscription = () => {
     }
     return true; // пересечений нет
   };
+  
+    console.log(parkingInfo)
 
   const checkAvailability = async () => {
     try {
@@ -243,6 +245,7 @@ const Subscription = () => {
     }
 
     setFormError(null);
+    console.log(parkingInfo)
 
     // Подготовка данных для подписки
       // Формируем объект Subscription
@@ -251,7 +254,9 @@ const Subscription = () => {
     clientId: userId,
     dayOfWeak: selectedDays, // Выбранные дни недели
     startTime: startTime,
-    endTime: endTime
+    endTime: endTime,
+    price: parkingInfo.dailyPrice,
+    createTime: new Date().toISOString()
   };
 
   // Сериализуем объект в параметры URL
